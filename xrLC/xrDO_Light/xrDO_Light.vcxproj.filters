@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{76e2fcf4-5d39-48c0-81d9-9df94da99379}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h" />
+    <ClInclude Include="global_options.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler.cpp" />
+    <ClCompile Include="xrDO_Light.cpp" />
+    <ClCompile Include="..\..\xr_3da\xrLoadSurface.cpp" />
+    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\cl_log.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\tga.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\xrThread.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="X:\xrLC\COMMON_COMPILERS\resource.rc">
+      <Filter>Kernel</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

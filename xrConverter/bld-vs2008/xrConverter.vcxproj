@@ -1,0 +1,1118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_CUDA_UI|Win32">
+      <Configuration>Debug_CUDA_UI</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_CUDA_UI|x64">
+      <Configuration>Debug_CUDA_UI</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_CUDA|Win32">
+      <Configuration>Debug_CUDA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_CUDA|x64">
+      <Configuration>Debug_CUDA</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_UI|Win32">
+      <Configuration>Debug_UI</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_UI|x64">
+      <Configuration>Debug_UI</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_CUDA_UI|Win32">
+      <Configuration>Release_CUDA_UI</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_CUDA_UI|x64">
+      <Configuration>Release_CUDA_UI</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_CUDA|Win32">
+      <Configuration>Release_CUDA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_CUDA|x64">
+      <Configuration>Release_CUDA</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_UI|Win32">
+      <Configuration>Release_UI</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_UI|x64">
+      <Configuration>Release_UI</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{251A6DE4-30F3-43A4-8315-AB4E306BD58D}</ProjectGuid>
+    <RootNamespace>converter</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>xrConverter</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>X:\output\binaries\</OutDir>
+    <IntDir>X:\output\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <GenerateManifest>true</GenerateManifest>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+    <LibraryPath>X:\output\libraries;$(LibraryPath)</LibraryPath>
+    <IncludePath>X:\components\libogg\include;X:\components\nvtt_static;X:\components\libvorbis\include;X:\xrConverter\bld-vs2008;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <GenerateManifest>true</GenerateManifest>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+    <LibraryPath>X:\output\libraries_x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\maks\Downloads\XrConverter\nvtt\;C:\Users\maks\Downloads\XrConverter\converter\bld-vs2008;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)_x64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|Win32'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <GenerateManifest>true</GenerateManifest>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|x64'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <GenerateManifest>true</GenerateManifest>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|Win32'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|x64'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|Win32'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|x64'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|Win32'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|x64'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|Win32'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|x64'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|Win32'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|x64'">
+    <OutDir>..\..\..\..\binaries\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\..\intermediate\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat />
+      <UseFullPaths>false</UseFullPaths>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/LARGEADDRESSAWARE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>nvtt_static.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;DEBUGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <UseFullPaths>false</UseFullPaths>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/LARGEADDRESSAWARE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <AdditionalDependencies>nvtt.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat />
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/LARGEADDRESSAWARE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA|x64'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/LARGEADDRESSAWARE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\binaries\$(Platform)-$(Configuration)\xray_re;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_CUDA_UI|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat />
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_CUDA_UI|x64'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat />
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_UI|x64'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UI|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\xray_re;..\opcode;..\..\..\..\3rd_party\libvorbis\include;..\..\..\..\3rd_party\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;ICE_NO_DLL;BAN_OPCODE_AUTOLINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\batch_helper.h" />
+    <ClInclude Include="..\converter.h" />
+    <ClInclude Include="..\crc32\crc32.h" />
+    <ClInclude Include="..\db_tools.h" />
+    <ClInclude Include="..\dds_tools.h" />
+    <ClInclude Include="..\dm_tools.h" />
+    <ClInclude Include="..\fancy_tools.h" />
+    <ClInclude Include="..\level_aux_mesh.h" />
+    <ClInclude Include="..\level_mesh_opcode.h" />
+    <ClInclude Include="..\level_tools.h" />
+    <ClInclude Include="..\lzo\lzoconf.h" />
+    <ClInclude Include="..\lzo\lzodefs.h" />
+    <ClInclude Include="..\lzo\minilzo.h" />
+    <ClInclude Include="..\object_tools.h" />
+    <ClInclude Include="..\ogf_tools.h" />
+    <ClInclude Include="..\ogg_tools.h" />
+    <ClInclude Include="..\opcode\Ice\IceAABB.h" />
+    <ClInclude Include="..\opcode\Ice\IceAxes.h" />
+    <ClInclude Include="..\opcode\Ice\IceBoundingSphere.h" />
+    <ClInclude Include="..\opcode\Ice\IceContainer.h" />
+    <ClInclude Include="..\opcode\Ice\IceFPU.h" />
+    <ClInclude Include="..\opcode\Ice\IceHPoint.h" />
+    <ClInclude Include="..\opcode\Ice\IceIndexedTriangle.h" />
+    <ClInclude Include="..\opcode\Ice\IceLSS.h" />
+    <ClInclude Include="..\opcode\Ice\IceMatrix3x3.h" />
+    <ClInclude Include="..\opcode\Ice\IceMatrix4x4.h" />
+    <ClInclude Include="..\opcode\Ice\IceMemoryMacros.h" />
+    <ClInclude Include="..\opcode\Ice\IceOBB.h" />
+    <ClInclude Include="..\opcode\Ice\IcePairs.h" />
+    <ClInclude Include="..\opcode\Ice\IcePlane.h" />
+    <ClInclude Include="..\opcode\Ice\IcePoint.h" />
+    <ClInclude Include="..\opcode\Ice\IcePreprocessor.h" />
+    <ClInclude Include="..\opcode\Ice\IceRandom.h" />
+    <ClInclude Include="..\opcode\Ice\IceRay.h" />
+    <ClInclude Include="..\opcode\Ice\IceRevisitedRadix.h" />
+    <ClInclude Include="..\opcode\Ice\IceSegment.h" />
+    <ClInclude Include="..\opcode\Ice\IceTriangle.h" />
+    <ClInclude Include="..\opcode\Ice\IceTrilist.h" />
+    <ClInclude Include="..\opcode\Ice\IceTypes.h" />
+    <ClInclude Include="..\opcode\Ice\IceUtils.h" />
+    <ClInclude Include="..\opcode\Opcode.h" />
+    <ClInclude Include="..\opcode\OPC_AABBCollider.h" />
+    <ClInclude Include="..\opcode\OPC_AABBTree.h" />
+    <ClInclude Include="..\opcode\OPC_BaseModel.h" />
+    <ClInclude Include="..\opcode\OPC_BoxBoxOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_BoxPruning.h" />
+    <ClInclude Include="..\opcode\OPC_Collider.h" />
+    <ClInclude Include="..\opcode\OPC_Common.h" />
+    <ClInclude Include="..\opcode\OPC_HybridModel.h" />
+    <ClInclude Include="..\opcode\OPC_IceHook.h" />
+    <ClInclude Include="..\opcode\OPC_LSSAABBOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_LSSCollider.h" />
+    <ClInclude Include="..\opcode\OPC_LSSTriOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_MeshInterface.h" />
+    <ClInclude Include="..\opcode\OPC_Model.h" />
+    <ClInclude Include="..\opcode\OPC_OBBCollider.h" />
+    <ClInclude Include="..\opcode\OPC_OptimizedTree.h" />
+    <ClInclude Include="..\opcode\OPC_Picking.h" />
+    <ClInclude Include="..\opcode\OPC_PlanesAABBOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_PlanesCollider.h" />
+    <ClInclude Include="..\opcode\OPC_PlanesTriOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_RayAABBOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_RayCollider.h" />
+    <ClInclude Include="..\opcode\OPC_RayTriOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_Settings.h" />
+    <ClInclude Include="..\opcode\OPC_SphereAABBOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_SphereCollider.h" />
+    <ClInclude Include="..\opcode\OPC_SphereTriOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_SweepAndPrune.h" />
+    <ClInclude Include="..\opcode\OPC_TreeBuilders.h" />
+    <ClInclude Include="..\opcode\OPC_TreeCollider.h" />
+    <ClInclude Include="..\opcode\OPC_TriBoxOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_TriTriOverlap.h" />
+    <ClInclude Include="..\opcode\OPC_VolumeCollider.h" />
+    <ClInclude Include="..\opcode\StdAfx.h" />
+    <ClInclude Include="..\tools_base.h" />
+    <ClInclude Include="..\xrdemo_tools.h" />
+    <ClInclude Include="xr_aabb.h" />
+    <ClInclude Include="xr_ai_cross_table.h" />
+    <ClInclude Include="xr_ai_graph.h" />
+    <ClInclude Include="xr_ai_map.h" />
+    <ClInclude Include="xr_ai_version.h" />
+    <ClInclude Include="xr_ai_way.h" />
+    <ClInclude Include="xr_blender.h" />
+    <ClInclude Include="xr_bone.h" />
+    <ClInclude Include="xr_build_err.h" />
+    <ClInclude Include="xr_build_lights.h" />
+    <ClInclude Include="xr_cform.h" />
+    <ClInclude Include="xr_clsid.h" />
+    <ClInclude Include="xr_cl_parser.h" />
+    <ClInclude Include="xr_color.h" />
+    <ClInclude Include="xr_cylinder.h" />
+    <ClInclude Include="xr_d3d_light.h" />
+    <ClInclude Include="xr_details.h" />
+    <ClInclude Include="xr_dm.h" />
+    <ClInclude Include="xr_entity.h" />
+    <ClInclude Include="xr_entity_factory.h" />
+    <ClInclude Include="xr_entity_script.h" />
+    <ClInclude Include="xr_entity_zenobian.h" />
+    <ClInclude Include="xr_envelope.h" />
+    <ClInclude Include="xr_file_system.h" />
+    <ClInclude Include="xr_file_system_posix.h" />
+    <ClInclude Include="xr_file_system_win32.h" />
+    <ClInclude Include="xr_fixed_vector.h" />
+    <ClInclude Include="xr_gamemtls_lib.h" />
+    <ClInclude Include="xr_game_graph.h" />
+    <ClInclude Include="xr_game_spawn.h" />
+    <ClInclude Include="xr_geom_buf.h" />
+    <ClInclude Include="xr_guid.h" />
+    <ClInclude Include="xr_image.h" />
+    <ClInclude Include="xr_influence.h" />
+    <ClInclude Include="xr_ini_file.h" />
+    <ClInclude Include="xr_level.h" />
+    <ClInclude Include="xr_level_ai.h" />
+    <ClInclude Include="xr_level_cform.h" />
+    <ClInclude Include="xr_level_details.h" />
+    <ClInclude Include="xr_level_dm.h" />
+    <ClInclude Include="xr_level_env_mod.h" />
+    <ClInclude Include="xr_level_fog_vol.h" />
+    <ClInclude Include="xr_level_game.h" />
+    <ClInclude Include="xr_level_gct.h" />
+    <ClInclude Include="xr_level_geom.h" />
+    <ClInclude Include="xr_level_glows.h" />
+    <ClInclude Include="xr_level_graph.h" />
+    <ClInclude Include="xr_level_hom.h" />
+    <ClInclude Include="xr_level_lights.h" />
+    <ClInclude Include="xr_level_ltx.h" />
+    <ClInclude Include="xr_level_portals.h" />
+    <ClInclude Include="xr_level_ps_static.h" />
+    <ClInclude Include="xr_level_sectors.h" />
+    <ClInclude Include="xr_level_shaders.h" />
+    <ClInclude Include="xr_level_snd_env.h" />
+    <ClInclude Include="xr_level_snd_static.h" />
+    <ClInclude Include="xr_level_som.h" />
+    <ClInclude Include="xr_level_spawn.h" />
+    <ClInclude Include="xr_level_version.h" />
+    <ClInclude Include="xr_level_visuals.h" />
+    <ClInclude Include="xr_level_wallmarks.h" />
+    <ClInclude Include="xr_limits.h" />
+    <ClInclude Include="xr_log.h" />
+    <ClInclude Include="xr_lzhuf.h" />
+    <ClInclude Include="xr_math.h" />
+    <ClInclude Include="xr_matrix.h" />
+    <ClInclude Include="xr_mesh.h" />
+    <ClInclude Include="xr_mesh_builder.h" />
+    <ClInclude Include="xr_mesh_utils.h" />
+    <ClInclude Include="xr_mesh_vbuf.h" />
+    <ClInclude Include="xr_motion.h" />
+    <ClInclude Include="xr_name_gen.h" />
+    <ClInclude Include="xr_obb.h" />
+    <ClInclude Include="xr_object.h" />
+    <ClInclude Include="xr_object_format.h" />
+    <ClInclude Include="xr_obj_motion.h" />
+    <ClInclude Include="xr_ogf.h" />
+    <ClInclude Include="xr_ogf_format.h" />
+    <ClInclude Include="xr_ogf_v3.h" />
+    <ClInclude Include="xr_ogf_v4.h" />
+    <ClInclude Include="xr_packet.h" />
+    <ClInclude Include="xr_plane.h" />
+    <ClInclude Include="xr_quaternion.h" />
+    <ClInclude Include="xr_reader.h" />
+    <ClInclude Include="xr_rect.h" />
+    <ClInclude Include="xr_remapper.h" />
+    <ClInclude Include="xr_scene.h" />
+    <ClInclude Include="xr_scene_ai_map.h" />
+    <ClInclude Include="xr_scene_common.h" />
+    <ClInclude Include="xr_scene_details.h" />
+    <ClInclude Include="xr_scene_glows.h" />
+    <ClInclude Include="xr_scene_groups.h" />
+    <ClInclude Include="xr_scene_lights.h" />
+    <ClInclude Include="xr_scene_objects.h" />
+    <ClInclude Include="xr_scene_part.h" />
+    <ClInclude Include="xr_scene_particles.h" />
+    <ClInclude Include="xr_scene_portals.h" />
+    <ClInclude Include="xr_scene_revision.h" />
+    <ClInclude Include="xr_scene_sectors.h" />
+    <ClInclude Include="xr_scene_shapes.h" />
+    <ClInclude Include="xr_scene_sound_envs.h" />
+    <ClInclude Include="xr_scene_sound_srcs.h" />
+    <ClInclude Include="xr_scene_spawns.h" />
+    <ClInclude Include="xr_scene_visuals.h" />
+    <ClInclude Include="xr_scene_wallmarks.h" />
+    <ClInclude Include="xr_scene_ways.h" />
+    <ClInclude Include="xr_scrambler.h" />
+    <ClInclude Include="xr_shaders_lib.h" />
+    <ClInclude Include="xr_shaders_xrlc_lib.h" />
+    <ClInclude Include="xr_shape.h" />
+    <ClInclude Include="xr_skeleton.h" />
+    <ClInclude Include="xr_skl_motion.h" />
+    <ClInclude Include="xr_sound_thumbnail.h" />
+    <ClInclude Include="xr_sphere.h" />
+    <ClInclude Include="xr_string_utils.h" />
+    <ClInclude Include="xr_surface.h" />
+    <ClInclude Include="xr_surface_factory.h" />
+    <ClInclude Include="xr_texture_thumbnail.h" />
+    <ClInclude Include="xr_thumbnail.h" />
+    <ClInclude Include="xr_types.h" />
+    <ClInclude Include="xr_utils.h" />
+    <ClInclude Include="xr_vector2.h" />
+    <ClInclude Include="xr_vector3.h" />
+    <ClInclude Include="xr_vector4.h" />
+    <ClInclude Include="xr_wallmarks.h" />
+    <ClInclude Include="xr_writer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\batch_helper.cpp" />
+    <ClCompile Include="..\converter.cpp" />
+    <ClCompile Include="..\crc32\crc32.c" />
+    <ClCompile Include="..\db_tools.cpp" />
+    <ClCompile Include="..\dds_tools.cpp" />
+    <ClCompile Include="..\dm_tools.cpp" />
+    <ClCompile Include="..\fancy_tools.cpp" />
+    <ClCompile Include="..\level_aux_mesh.cpp" />
+    <ClCompile Include="..\level_mesh.cpp" />
+    <ClCompile Include="..\level_mesh_commit.cpp" />
+    <ClCompile Include="..\level_mesh_ladders.cpp" />
+    <ClCompile Include="..\level_mesh_materials.cpp" />
+    <ClCompile Include="..\level_mesh_terrain.cpp" />
+    <ClCompile Include="..\level_tools.cpp" />
+    <ClCompile Include="..\level_tools_ai_map.cpp" />
+    <ClCompile Include="..\level_tools_debug_cform.cpp" />
+    <ClCompile Include="..\level_tools_details.cpp" />
+    <ClCompile Include="..\level_tools_glows.cpp" />
+    <ClCompile Include="..\level_tools_hom.cpp" />
+    <ClCompile Include="..\level_tools_lights.cpp" />
+    <ClCompile Include="..\level_tools_particles.cpp" />
+    <ClCompile Include="..\level_tools_portals.cpp" />
+    <ClCompile Include="..\level_tools_sectors.cpp" />
+    <ClCompile Include="..\level_tools_som.cpp" />
+    <ClCompile Include="..\level_tools_sound_envs.cpp" />
+    <ClCompile Include="..\level_tools_sound_srcs.cpp" />
+    <ClCompile Include="..\level_tools_spawns.cpp" />
+    <ClCompile Include="..\level_tools_visuals.cpp" />
+    <ClCompile Include="..\level_tools_wallmarks.cpp" />
+    <ClCompile Include="..\level_tools_ways.cpp" />
+    <ClCompile Include="..\lzo\minilzo.c" />
+    <ClCompile Include="..\object_tools.cpp" />
+    <ClCompile Include="..\ogf_tools.cpp" />
+    <ClCompile Include="..\ogg_tools.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceAABB.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceContainer.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceHPoint.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceIndexedTriangle.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceMatrix3x3.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceMatrix4x4.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceOBB.cpp" />
+    <ClCompile Include="..\opcode\Ice\IcePlane.cpp" />
+    <ClCompile Include="..\opcode\Ice\IcePoint.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceRandom.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceRay.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceRevisitedRadix.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceSegment.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceTriangle.cpp" />
+    <ClCompile Include="..\opcode\Ice\IceUtils.cpp" />
+    <ClCompile Include="..\opcode\Opcode.cpp" />
+    <ClCompile Include="..\opcode\OPC_AABBCollider.cpp" />
+    <ClCompile Include="..\opcode\OPC_AABBTree.cpp" />
+    <ClCompile Include="..\opcode\OPC_BaseModel.cpp" />
+    <ClCompile Include="..\opcode\OPC_BoxPruning.cpp" />
+    <ClCompile Include="..\opcode\OPC_Collider.cpp" />
+    <ClCompile Include="..\opcode\OPC_Common.cpp" />
+    <ClCompile Include="..\opcode\OPC_HybridModel.cpp" />
+    <ClCompile Include="..\opcode\OPC_LSSCollider.cpp" />
+    <ClCompile Include="..\opcode\OPC_MeshInterface.cpp" />
+    <ClCompile Include="..\opcode\OPC_Model.cpp" />
+    <ClCompile Include="..\opcode\OPC_OBBCollider.cpp" />
+    <ClCompile Include="..\opcode\OPC_OptimizedTree.cpp" />
+    <ClCompile Include="..\opcode\OPC_Picking.cpp" />
+    <ClCompile Include="..\opcode\OPC_PlanesCollider.cpp" />
+    <ClCompile Include="..\opcode\OPC_RayCollider.cpp" />
+    <ClCompile Include="..\opcode\OPC_SphereCollider.cpp" />
+    <ClCompile Include="..\opcode\OPC_SweepAndPrune.cpp" />
+    <ClCompile Include="..\opcode\OPC_TreeBuilders.cpp" />
+    <ClCompile Include="..\opcode\OPC_TreeCollider.cpp" />
+    <ClCompile Include="..\opcode\OPC_VolumeCollider.cpp" />
+    <ClCompile Include="..\opcode\StdAfx.cpp" />
+    <ClCompile Include="..\xrdemo_tools.cpp" />
+    <ClCompile Include="xr_ai_cross_table.cxx" />
+    <ClCompile Include="xr_ai_graph.cxx" />
+    <ClCompile Include="xr_ai_way.cxx" />
+    <ClCompile Include="xr_blender.cxx" />
+    <ClCompile Include="xr_bone.cxx" />
+    <ClCompile Include="xr_build_err.cxx" />
+    <ClCompile Include="xr_build_lights.cxx" />
+    <ClCompile Include="xr_cform.cxx" />
+    <ClCompile Include="xr_clsid.cxx" />
+    <ClCompile Include="xr_cl_parser.cxx" />
+    <ClCompile Include="xr_d3d_light.cxx" />
+    <ClCompile Include="xr_details.cxx" />
+    <ClCompile Include="xr_dm.cxx" />
+    <ClCompile Include="xr_entity.cxx" />
+    <ClCompile Include="xr_entity_factory.cxx" />
+    <ClCompile Include="xr_entity_script.cxx" />
+    <ClCompile Include="xr_entity_zenobian.cxx" />
+    <ClCompile Include="xr_envelope.cxx" />
+    <ClCompile Include="xr_envelope_eval.cxx" />
+    <ClCompile Include="xr_file_system.cxx" />
+    <ClCompile Include="xr_file_system_posix.cxx" />
+    <ClCompile Include="xr_file_system_win32.cxx" />
+    <ClCompile Include="xr_gamemtls_lib.cxx" />
+    <ClCompile Include="xr_game_graph.cxx" />
+    <ClCompile Include="xr_game_spawn.cxx" />
+    <ClCompile Include="xr_geom_buf.cxx" />
+    <ClCompile Include="xr_guid.cxx" />
+    <ClCompile Include="xr_image.cxx" />
+    <ClCompile Include="xr_image_bmp.cxx" />
+    <ClCompile Include="xr_image_dds.cxx" />
+    <ClCompile Include="xr_image_tga.cxx" />
+    <ClCompile Include="xr_influence.cxx" />
+    <ClCompile Include="xr_ini_file.cxx" />
+    <ClCompile Include="xr_level.cxx" />
+    <ClCompile Include="xr_level_ai.cxx" />
+    <ClCompile Include="xr_level_cform.cxx" />
+    <ClCompile Include="xr_level_details.cxx" />
+    <ClCompile Include="xr_level_dm.cxx" />
+    <ClCompile Include="xr_level_env_mod.cxx" />
+    <ClCompile Include="xr_level_fog_vol.cxx" />
+    <ClCompile Include="xr_level_game.cxx" />
+    <ClCompile Include="xr_level_gct.cxx" />
+    <ClCompile Include="xr_level_gct_v9.cxx" />
+    <ClCompile Include="xr_level_geom.cxx" />
+    <ClCompile Include="xr_level_glows.cxx" />
+    <ClCompile Include="xr_level_graph.cxx" />
+    <ClCompile Include="xr_level_hom.cxx" />
+    <ClCompile Include="xr_level_lights.cxx" />
+    <ClCompile Include="xr_level_ltx.cxx" />
+    <ClCompile Include="xr_level_portals.cxx" />
+    <ClCompile Include="xr_level_ps_static.cxx" />
+    <ClCompile Include="xr_level_sectors.cxx" />
+    <ClCompile Include="xr_level_shaders.cxx" />
+    <ClCompile Include="xr_level_snd_env.cxx" />
+    <ClCompile Include="xr_level_snd_static.cxx" />
+    <ClCompile Include="xr_level_som.cxx" />
+    <ClCompile Include="xr_level_spawn.cxx" />
+    <ClCompile Include="xr_level_visuals.cxx" />
+    <ClCompile Include="xr_level_wallmarks.cxx" />
+    <ClCompile Include="xr_log.cxx" />
+    <ClCompile Include="xr_lzhuf.cxx" />
+    <ClCompile Include="xr_matrix.cxx" />
+    <ClCompile Include="xr_mesh.cxx" />
+    <ClCompile Include="xr_mesh_builder.cxx" />
+    <ClCompile Include="xr_mesh_vbuf.cxx" />
+    <ClCompile Include="xr_motion.cxx" />
+    <ClCompile Include="xr_name_gen.cxx" />
+    <ClCompile Include="xr_object.cxx" />
+    <ClCompile Include="xr_obj_motion.cxx" />
+    <ClCompile Include="xr_ogf.cxx" />
+    <ClCompile Include="xr_ogf_v3.cxx" />
+    <ClCompile Include="xr_ogf_v4.cxx" />
+    <ClCompile Include="xr_packet.cxx" />
+    <ClCompile Include="xr_quaternion.cxx" />
+    <ClCompile Include="xr_reader.cxx" />
+    <ClCompile Include="xr_reader_scrambler.cxx" />
+    <ClCompile Include="xr_scene.cxx" />
+    <ClCompile Include="xr_scene_ai_map.cxx" />
+    <ClCompile Include="xr_scene_details.cxx" />
+    <ClCompile Include="xr_scene_glows.cxx" />
+    <ClCompile Include="xr_scene_groups.cxx" />
+    <ClCompile Include="xr_scene_lights.cxx" />
+    <ClCompile Include="xr_scene_objects.cxx" />
+    <ClCompile Include="xr_scene_part.cxx" />
+    <ClCompile Include="xr_scene_particles.cxx" />
+    <ClCompile Include="xr_scene_portals.cxx" />
+    <ClCompile Include="xr_scene_revision.cxx" />
+    <ClCompile Include="xr_scene_sectors.cxx" />
+    <ClCompile Include="xr_scene_shapes.cxx" />
+    <ClCompile Include="xr_scene_sound_envs.cxx" />
+    <ClCompile Include="xr_scene_sound_srcs.cxx" />
+    <ClCompile Include="xr_scene_spawns.cxx" />
+    <ClCompile Include="xr_scene_visuals.cxx" />
+    <ClCompile Include="xr_scene_wallmarks.cxx" />
+    <ClCompile Include="xr_scene_ways.cxx" />
+    <ClCompile Include="xr_scrambler.cxx" />
+    <ClCompile Include="xr_shaders_lib.cxx" />
+    <ClCompile Include="xr_shaders_xrlc_lib.cxx" />
+    <ClCompile Include="xr_skeleton.cxx" />
+    <ClCompile Include="xr_skl_motion.cxx" />
+    <ClCompile Include="xr_sound_thumbnail.cxx" />
+    <ClCompile Include="xr_surface.cxx" />
+    <ClCompile Include="xr_texture_thumbnail.cxx" />
+    <ClCompile Include="xr_vector3.cxx" />
+    <ClCompile Include="xr_writer.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\3rd_party\libvorbis\bld-vs2008\libvorbisfile\libvorbisfile_static.vcxproj">
+      <Project>{cebde98b-a6aa-46e6-bc79-faaf823db9ec}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\xray_re\bld-vs2008\xray_re.vcxproj">
+      <Project>{7adf7f28-cc62-489d-81eb-b4922f0611cb}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

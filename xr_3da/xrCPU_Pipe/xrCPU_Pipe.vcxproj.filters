@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{4d2289e1-9436-4fdf-9192-5f8389f4a207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3DNow!">
+      <UniqueIdentifier>{7f7eef02-7d4e-4c88-af75-e8453263ac42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SSE">
+      <UniqueIdentifier>{49aeb34f-8117-415a-887f-b9484cfe9893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generic x86">
+      <UniqueIdentifier>{2235e77c-02c6-4066-a43f-47c44d990405}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="xrCPU_Pipe.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="3DNow!Lib.cpp">
+      <Filter>3DNow!</Filter>
+    </ClCompile>
+    <ClCompile Include="xrBoneLerp_3DNow!.cpp">
+      <Filter>3DNow!</Filter>
+    </ClCompile>
+    <ClCompile Include="xrM44mul_3DNow!.cpp">
+      <Filter>3DNow!</Filter>
+    </ClCompile>
+    <ClCompile Include="xrMemCopy8_3DNow!.cpp">
+      <Filter>3DNow!</Filter>
+    </ClCompile>
+    <ClCompile Include="xrMemFill32_3DNow!.cpp">
+      <Filter>3DNow!</Filter>
+    </ClCompile>
+    <ClCompile Include="xrSkin1W_3DNow!.cpp">
+      <Filter>3DNow!</Filter>
+    </ClCompile>
+    <ClCompile Include="xrSkin2W_3DNow!.cpp">
+      <Filter>3DNow!</Filter>
+    </ClCompile>
+    <ClCompile Include="xrSkin1W_SSE.cpp">
+      <Filter>SSE</Filter>
+    </ClCompile>
+    <ClCompile Include="xrSkin2W_SSE.cpp">
+      <Filter>SSE</Filter>
+    </ClCompile>
+    <ClCompile Include="xrBoneLerp.cpp">
+      <Filter>Generic x86</Filter>
+    </ClCompile>
+    <ClCompile Include="xrM44mul.cpp">
+      <Filter>Generic x86</Filter>
+    </ClCompile>
+    <ClCompile Include="xrQuatSlerp.cpp">
+      <Filter>Generic x86</Filter>
+    </ClCompile>
+    <ClCompile Include="xrSkin1W.cpp">
+      <Filter>Generic x86</Filter>
+    </ClCompile>
+    <ClCompile Include="xrSkin2W.cpp">
+      <Filter>Generic x86</Filter>
+    </ClCompile>
+    <ClCompile Include="xrTransfer.cpp">
+      <Filter>Generic x86</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="xrCPU_Pipe.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

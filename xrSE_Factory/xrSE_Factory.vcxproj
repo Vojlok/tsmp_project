@@ -1,0 +1,611 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|Win32">
+      <Configuration>Mixed</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|x64">
+      <Configuration>Mixed</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}</ProjectGuid>
+    <RootNamespace>xrSE_Factory</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>X:\output\binaries</OutDir>
+    <IntDir>X:\output\intermediate\$(ProjectName)\</IntDir>
+    <LibraryPath>X:\output\libraries;$(LibraryPath)</LibraryPath>
+    <IncludePath>X:\components\luabind;X:\xrLC\COMMON_COMPILERS;X:\xrSE_Factory;X:\components;X:\xrLua\src;X:\components\loki;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4457;4458;4595;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <PreprocessorDefinitions>_AMD64_;_WIN64;DEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4457;4458;4595;</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>x:\xrGame.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <PreprocessorDefinitions>DEBUG;MIXED;WIN32;DEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;dSINGLE;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4457;4458;4595;</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386  %(AdditionalOptions)</AdditionalOptions>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>$(OutDir)$(ProjectName).map</MapFileName>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TypeLibraryName>x:\xrGame.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <PreprocessorDefinitions>DEBUG;MIXED;WIN32;DEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;dSINGLE;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4457;4458;4595;</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386  %(AdditionalOptions)</AdditionalOptions>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>$(OutDir)$(ProjectName).map</MapFileName>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;LUABIND_NO_ERROR_CHECKING;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4457;4458;4595;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>XrLua.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>_AMD64_;_WIN64;NDEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;LUABIND_NO_ERROR_CHECKING;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4457;4458;4595;4457;4458;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\xr_3da\xrGame\alife_human_brain.h" />
+    <ClInclude Include="..\xr_3da\xrGame\alife_human_brain_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\alife_monster_brain.h" />
+    <ClInclude Include="..\xr_3da\xrGame\alife_monster_brain_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\alife_space.h" />
+    <ClInclude Include="..\xr_3da\xrGame\PHNetState.h" />
+    <ClInclude Include="..\xr_3da\xrGame\PHSynchronize.h" />
+    <ClInclude Include="..\xr_3da\xrGame\xrServer_Objects.h" />
+    <ClInclude Include="..\xr_3da\xrGame\xrServer_Objects_ALife.h" />
+    <ClInclude Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Items.h" />
+    <ClInclude Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Monsters.h" />
+    <ClInclude Include="..\xr_3da\xrGame\xrServer_Object_Base.h" />
+    <ClInclude Include="..\xr_3da\xrGame\DrawUtils.h" />
+    <ClInclude Include="pch_script.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="xr_LuaAllocator.h" />
+    <ClInclude Include="xrSE_Factory.h" />
+    <ClInclude Include="xrSE_Factory_import_export.h" />
+    <ClInclude Include="..\xr_3da\xrGame\ai_sounds.h" />
+    <ClInclude Include="..\xr_3da\xrGame\ai_space.h" />
+    <ClInclude Include="..\xr_3da\xrGame\ai_space_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_broker.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_cloner.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_comparer.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_destroyer.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_interfaces.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_loader.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_saver.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_type_traits.h" />
+    <ClInclude Include="..\xr_3da\xrGame\clsid_game.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_factory.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_factory_impl.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_factory_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_factory_space.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_item_abstract.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_item_abstract_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_item_client_server.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_item_client_server_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_item_script.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_item_single.h" />
+    <ClInclude Include="..\xr_3da\xrGame\object_item_single_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\smart_cast.h" />
+    <ClInclude Include="..\xr_3da\xrGame\smart_cast_impl0.h" />
+    <ClInclude Include="..\xr_3da\xrGame\smart_cast_impl1.h" />
+    <ClInclude Include="..\xr_3da\xrGame\smart_cast_impl2.h" />
+    <ClInclude Include="..\xr_3da\xrGame\associative_vector.h" />
+    <ClInclude Include="..\xr_3da\xrGame\associative_vector_compare_predicate.h" />
+    <ClInclude Include="..\xr_3da\xrGame\associative_vector_compare_predicate_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\associative_vector_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_fmatrix.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_fcolor.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_fvector.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_ini_file.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_ini_file_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_token_list.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_token_list_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_rtoken_list.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_rtoken_list_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_net_packet.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_sound_type.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_flags.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_reader.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_engine.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_engine_export.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_engine_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_engine_space.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_storage.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_storage_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_storage_space.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_process.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_process_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_thread.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_thread_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_stack_tracker.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_stack_tracker_inline.h" />
+    <ClInclude Include="..\xr_3da\xrGame\mslotutils.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_callStack.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_debugger.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_debugger_messages.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_debugger_threads.h" />
+    <ClInclude Include="script_debugger_utils.h" />
+    <ClInclude Include="script_file.h" />
+    <ClInclude Include="..\xr_3da\xrGame\script_lua_helper.h" />
+    <ClInclude Include="..\xr_3da\xrGame\doug_lea_memory_allocator.h" />
+    <ClInclude Include="..\xr_3da\xrGame\ChooseTypes.h" />
+    <ClInclude Include="script_value.h" />
+    <ClInclude Include="script_value_inline.h" />
+    <ClInclude Include="script_value_wrapper.h" />
+    <ClInclude Include="script_value_wrapper_inline.h" />
+    <ClInclude Include="script_properties_list_helper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\xr_3da\xrGame\alife_human_brain.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\alife_monster_brain.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\alife_space.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\character_info.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\PHNetState.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\PHSynchronize.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\specific_character.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\ui\xrUIXmlParser.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Factory.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_Abstract.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Items.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Items_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Items_script2.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Items_script3.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Monsters.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Monsters_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Monsters_script2.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrserver_objects_alife_monsters_script3.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Monsters_script4.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_script2.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_script3.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_script2.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\xrServer_Object_Base.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="X:\xrAI\script_additional_libs.cpp" />
+    <ClCompile Include="xr_LuaAllocator.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+      </PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="xrSE_Factory.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\ai_space.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\object_factory.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\object_factory_register.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\object_factory_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\object_item_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\smart_cast.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\smart_cast_stats.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_fmatrix_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_fcolor_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_fvector_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_ini_file.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_ini_file_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_token_list.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_token_list_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_rtoken_list_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_net_packet_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_sound_type_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_flags_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_reader_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_engine.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_engine_export.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_engine_script.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_storage.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_process.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_thread.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_stack_tracker.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\xr_3da\xrGame\script_callStack.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_debugger.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_debugger_threads.cpp" />
+    <ClCompile Include="script_debugger_utils.cpp" />
+    <ClCompile Include="script_file.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\script_lua_helper.cpp" />
+    <ClCompile Include="..\xr_3da\xrGame\doug_lea_memory_allocator.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level2</WarningLevel>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+      </PrecompiledHeader>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">Level2</WarningLevel>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="properties_list_helper_script.cpp" />
+    <ClCompile Include="script_properties_list_helper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\xrCore\xrCore.vcxproj">
+      <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <!--ProjectReference Include="..\xrNetServer\xrNetServer.vcxproj">
+      <Project>{435bac9a-b225-457d-ab40-c9bd0cc8838c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\xrXMLParser\xrXMLParser.vcxproj">
+      <Project>{94a1c366-3d19-48e6-8170-4adc2e70df98}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference-->
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

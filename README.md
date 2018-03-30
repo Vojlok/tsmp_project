@@ -1,1 +1,1 @@
-# tsmp_project
+для сборки движка необходима visual studio 2015 и диск X: .
