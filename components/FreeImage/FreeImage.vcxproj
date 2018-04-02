@@ -74,10 +74,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>X:\output\binaries\</OutDir>
-    <IntDir>X:\output\intermediate\$(ProjectName)\</IntDir>
-    <IncludePath>X:\output\libraries;$(IncludePath)</IncludePath>
-    <LibraryPath>X:\output\libraries;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\output\libraries_$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -131,8 +131,8 @@
       <TargetMachine>MachineX86</TargetMachine>
       <Profile>true</Profile>
       <AdditionalDependencies>openexr.lib;libraw.lib;libopenjpeg.lib;zlib.lib;libjpeg.lib;libtiff4.lib;libwebp.lib;libpng.lib;libjxr.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>X:\output\binaries\freeimage.dll</OutputFile>
-      <ImportLibrary>X:\output\libraries\freeimage.lib</ImportLibrary>
+      <OutputFile>$(SolutionDir)\output\binaries_$(Configuration)\$(ProjectName).dll</OutputFile>
+      <ImportLibrary>$(SolutionDir)\output\libraries_$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>

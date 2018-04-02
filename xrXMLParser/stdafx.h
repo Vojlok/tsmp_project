@@ -9,6 +9,8 @@
 
 #pragma once
 
+#pragma warning(disable:4577)
+
 #include "../xrCore/xrCore.h"
 
 #include "xrXMLParser.h"

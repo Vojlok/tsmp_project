@@ -113,8 +113,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>X:\xr_3da;X:\editors\LevelEditor\Edit;X:\components\MagicFm\Include;X:\editors\ECore\Engine;X:\components\FreeImage\Source;X:\ETools;X:\xrCDB;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
-    <OutDir>X:\output\binaries\</OutDir>
-    <IntDir>X:\output\intermediate\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>X:\components\dx9sdk\lib;X:\output\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -179,6 +179,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <TargetMachine>NotSet</TargetMachine>
       <AdditionalDependencies>FreeImage.lib;MagicFm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(SolutionDir)\output\libraries_$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

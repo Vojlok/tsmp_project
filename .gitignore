@@ -27,3 +27,4 @@ output/
 *.VC.db
 *.suo
 *.user
+*.opendb

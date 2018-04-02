@@ -3,7 +3,7 @@
 //      are changed infrequently
 //
 // Third generation by Oles.
-
+#pragma warning(disable:4577)
 
 #ifndef stdafxH
 #define stdafxH
@@ -11,7 +11,7 @@
 
 #pragma once
 
-#pragma warning(disable:4577)
+
 #include "../xrCore/xrCore.h"
 
 //#include <errno.h>
