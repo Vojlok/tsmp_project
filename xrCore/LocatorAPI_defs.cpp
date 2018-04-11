@@ -19,7 +19,7 @@ FS_File::FS_File(xr_string nm, const _FINDDATA_T& f)				{set(nm,f.size,f.time_wr
 
 void FS_File::set(xr_string nm, long sz, time_t modif,unsigned attr)
 {
-	name		= nm;		xr_strlwr	(name);
+	name		= std::move(nm);		xr_strlwr	(name);
 	size		= sz;
 	time_write	= modif;
 	attrib		= attr;

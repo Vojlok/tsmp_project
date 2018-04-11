@@ -80,7 +80,7 @@ extern void * __cdecl _aligned_malloc(size_t size, int boundary);
 
 void  * __cdecl _gsi_memalign(size_t boundary, size_t size)
 {
-	return  _aligned_malloc(size, (int)boundary);
+	return  _aligned_malloc(size, boundary);
 }
 
 #elif (!defined (_PS2) && !defined (_PSP)&& !defined (_PS3))

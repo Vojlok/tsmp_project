@@ -164,7 +164,7 @@ public      :
                                            dwVerSize        ,
                                            lpData            ) )
         {
-            delete [] lpData ;
+            delete [] (TCHAR*) lpData ;
             return ( FALSE ) ;
         }
 
@@ -180,7 +180,7 @@ public      :
             dwLS = lpVerInfo->dwFileVersionLS ;
         }
 
-        delete [] lpData ;
+        delete [] (TCHAR*)lpData ;
 
         return ( bRet ) ;
     }

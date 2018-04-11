@@ -211,25 +211,25 @@ float CPersonalIntelligenceFunction::ffGetValue()
 
 float CPersonalRelationFunction::ffGetValue()
 {
-#pragma todo("Dima to Dima : Implement relation function")
+//#pragma todo("Dima to Dima : Implement relation function")
 	return(0);
 }
 
 float CPersonalGreedFunction::ffGetValue()
 {
-#pragma todo("Dima to Dima : Implement greed function")
+//#pragma todo("Dima to Dima : Implement greed function")
 	return(0);
 }
 
 float CPersonalAggressivenessFunction::ffGetValue()
 {
-#pragma todo("Dima to Dima : Implement aggressiveness function")
+//#pragma todo("Dima to Dima : Implement aggressiveness function")
 	return(0);
 }
 
 float CEnemyEquipmentCostFunction::ffGetValue()
 {
-#pragma todo("Dima to Dima : Implement enemy equipment cost function")
+//#pragma todo("Dima to Dima : Implement enemy equipment cost function")
 	return					(0);
 }
 
@@ -255,7 +255,7 @@ float CEnemyRukzakWeightFunction::ffGetValue()
 
 float CEnemyAnomalityFunction::ffGetValue()
 {
-#pragma todo("Dima to Dima : Implement enemy anomality function")
+//#pragma todo("Dima to Dima : Implement enemy anomality function")
 	return(0);
 }
 
@@ -331,7 +331,7 @@ float CItemDeterioration::ffGetValue()
 		if (weapon)
 			return				(1.f - weapon->GetCondition());
 
-#pragma todo("Dima to Dima : Append ItemDeterioration with non-ALife non-weapon branch")
+//#pragma todo("Dima to Dima : Append ItemDeterioration with non-ALife non-weapon branch")
 		return					(0.f);
 	}
 	else {
@@ -345,7 +345,7 @@ float CItemDeterioration::ffGetValue()
 float CEquipmentPreference::ffGetValue()
 {
 	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append EquipmentPreference with non-ALife branch")
+//#pragma todo("Dima to Dima : Append EquipmentPreference with non-ALife branch")
 		return					(0);
 	}
 	else {
@@ -371,7 +371,7 @@ float CMainWeaponType::ffGetValue()
 float CMainWeaponPreference::ffGetValue()
 {
 	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append MainWeaponPreference with non-ALife branch")
+//#pragma todo("Dima to Dima : Append MainWeaponPreference with non-ALife branch")
 		return					(0);
 	}
 	else {
@@ -424,7 +424,7 @@ float CMainWeaponPreference::ffGetValue()
 float CItemValue::ffGetValue()
 {
 	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append ItemValue with non-ALife branch")
+//#pragma todo("Dima to Dima : Append ItemValue with non-ALife branch")
 		return					(0);
 	}
 	else {
@@ -438,7 +438,7 @@ float CItemValue::ffGetValue()
 float CWeaponAmmoCount::ffGetValue()
 {
 	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append WeaponAmmoCount with non-ALife branch")
+//#pragma todo("Dima to Dima : Append WeaponAmmoCount with non-ALife branch")
 		return					(0);
 	}
 	else {

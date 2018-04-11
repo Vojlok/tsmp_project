@@ -552,7 +552,7 @@ lzo1x_999_compress_internal ( const lzo_bytep in , lzo_uint  in_len,
 
     /* sanity check */
 #if defined(LZO1X)
-    LZO_COMPILE_TIME_ASSERT(LZO1X_999_MEM_COMPRESS >= SIZEOF_LZO_SWD_T)
+    LZO_COMPILE_TIME_ASSERT((14 * 16384L * sizeof(short)) >= SIZEOF_LZO_SWD_T)
 #elif defined(LZO1Y)
     LZO_COMPILE_TIME_ASSERT(LZO1Y_999_MEM_COMPRESS >= SIZEOF_LZO_SWD_T)
 #elif defined(LZO1Z)
@@ -812,11 +812,11 @@ lzo1x_999_compress_level    ( const lzo_bytep in , lzo_uint  in_len,
     static const struct
     {
         int try_lazy;
+		lzo_uint32 flags;
         lzo_uint good_length;
         lzo_uint max_lazy;
         lzo_uint nice_length;
-        lzo_uint max_chain;
-        lzo_uint32 flags;
+        lzo_uint max_chain;        
     } c[9] = {
         {   0,   0,   0,   8,    4,   0 },      /* faster compression */
         {   0,   0,   0,  16,    8,   0 },

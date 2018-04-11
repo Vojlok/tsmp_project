@@ -9,7 +9,7 @@
 #define HEAP_ALLOC(var,size) \
 	lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo_align_t) ]
 
-__declspec(thread) HEAP_ALLOC(rtc9_wrkmem,LZO1X_999_MEM_COMPRESS);
+__declspec(thread) HEAP_ALLOC(rtc9_wrkmem, ((14 * 16384L * sizeof(short))) );
 
 
 static u8*  _LZO_Dictionary     = NULL;

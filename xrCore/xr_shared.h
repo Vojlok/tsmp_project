@@ -38,7 +38,7 @@ public:
 		SharedMapIt it			= container.begin();
 		SharedMapIt _E			= container.end();
 		if (force_destroy){
-			for (; it!=_E; it++){
+			for (; it!=_E; ++it){
 				T*	sv			= it->second;
 				xr_delete		(sv);
 			}
@@ -53,7 +53,7 @@ public:
 					container.erase		(i_current);
 					it					= i_next;
 				}else{
-					it++;
+					++it;
 				}
 			}
 		}

@@ -203,10 +203,12 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 	//u32		p_new				= get_pool	(size+(debug_mode?4:0));
 	u32		p_mode				;
 
-	if (mem_generic==p_current)	{
+	if (mem_generic==p_current)	
+	{
 		if (p_new<p_current)		p_mode	= 2	;
 		else						p_mode	= 0	;
-	} else 							p_mode	= 1	;
+	}
+	else 							p_mode	= 1	;
 
 	void*	_real				= (void*)(((u8*)P)-1);
 	void*	_ptr				= NULL;
@@ -250,7 +252,10 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 		//mem_copy				(p_new,p_old,_min(s_current,s_dest));
 		mem_free				(p_old);
 		_ptr					= p_new;
-	} else if (2==p_mode)		{
+	} 
+	else 
+		if (2==p_mode)		
+		{
 		// relocate into another mmgr(pooled) from real
 		void*	p_old			= P;
 		void*	p_new			= mem_alloc(size
@@ -261,7 +266,7 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 		mem_copy				(p_new,p_old,(u32)size);
 		mem_free				(p_old);
 		_ptr					= p_new;
-	}
+		}
 
 #ifdef DEBUG_MEMORY_MANAGER
 	if (mem_initialized)		debug_cs.Leave	();

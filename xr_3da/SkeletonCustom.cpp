@@ -238,7 +238,7 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 	bone_instances	= NULL;
 
 	// Load bones
-#pragma todo("container is created in stack!")
+//#pragma todo("container is created in stack!")
 	xr_vector<shared_str>	L_parents;
 
 	R_ASSERT		(data->find_chunk(OGF_S_BONE_NAMES));
@@ -367,11 +367,11 @@ void CKinematics::LL_Validate()
     if (bCheckBreakable){
         BOOL bValidBreakable		= TRUE;
 
-#pragma todo("container is created in stack!")
+//#pragma todo("container is created in stack!")
         xr_vector<xr_vector<u16> > 	groups;
         LL_GetBoneGroups			(groups);
 
-#pragma todo("container is created in stack!")
+//#pragma todo("container is created in stack!")
         xr_vector<u16>   			b_parts(LL_BoneCount(),BI_NONE);
         CBoneData* root 			= &LL_GetData(LL_GetBoneRoot());
         u16 last_id					= 0;

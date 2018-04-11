@@ -449,13 +449,14 @@ void qr2_check_queries(qr2_t qrec)
 
 			qr2_parse_queryA(qrec, indata, error, (struct sockaddr *)&saddr);
 		}
-		else if (error == 0)
+		else 
+			if (error == 0)
 		{
 			// socket closed?
 			gsDebugFormat(GSIDebugCat_QR2, GSIDebugType_Network, GSIDebugLevel_Comment,
 				"CanReceiveOnSocket() returned true, but recvfrom return 0!\r\n", error);
 		}
-		else
+			else
 		{
 			gsDebugFormat(GSIDebugCat_QR2, GSIDebugType_Network, GSIDebugLevel_Comment,
 				"CanReceiveOnSocket() returned true, but recvfrom failed!\r\n", error);

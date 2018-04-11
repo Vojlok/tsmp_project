@@ -305,8 +305,13 @@ LONG __stdcall CrashHandlerExceptionFilter (EXCEPTION_POINTERS* pExPtrs)
             else
             {
                 HINSTANCE hBaseAddr = (HINSTANCE)
-                      SymGetModuleBase((HANDLE)GetCurrentProcessId ( ) ,
-                                       (DWORD)pExPtrs->
+                      SymGetModuleBase((HANDLE)(size_t)GetCurrentProcessId () ,
+						  
+#ifdef _WIN64
+					  (DWORD64)pExPtrs->
+#else
+						  (DWORD)pExPtrs->
+#endif
                                             ExceptionRecord->
                                                       ExceptionAddress);
                 if ( NULL != hBaseAddr )
@@ -392,7 +397,12 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
 
         iCurr += wsprintf ( g_szBuff + iCurr , _T ( " caused an " ) ) ;
 
-        dwTemp = (DWORD)
+#ifdef _WIN64
+		dwTemp = (DWORD64)
+#else
+		dwTemp = (DWORD)
+#endif
+       
             ConvertSimpleException(pExPtrs->ExceptionRecord->
                                                          ExceptionCode);
 
@@ -421,8 +431,14 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
         iCurr += wsprintf ( g_szBuff + iCurr , _T ( " in module " ) ) ;
 
         dwTemp =
-            SymGetModuleBase ( (HANDLE)GetCurrentProcessId ( ) ,
-                               (DWORD)pExPtrs->ExceptionRecord->
+            SymGetModuleBase ( (HANDLE)(size_t)GetCurrentProcessId ( ) ,
+
+#ifdef _WIN64
+			(DWORD64)pExPtrs->ExceptionRecord->
+#else
+				(DWORD)pExPtrs->ExceptionRecord->
+#endif
+                               
                                                     ExceptionAddress ) ;
         ASSERT ( NULL != dwTemp ) ;
 
@@ -433,7 +449,7 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
         else
         {
             iCurr += BSUGetModuleBaseName ( GetCurrentProcess ( ) ,
-                                            (HINSTANCE)dwTemp     ,
+                                            (HINSTANCE)(size_t)dwTemp     ,
                                             g_szBuff + iCurr      ,
                                             BUFF_SIZE - iCurr      ) ;
         }
@@ -459,8 +475,12 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
 
         DWORD dwDisp ;
         if ( TRUE ==
-              SymGetSymFromAddr ( (HANDLE)GetCurrentProcessId ( )     ,
-                                  (DWORD)pExPtrs->ExceptionRecord->
+              SymGetSymFromAddr ( (HANDLE)(size_t)GetCurrentProcessId ( )     ,
+#ifdef _WIN64
+                                  (DWORD64)pExPtrs->ExceptionRecord->
+#else
+				  (DWORD)pExPtrs->ExceptionRecord->
+#endif
                                                      ExceptionAddress ,
 #ifdef _WIN64
 								  (PDWORD64)&dwDisp,
@@ -518,9 +538,13 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
         g_stLine.SizeOfStruct = sizeof ( IMAGEHLP_LINE ) ;
 
         if ( TRUE ==
-              InternalSymGetLineFromAddr ((HANDLE)
+              InternalSymGetLineFromAddr ((HANDLE)(size_t)
                                             GetCurrentProcessId ( )    ,
-                                          (DWORD)pExPtrs->
+#ifdef _WIN64
+											(DWORD64)pExPtrs->
+#else
+				  (DWORD)pExPtrs->
+#endif                                         
                                                     ExceptionRecord->
                                                       ExceptionAddress ,
                                           &dwDisp                      ,
@@ -670,7 +694,7 @@ BOOL __stdcall CH_ReadProcessMemory ( HANDLE                      ,
                                  lpBuffer              ,
                                  nSize                 ,
 #ifdef _WIN64
-								 (SIZE_T *)lpNumberOfBytesRead 
+								 (SIZE_T *)(size_t)lpNumberOfBytesRead 
 #else
                                  lpNumberOfBytesRead   
 #endif
@@ -714,7 +738,7 @@ LPCTSTR __stdcall
         // Note:  If the source file and line number functions are used,
         //        StackWalk can cause an access violation.
         BOOL bSWRet = StackWalk ( CH_MACHINE                        ,
-                                  (HANDLE)GetCurrentProcessId ( )   ,
+                                  (HANDLE)(size_t)GetCurrentProcessId ( )   ,
                                   GetCurrentThread ( )              ,
                                   &g_stFrame                        ,
                                   pExPtrs->ContextRecord            ,
@@ -734,7 +758,7 @@ LPCTSTR __stdcall
         // by StackWalk really exists. I've seen cases in which
         // StackWalk returns TRUE but the address doesn't belong to
         // a module in the process.
-        dwModBase = SymGetModuleBase ( (HANDLE)GetCurrentProcessId ( ),
+        dwModBase = SymGetModuleBase ( (HANDLE)(size_t)GetCurrentProcessId ( ),
                                         g_stFrame.AddrPC.Offset       );
         if ( 0 == dwModBase )
         {
@@ -774,7 +798,7 @@ LPCTSTR __stdcall
 
             ASSERT ( iCurr < ( BUFF_SIZE - MAX_PATH ) ) ;
             iCurr += BSUGetModuleBaseName ( GetCurrentProcess ( ) ,
-                                            (HINSTANCE)dwModBase  ,
+                                            (HINSTANCE)(size_t)dwModBase  ,
                                             g_szBuff + iCurr      ,
                                             BUFF_SIZE - iCurr      ) ;
         }
@@ -794,7 +818,7 @@ LPCTSTR __stdcall
                                   sizeof ( IMAGEHLP_SYMBOL ) ;
 
             if ( TRUE ==
-                  SymGetSymFromAddr ( (HANDLE)GetCurrentProcessId ( ) ,
+                  SymGetSymFromAddr ( (HANDLE)(size_t)GetCurrentProcessId ( ) ,
                                       g_stFrame.AddrPC.Offset         ,
 #ifdef _WIN64
                                       (PDWORD64)&dwDisp               ,
@@ -853,7 +877,7 @@ LPCTSTR __stdcall
             g_stLine.SizeOfStruct = sizeof ( IMAGEHLP_LINE ) ;
 
             if ( TRUE ==
-                   InternalSymGetLineFromAddr ( (HANDLE)
+                   InternalSymGetLineFromAddr ( (HANDLE)(size_t)
                                                   GetCurrentProcessId(),
                                                 g_stFrame.AddrPC.Offset,
                                                 &dwDisp                ,
@@ -1202,7 +1226,7 @@ void InitSymEng ( void )
 
         // Force the invade process flag no matter what operating system
         // I'm on.
-        HANDLE hPID = (HANDLE)GetCurrentProcessId ( ) ;
+        HANDLE hPID = (HANDLE)(size_t)GetCurrentProcessId ( ) ;
         VERIFY ( BSUSymInitialize ( (DWORD)hPID ,
                                     hPID        ,
                                     g_application_path,
@@ -1216,7 +1240,7 @@ void CleanupSymEng ( void )
 {
     if ( TRUE == g_bSymEngInit )
     {
-        VERIFY ( SymCleanup ( (HANDLE)GetCurrentProcessId ( ) ) ) ;
+        VERIFY ( SymCleanup ( (HANDLE)(size_t)GetCurrentProcessId ( ) ) ) ;
         g_bSymEngInit = FALSE ;
     }
 }

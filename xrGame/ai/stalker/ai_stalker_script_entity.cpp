@@ -39,13 +39,13 @@ u32 CAI_Stalker::GetWeaponAmmo() const
 
 CInventoryItem *CAI_Stalker::GetMedikit() const
 {
-#pragma todo("Dima to Dima : Return correct medikit")
+//#pragma todo("Dima to Dima : Return correct medikit")
 	return			(0);
 }
 
 CInventoryItem *CAI_Stalker::GetFood() const
 {
-#pragma todo("Dima to Dima : Return correct food")
+//#pragma todo("Dima to Dima : Return correct food")
 	return			(0);
 }
 

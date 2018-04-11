@@ -300,7 +300,7 @@ void	thread_name	(const char* name)
 	__try
 	{
 #ifdef _WIN64
-		RaiseException(0x406D1388,0,sizeof(tn)/sizeof(DWORD),(const ULONG_PTR *)(DWORD*)&tn);
+		RaiseException(0x406D1388,0,sizeof(tn)/sizeof(DWORD),(ULONG_PTR*)&tn);
 #else
 		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(DWORD), (DWORD*)&tn);
 #endif

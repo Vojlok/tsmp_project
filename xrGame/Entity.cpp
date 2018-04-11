@@ -145,7 +145,7 @@ void CEntity::Load		(LPCSTR section)
 	id_Squad			= READ_IF_EXISTS(pSettings,r_s32,section,"squad",-1);
 	id_Group			= READ_IF_EXISTS(pSettings,r_s32,section,"group",-1);
 	
-#pragma todo("Jim to Dima: no specific figures or comments needed")	
+//#pragma todo("Jim to Dima: no specific figures or comments needed")	
 	m_fMorale			= 66.f;
 
 	//время убирания тела с уровня

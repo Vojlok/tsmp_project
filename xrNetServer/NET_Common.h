@@ -15,7 +15,7 @@
 #define NET_USE_LZO_COMPRESSION         1
 #define NET_USE_COMPRESSION_CRC         1
 
-#define NET_LOG_PACKETS                 0
+//#define NET_LOG_PACKETS                 1
 #define NET_LOG_COMPRESSION             0
 #define NET_DUMP_COMPRESSION            0
 

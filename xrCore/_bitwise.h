@@ -74,7 +74,11 @@ IC	u32	btwCount1(u32 v)
 
 IC	u64	btwCount1(u64 v)
 {
+#ifdef _WIN64
 	return btwCount1(u32(v&u32(-1)))+btwCount1(u32(v>>u64(32)));
+#else
+	return btwCount1(u32(v&u32(-1))) + btwCount1(u32(v >> u64(32)));
+#endif
 }
 
 

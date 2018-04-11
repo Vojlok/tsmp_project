@@ -463,13 +463,13 @@ LOOP_ENTRY:
     } while ( pc->Suffix );
 NO_LOOP:
     if (pps == ps)                          return pc;
-    ct.NumStats=0;                          ct.Flags=0x10*(sym >= 0x40);
+	ct.NumStats = 0;                          ct.Flags = 0x10 * (sym >= 0x40);
     ct.oneState().Symbol=sym=*(BYTE*) UpBranch;
     ct.oneState().Successor=(PPM_CONTEXT*) (((BYTE*) UpBranch)+1);
     ct.Flags |= 0x08*(sym >= 0x40);
     if ( pc->NumStats ) {
         if ((p=pc->Stats)->Symbol != sym)
-                do { tmp=p[1].Symbol;       p++; } while (tmp != sym);
+                do { tmp=p[1].Symbol;       ++p; } while (tmp != sym);
         s0=pc->SummFreq-pc->NumStats-(cf=p->Freq-1);
         ct.oneState().Freq=1+((2*cf <= s0)?(5*cf > s0):((cf+2*s0-3)/s0));
     } else

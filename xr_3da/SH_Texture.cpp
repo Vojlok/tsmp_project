@@ -134,21 +134,6 @@ void CTexture::apply_normal	(u32 dwStage)	{
 
 void CTexture::Preload	()
 {
-	// Material
-/*
-	if (Device.Resources->m_description->line_exist("specification",*cName))	{
-//		if (strstr(*cName,"ston_stena"))	__asm int 3;
-		LPCSTR		descr			=	Device.Resources->m_description->r_string("specification",*cName);
-		string256	bmode;
-		sscanf		(descr,"bump_mode[%[^]]], material[%f]",bmode,&m_material);
-		if ((bmode[0]=='u')&&(bmode[1]=='s')&&(bmode[2]=='e')&&(bmode[3]==':'))
-		{
-			// bump-map specified
-			m_bumpmap		=	bmode+4;
-		}
-//		Msg	("mid[%f] : %s",m_material,*cName);
-	}
-*/
 	m_bumpmap = Device.Resources->m_textures_description.GetBumpName(cName);
 	m_material = Device.Resources->m_textures_description.GetMaterial(cName);
 }

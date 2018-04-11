@@ -611,9 +611,9 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 
 void	IPureServer::Flush_Clients_Buffers	()
 {
-    #if NET_LOG_PACKETS
-    Msg( "#flush server send-buf" );
-    #endif
+  //  #if NET_LOG_PACKETS
+	if (0 != strstr(Core.Params, "-packets"))  Msg( "#flush server send-buf" );
+ //   #endif
 
 	csPlayers.Enter();	
 

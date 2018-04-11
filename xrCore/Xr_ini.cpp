@@ -188,7 +188,7 @@ void	CInifile::Load(IReader* F, LPCSTR path)
 					xr_string	tmp;
 					_GetItem	(inherited_names,k,tmp);
 					Sect& inherited_section = r_section(tmp.c_str());
-					for (SectIt_ it =inherited_section.Data.begin(); it!=inherited_section.Data.end(); it++)
+					for (SectIt_ it =inherited_section.Data.begin(); it!=inherited_section.Data.end(); ++it)
 						insert_item	(Current,*it);
 				}
 			}
@@ -320,7 +320,7 @@ u32		CInifile::line_count(LPCSTR Sname)
 	Sect&	S = r_section(Sname);
 	SectCIt	I = S.Data.begin();
 	u32	C = 0;
-	for (; I!=S.Data.end(); I++)	if (*I->first) C++;
+	for (; I!=S.Data.end(); ++I)	if (*I->first) ++C;
 	return  C;
 }
 
@@ -484,7 +484,7 @@ BOOL	CInifile::r_line( LPCSTR S, int L, const char** N, const char** V )
 {
 	Sect&	SS = r_section(S);
 	if (L>=(int)SS.Data.size() || L<0 ) return FALSE;
-	for (SectCIt I=SS.Data.begin(); I!=SS.Data.end(); I++)
+	for (SectCIt I=SS.Data.begin(); I!=SS.Data.end(); ++I)
 		if (!(L--)){
 			*N = *I->first;
 			*V = *I->second;

@@ -22,7 +22,7 @@ smem_value*			smem_container::dock			(u32 dwCRC, u32 dwLength, void* ptr)
 	cdb::iterator	saved_place	= it;
 	if (container.end() != it)	{
 		// supposedly found
-		for (;;	it++)	{
+		for (;;	++it)	{
 			if (it==container.end())			break;
 			if ((*it)->dwCRC	!= dwCRC)		break;
 			if ((*it)->dwLength != dwLength)	break;
@@ -60,7 +60,7 @@ void				smem_container::clean			()
 	cs.Enter		();
 	cdb::iterator	it	= container.begin	();
 	cdb::iterator	end	= container.end		();
-	for (; it!=end; it++)	if (0==(*it)->dwReference)	xr_free	(*it);
+	for (; it!=end; ++it)	if (0==(*it)->dwReference)	xr_free	(*it);
 	container.erase	(remove(container.begin(),container.end(),(smem_value*)0),container.end());
 	if (container.empty())	container.clear	();
 	cs.Leave		();
@@ -72,7 +72,7 @@ void				smem_container::dump			()
 	cdb::iterator	it	= container.begin	();
 	cdb::iterator	end	= container.end		();
 	FILE* F			= fopen("x:\\$smem_dump$.txt","w");
-	for (; it!=end; it++)
+	for (; it!=end; ++it)
 		fprintf		(F,"%4d : crc[%6x], %d bytes\n",(*it)->dwReference,(*it)->dwCRC,(*it)->dwLength);
 	fclose			(F);
 	cs.Leave		();
@@ -87,7 +87,7 @@ u32					smem_container::stat_economy	()
 	counter			-= sizeof(*this);
 	counter			-= sizeof(cdb::allocator_type);
 	const int		node_size = 20;
-	for (; it!=end; it++)	{
+	for (; it!=end; ++it)	{
 		counter		-= 16;
 		counter		-= node_size;
 		counter		+= s64((s64((*it)->dwReference) - 1)*s64((*it)->dwLength));

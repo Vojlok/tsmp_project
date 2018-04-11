@@ -310,7 +310,7 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">X:\components\libvorbis\include;X:\components\loki;X:\xrLua\src;X:\components\luabind;X:\xrOpenAL\include\AL;X:\components\eax\Include;X:\components;X:\components\dx9sdk\include;X:\xrCore;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='WIN64|x64'">X:\components\libvorbis\include;X:\components\loki;X:\xrLua\src;X:\components\luabind;X:\xrOpenAL\include\AL;X:\components\eax\Include;X:\components;X:\components\dx9sdk\include;X:\xrCore;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='64bit|x64'">X:\components\libvorbis\include;X:\components\loki;X:\xrLua\src;X:\components\luabind;X:\xrOpenAL\include\AL;X:\components\eax\Include;X:\components;X:\components\dx9sdk\include;X:\xrCore;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\components\libs;$(SolutionDir)\components\dx9sdk\lib;$(SolutionDir)\output\libraries\;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\components\libs;$(SolutionDir)\components\dx9sdk\lib;$(SolutionDir)\output\libraries_release\;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='WIN64|Win32'">X:\components\libs;X:\components\dx9sdk\lib;X:\output\libraries\;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='64bit|Win32'">X:\components\libs;X:\components\dx9sdk\lib;X:\output\libraries\;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">X:\components\dx9sdk\lib64;X:\output\libraries_x64;$(LibraryPath)</LibraryPath>
@@ -624,6 +624,9 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)\output\libraries_$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>@start X:\copy.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='WIN64|Win32'">
     <Midl>

@@ -83,7 +83,7 @@ void		str_container::clean	()
 			container.erase	(i_current);
 			it							= i_next;
 		} else {
-			it++;
+			++it;
 		}
 	}
 	if (container.empty())	container.clear	();
@@ -111,7 +111,7 @@ void		str_container::dump	()
 	cdb::iterator	it	= container.begin	();
 	cdb::iterator	end	= container.end		();
 	FILE* F		= fopen("x:\\$str_dump$.txt","w");
-	for (; it!=end; it++)
+	for (; it!=end; ++it)
 		fprintf		(F,"ref[%4d]-len[%3d]-crc[%8X] : %s\n",(*it)->dwReference,(*it)->dwLength,(*it)->dwCRC,(*it)->value);
 	fclose		(F);
 	cs.Leave	();
@@ -126,7 +126,7 @@ u32			str_container::stat_economy		()
 	counter			-= sizeof(*this);
 	counter			-= sizeof(cdb::allocator_type);
 	const int		node_size = 20;
-	for (; it!=end; it++)	{
+	for (; it!=end; ++it)	{
 		counter		-= HEADER;
 		counter		-= node_size;
 		counter		+= int((int((*it)->dwReference) - 1)*int((*it)->dwLength + 1));

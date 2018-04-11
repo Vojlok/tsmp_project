@@ -183,7 +183,7 @@ void	CSoundRender_TargetD::fill_parameters()
 
 void	CSoundRender_TargetD::fill_block		()
 {
-#pragma todo("check why pEmitter is NULL")
+//#pragma todo("check why pEmitter is NULL")
 	if (0==pEmitter)					return;
 
 	// Obtain memory address of write block. This will be in two parts if the block wraps around.

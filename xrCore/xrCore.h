@@ -206,7 +206,7 @@
 struct XRCORE_API xr_rtoken{
     shared_str	name;
     int	   	id;
-           	xr_rtoken	(LPCSTR _nm, int _id){name=_nm;id=_id;}
+	xr_rtoken(LPCSTR _nm, int _id) :name(_nm), id(_id) {};
 public:
     void	rename		(LPCSTR _nm)		{name=_nm;}
     bool	equal		(LPCSTR _nm)		{return (0==xr_strcmp(*name,_nm));}
