@@ -174,7 +174,7 @@ find_match ( LZO_COMPRESS_T *c, lzo_swd_p s,
         c->textsize += this_len - skip;
     }
 
-    s->m_len = 1;
+ //   s->m_len = 1;
     s->m_len = THRESHOLD;
 #ifdef SWD_BEST_OFF
     if (s->use_best_off)

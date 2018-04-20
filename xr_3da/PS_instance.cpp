@@ -31,7 +31,7 @@ CPS_Instance::~CPS_Instance					()
 	xr_vector<CPS_Instance*>::iterator it2	= std::find( g_pGamePersistent->ps_destroy.begin(),
 													g_pGamePersistent->ps_destroy.end(), this);
 
-	VERIFY									(it2==g_pGamePersistent->ps_destroy.end());
+	VERIFY									(it2==g_pGamePersistent->ps_destroy.end());	
 
 	spatial_unregister						();
 	shedule_unregister						();

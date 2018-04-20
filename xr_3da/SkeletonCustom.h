@@ -101,7 +101,7 @@ public:
 	virtual u32			mem_usage		()
 	{
 		u32 sz			= sizeof(*this)+sizeof(vecBones::value_type)*children.size();
-		for (ChildFacesVecIt c_it=child_faces.begin(); c_it!=child_faces.end(); c_it++)
+		for (ChildFacesVecIt c_it=child_faces.begin(); c_it!=child_faces.end(); ++c_it)
 			sz			+= c_it->size()*sizeof(FacesVec::value_type)+sizeof(*c_it);
 		return			sz;
 	}
@@ -284,7 +284,7 @@ public:
 		sz						+= bone_instances?bone_instances->mem_usage():0;
 		if (!bInstance){
 //			sz					+= pUserData?pUserData->mem_usage():0;
-			for (vecBonesIt b_it=bones->begin(); b_it!=bones->end(); b_it++)
+			for (vecBonesIt b_it=bones->begin(); b_it!=bones->end(); ++b_it)
 				sz				+= sizeof(vecBones::value_type)+(*b_it)->mem_usage();
 		}
 		return sz;

@@ -28,3 +28,4 @@ output/
 *.suo
 *.user
 *.opendb
+*.pvs-studio.i

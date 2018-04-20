@@ -51,7 +51,7 @@ namespace Feel {
 	void	Vision::o_delete	(CObject* O)
 	{
 		xr_vector<feel_visible_Item>::iterator I=feel_visible.begin(),TE=feel_visible.end();
-		for (; I!=TE; I++)
+		for (; I!=TE; ++I)
 			if (I->O==O) {
 				feel_visible.erase(I);
 				return;
@@ -150,7 +150,7 @@ namespace Feel {
 	void Vision::o_trace	(Fvector& P, float dt, float vis_threshold)	{
 		RQR.r_clear			();
 		xr_vector<feel_visible_Item>::iterator I=feel_visible.begin(),E=feel_visible.end();
-		for (; I!=E; I++){
+		for (; I!=E; ++I){
 			if (0==I->O->CFORM())	{ I->fuzzy = -1; continue; }
 
 			// verify relation

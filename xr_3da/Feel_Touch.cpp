@@ -45,7 +45,7 @@ void Touch::feel_touch_update	(Fvector& C, float R)
 	xr_vector<CObject*>::iterator	n_end	= q_nearest.end		();
 	if (n_end!=n_begin)						{
 		// Process results (NEW)
-		for (xr_vector<CObject*>::iterator it = n_begin; it!=n_end; it++){
+		for (xr_vector<CObject*>::iterator it = n_begin; it!=n_end; ++it){
 			CObject* O = *it;
 			if (O->getDestroy())		continue;							// Don't touch candidates for destroy
 			if (!feel_touch_contact(O))	continue;							// Actual contact

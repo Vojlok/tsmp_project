@@ -192,6 +192,8 @@ CLocatorAPI::CLocatorAPI()
 	dwAllocGranularity	= sys_inf.dwAllocationGranularity;
     m_iLockRescan		= 0; 
 	dwOpenCounter		= 0;
+	bNoRecurse = true;
+	m_auth_code = 0;
 }
 
 CLocatorAPI::~CLocatorAPI()
@@ -906,8 +908,8 @@ void CLocatorAPI::check_cached_files	(LPSTR fname, const file &desc, LPCSTR &sou
 	// Use
 	source_name		= &fname_copy[0];
 	strcpy_s		(fname_copy,sizeof(fname_copy),fname);
-	strcpy_s		(fname,sizeof(fname),fname_in_cache);
-}
+	strcpy_s		(fname,sizeof(fname),fname_in_cache); //-V579
+}														  
 
 void CLocatorAPI::file_from_cache_impl	(IReader *&R, LPSTR fname, const file &desc)
 {

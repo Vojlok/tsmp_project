@@ -76,6 +76,7 @@ public      :
     // functions in place of their corresponding DBGHELP.DLL functions.
     CSymbolEngine ( void )
     {
+		m_hProcess = 0;
     }
 
     virtual ~CSymbolEngine ( void )

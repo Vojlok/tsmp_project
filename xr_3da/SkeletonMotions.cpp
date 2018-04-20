@@ -45,7 +45,7 @@ BOOL motions_value::load		(LPCSTR N, IReader *data, vecBones* bones)
 			PART.Name			= _strlwr(buf);
 			PART.bones.resize	(MP->r_u16());
 
-			for (xr_vector<u32>::iterator b_it=PART.bones.begin(); b_it<PART.bones.end(); b_it++)
+			for (xr_vector<u32>::iterator b_it=PART.bones.begin(); b_it<PART.bones.end(); ++b_it)
 			{
 				MP->r_stringZ	(buf,sizeof(buf));
 				u16 m_idx 		= u16			(MP->r_u32());
@@ -221,7 +221,7 @@ void motions_container::clean(bool force_destroy)
 				container.erase		(i_current);
 				it					= i_next;
 			} else {
-				it++;
+				++it;
 			}
 		}
 	}
@@ -232,7 +232,7 @@ void motions_container::dump()
 	SharedMotionsMapIt _E	= container.end();
 	Log	("--- motion container --- begin:");
 	u32 sz					= sizeof(*this);
-	for (u32 k=0; it!=_E; k++,it++){
+	for (u32 k=0; it!=_E; k++,++it){
 		sz					+= it->second->mem_usage();
 		Msg("#%3d: [%3d/%5d Kb] - %s",k,it->second->m_dwReference,it->second->mem_usage()/1024,it->first.c_str());
 	}

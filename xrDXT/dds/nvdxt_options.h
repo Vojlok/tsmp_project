@@ -55,11 +55,11 @@ public:
 
 
     }
-    nvBoolean bEnableNormalMapConversion; // do not convert to a normal map
+ 
+	float scale;    // height multiplier
     int minz;       // minimum value the z value can attain in the x y z  normal
-                    // keeps normal point "upwards"
-    float scale;    // height multiplier
-
+                    // keeps normal point "upwards"   
+	nvBoolean bEnableNormalMapConversion; // do not convert to a normal map
 
 
     nvNormalMapFilters filterKernel;  // kernel used to create normal maps.  Done this way to be compatible with plugins

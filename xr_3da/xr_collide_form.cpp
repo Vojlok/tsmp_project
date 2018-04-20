@@ -120,7 +120,7 @@ void CCF_Skeleton::BuildState()
 		}
 	}
 
-	for (ElementVecIt I=elements.begin(); I!=elements.end(); I++){
+	for (ElementVecIt I=elements.begin(); I!=elements.end(); ++I){
 		if (!I->valid())		continue;
 		SBoneShape&	shape		= K->LL_GetData(I->elem_id).shape;
 		Fmatrix					ME,T,TW;
@@ -203,7 +203,7 @@ BOOL CCF_Skeleton::_RayQuery( const collide::ray_defs& Q, collide::rq_results& R
 	}
 
 	BOOL bHIT			= FALSE;
-	for (ElementVecIt I=elements.begin(); I!=elements.end(); I++){
+	for (ElementVecIt I=elements.begin(); I!=elements.end(); ++I){
 		if (!I->valid())continue;
 		bool res		= false;
 		float range		= Q.range;

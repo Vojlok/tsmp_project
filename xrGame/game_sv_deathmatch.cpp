@@ -1669,6 +1669,12 @@ void game_sv_Deathmatch::OnPlayerConnect(ClientID id_who)
 {
 	xrClientData* xrCData			= m_server->ID_to_client(id_who);
 	SpawnPlayer						(id_who, "spectator");
+
+	xrCData->m_radio_usage.m_BanSince = 0;
+	xrCData->m_radio_usage.m_Counter = 0;
+	for (int iii = 0; iii < 60; ++iii) xrCData->m_radio_usage.m_UsageHistory[iii] = 0;
+	xrCData->m_radio_usage.m_HasBan=false;
+
 	// Send Message About Client Connected
 	if (xrCData)
 	{

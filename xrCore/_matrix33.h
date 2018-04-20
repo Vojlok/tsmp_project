@@ -225,10 +225,10 @@ public:
         return i;
     }
 #undef ROT
-
 //--------------------------------------------------------------------------------
 // other unused function
 //--------------------------------------------------------------------------------
+/*  // maks0: нигде не вызывается, нафига тогда нужны...
     IC SelfRef McolcMcol(int cr, SelfCRef M, int c)
     {
         m[0][cr] = M.m[0][c];
@@ -236,7 +236,7 @@ public:
         m[2][cr] = M.m[2][c];
 		return *this;
     }
-
+	
     IC SelfRef MxMpV(SelfCRef M1, SelfCRef M2, const Tvector& T)
     {
         m[0][0] = ( M1.m[0][0] * M2.m[0][0] +
@@ -268,7 +268,7 @@ public:
                     M1.m[2][2] * M2.m[2][2] + T.z);
 		return *this;
     }
-
+	
     IC SelfRef Mqinverse(SelfCRef M)
     {
         int i,j;
@@ -316,7 +316,7 @@ public:
 		return *this;
     }
 
-    IC SelfRef MskewV(const Tvector& v)
+    IC SelfRef MskewV(const Tvector& v) 
     {
         m[0][0] = m[1][1] = m[2][2] = 0.0;
         m[1][0] = v.z;
@@ -326,26 +326,26 @@ public:
         m[1][2] = -v.x;
         m[2][1] = v.x;
 		return *this;
-    }
+    } 
 	IC SelfRef sMxVpV(Tvector& R, float s1, const Tvector& V1, const Tvector& V2) const
 	{
 		R.x = s1 * (m[0][0] * V1.x + m[0][1] * V1.y + m[0][2] * V1.z) + V2.x;
 		R.y = s1 * (m[1][0] * V1.x + m[1][1] * V1.y + m[1][2] * V1.z) + V2.y;
 		R.z = s1 * (m[2][0] * V1.x + m[2][1] * V1.y + m[2][2] * V1.z) + V2.z;
 		return *this;
-	}
+	} 
 	IC void MTxV(Tvector& R, const Tvector& V1) const
 	{
 		R.x = (m[0][0] * V1.x + m[1][0] * V1.y + m[2][0] * V1.z);
 		R.y = (m[0][1] * V1.x + m[1][1] * V1.y + m[2][1] * V1.z);
 		R.z = (m[0][2] * V1.x + m[1][2] * V1.y + m[2][2] * V1.z);
-	}
+	} 
 	IC void MTxVpV(Tvector& R, const Tvector& V1, const Tvector& V2) const
 	{
 		R.x = (m[0][0] * V1.x + m[1][0] * V1.y + m[2][0] * V1.z + V2.x);
 		R.y = (m[0][1] * V1.x + m[1][1] * V1.y + m[2][1] * V1.z + V2.y);
 		R.z = (m[0][2] * V1.x + m[1][2] * V1.y + m[2][2] * V1.z + V2.z);
-	}
+	} 	
 	IC SelfRef MTxVmV(Tvector& R, const Tvector& V1, const Tvector& V2) const
 	{
 		R.x = (m[0][0] * V1.x + m[1][0] * V1.y + m[2][0] * V1.z - V2.x);
@@ -353,19 +353,20 @@ public:
 		R.z = (m[0][2] * V1.x + m[1][2] * V1.y + m[2][2] * V1.z - V2.z);
 		return *this;
 	}
-	IC SelfRef sMTxV(Tvector& R, float s1, const Tvector& V1) const
+	IC SelfRef sMTxV(Tvector& R, float s1, const Tvector& V1) const 
 	{
 		R.x = s1*(m[0][0] * V1.x + m[1][0] * V1.y + m[2][0] * V1.z);
 		R.y = s1*(m[0][1] * V1.x + m[1][1] * V1.y + m[2][1] * V1.z);
 		R.z = s1*(m[0][2] * V1.x + m[1][2] * V1.y + m[2][2] * V1.z);
+		return *this;
 	}
-	IC SelfRef MxV(Tvector& R, const Tvector& V1) const
+	IC SelfRef MxV(Tvector& R, const Tvector& V1) const 
 	{
 		R.x = (m[0][0] * V1.x + m[0][1] * V1.y + m[0][2] * V1.z);
 		R.y = (m[1][0] * V1.x + m[1][1] * V1.y + m[1][2] * V1.z);
 		R.z = (m[2][0] * V1.x + m[2][1] * V1.y + m[2][2] * V1.z);
 		return *this;
-	}
+	} */
 	IC	void transform_dir		(_vector2<T> &dest, const _vector2<T> &v)	const 	// preferred to use
 	{
 		dest.x = v.x*_11 + v.y*_21;
@@ -377,7 +378,7 @@ public:
 		_vector2<T>		res;
 		transform_dir	(res,v);
 		v.set			(res);
-	}
+	} /*  // maks0: нигде не вызывается, нафига тогда нужны...
 	IC SelfRef MxVpV(Tvector& R, const Tvector& V1, const Tvector& V2) const
 	{
 		R.x = (m[0][0] * V1.x + m[0][1] * V1.y + m[0][2] * V1.z + V2.x);
@@ -385,6 +386,7 @@ public:
 		R.z = (m[2][0] * V1.x + m[2][1] * V1.y + m[2][2] * V1.z + V2.z);
 		return *this;
 	}
+	*/
 };
 
 typedef		_matrix33<float>	Fmatrix33;

@@ -6,7 +6,7 @@ XRCORE_API void vminfo (size_t *_free, size_t *reserved, size_t *committed) {
 	MEMORY_BASIC_INFORMATION memory_info;
 	memory_info.BaseAddress = 0;
 	*_free = *reserved = *committed = 0;
-	while (VirtualQuery (memory_info.BaseAddress, &memory_info, sizeof (memory_info))) {
+	while (VirtualQuery (memory_info.BaseAddress, &memory_info, sizeof (memory_info))) { //-V575
 		switch (memory_info.State) {
 		case MEM_FREE:
 			*_free		+= memory_info.RegionSize;

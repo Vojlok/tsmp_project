@@ -50,7 +50,7 @@ bool  CPhraseScript::CheckInfo		(const CInventoryOwner* pOwner) const
 	THROW(pOwner);
 	u32 i;
 	for(i=0; i<m_HasInfo.size(); i++) {
-#pragma todo("Andy->Andy how to check infoportion existence in XML ?")
+//#pragma todo("Andy->Andy how to check infoportion existence in XML ?")
 /*		INFO_INDEX	result = CInfoPortion::IdToIndex(m_HasInfo[i],NO_INFO_INDEX,true);
 		if (result == NO_INFO_INDEX) {
 			ai().script_engine().script_log(eLuaMessageTypeError,"XML item not found : \"%s\"",*m_HasInfo[i]);

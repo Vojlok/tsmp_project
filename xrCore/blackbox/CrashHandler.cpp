@@ -614,7 +614,7 @@ BOOL __stdcall GetFaultReasonVB ( EXCEPTION_POINTERS * pExPtrs ,
         ASSERT ( NULL != szRet ) ;
         if ( NULL == szRet )
         {
-            return ( NULL != szRet ) ;
+            return false;
         }
         lstrcpyn ( szBuff   ,
                    szRet    ,
@@ -949,7 +949,7 @@ BOOL __stdcall
         szRet = GetFirstStackTraceString ( dwOpts , pExPtrs ) ;
         if ( NULL == szRet )
         {
-            return ( NULL != szRet ) ;
+            return false;
         }
         lstrcpyn ( szBuff   ,
                    szRet    ,
@@ -981,7 +981,7 @@ BOOL __stdcall
         szRet = GetNextStackTraceString ( dwOpts , pExPtrs ) ;
         if ( NULL == szRet )
         {
-            return ( NULL != szRet ) ;
+            return false;
         }
         lstrcpyn ( szBuff   ,
                    szRet    ,
@@ -1055,7 +1055,7 @@ BOOL __stdcall GetRegisterStringVB ( EXCEPTION_POINTERS * pExPtrs ,
         szRet = GetRegisterString ( pExPtrs ) ;
         if ( NULL == szRet )
         {
-            return ( NULL != szRet ) ;
+            return false;
         }
         lstrcpyn ( szBuff   ,
                    szRet    ,

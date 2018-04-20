@@ -172,7 +172,7 @@ void CEnvironment::RenderClouds			()
 
 	// Fill vertex buffer
 	v_clouds* pv				= (v_clouds*)	RCache.Vertex.Lock	(CloudsVerts.size(),clouds_geom.stride(),v_offset);
-	for (FvectorIt it=CloudsVerts.begin(); it!=CloudsVerts.end(); it++,pv++)
+	for (FvectorIt it=CloudsVerts.begin(); it!=CloudsVerts.end(); ++it,++pv)
 		pv->set					(*it,C0,C1);
 	RCache.Vertex.Unlock		(CloudsVerts.size(),clouds_geom.stride());
 
@@ -218,8 +218,8 @@ void CEnvironment::OnDeviceCreate()
 		EnvsMapIt _I,_E;
 		_I		= WeatherCycles.begin();
 		_E		= WeatherCycles.end();
-		for (; _I!=_E; _I++)
-			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); it++)
+		for (; _I!=_E; ++_I)
+			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); ++it)
 				(*it)->on_device_create();
 	}
 	// effects
@@ -227,8 +227,8 @@ void CEnvironment::OnDeviceCreate()
 		EnvsMapIt _I,_E;
 		_I		= WeatherFXs.begin();
 		_E		= WeatherFXs.end();
-		for (; _I!=_E; _I++)
-			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); it++)
+		for (; _I!=_E; ++_I)
+			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); ++it)
 				(*it)->on_device_create();
 	}
 
@@ -251,8 +251,8 @@ void CEnvironment::OnDeviceDestroy()
 		EnvsMapIt _I,_E;
 		_I		= WeatherCycles.begin();
 		_E		= WeatherCycles.end();
-		for (; _I!=_E; _I++)
-			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); it++)
+		for (; _I!=_E; ++_I)
+			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); ++it)
 				(*it)->on_device_destroy();
 	}
 	// effects
@@ -260,8 +260,8 @@ void CEnvironment::OnDeviceDestroy()
 		EnvsMapIt _I,_E;
 		_I		= WeatherFXs.begin();
 		_E		= WeatherFXs.end();
-		for (; _I!=_E; _I++)
-			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); it++)
+		for (; _I!=_E; ++_I)
+			for (EnvIt it=_I->second.begin(); it!=_I->second.end(); ++it)
 				(*it)->on_device_destroy();
 	}
 	CurrentEnv.destroy();

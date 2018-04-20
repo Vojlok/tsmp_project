@@ -46,6 +46,8 @@ xrMemory::xrMemory()
 	mem_copy	= xrMemCopy_x86;
 	mem_fill	= xrMemFill_x86;
 	mem_fill32	= xrMemFill32_x86;
+	stat_calls = 0;
+	stat_counter = 0;
 }
 
 #ifdef DEBUG_MEMORY_MANAGER

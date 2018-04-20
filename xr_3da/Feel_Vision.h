@@ -50,11 +50,11 @@ namespace Feel
 		void						feel_vision_get			(xr_vector<CObject*>& R)		{
 			R.clear					();
 			xr_vector<feel_visible_Item>::iterator I=feel_visible.begin(),E=feel_visible.end();
-			for (; I!=E; I++)	if (positive(I->fuzzy)) R.push_back(I->O);
+			for (; I!=E; ++I)	if (positive(I->fuzzy)) R.push_back(I->O);
 		}
 		Fvector						feel_vision_get_vispoint(CObject* _O)					{
 			xr_vector<feel_visible_Item>::iterator I=feel_visible.begin(),E=feel_visible.end();
-			for (; I!=E; I++)		if (_O == I->O) {
+			for (; I!=E; ++I)		if (_O == I->O) {
 				VERIFY	(positive(I->fuzzy));
 				return	I->cp_LAST;
 			}

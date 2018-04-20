@@ -78,6 +78,7 @@ public:
 	LZfs() {
 		in_start	= in_end	= in_iterator = 0;
 		out_start	= out_end	= out_iterator = 0;
+		getbuf = getlen = putbuf = putlen = 0;
 	}
 	
 	IC void		Init_Input(u8* _start, u8* _end) {

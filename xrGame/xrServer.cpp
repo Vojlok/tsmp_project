@@ -471,6 +471,8 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 	{
 		case M_CLIENT_REQUEST_CONNECTION_DATA:
 		{
+			CL->m_radio_usage.m_Counter = 0;
+			CL->m_radio_usage.m_HasBan = false;
 			OnCL_Connected				(CL);
 		}break;
 		case M_REMOTE_CONTROL_CMD:

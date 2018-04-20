@@ -47,7 +47,7 @@ Fvector vunpack		(s32 x, s32 y, s32 z)
 	pck.z   = (float(z)/255.f - .5f)*2.f;
 	return  pck;
 }
-Fvector vunpack		(Ivector src)                   
+Fvector vunpack		(Ivector &src)                   
 {
 	return  vunpack (src.x,src.y,src.z);
 }

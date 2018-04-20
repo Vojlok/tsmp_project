@@ -94,24 +94,24 @@ _lzo_config_check(void)
 #if !defined(LZO_CFG_NO_CONFIG_CHECK)
 #if defined(LZO_ABI_BIG_ENDIAN)
     u.l[0] = u.l[1] = 0; u.c[sizeof(lzo_xint) - 1] = 128;
-    r &= (u.l[0] == 128);
+	r = 0; //  r &= (u.l[0] == 128);
 #endif
 #if defined(LZO_ABI_LITTLE_ENDIAN)
     u.l[0] = u.l[1] = 0; u.c[0] = 128;
-    r &= (u.l[0] == 128);
+	r = 0; //  r &= (u.l[0] == 128); 
 #endif
 #if defined(LZO_UNALIGNED_OK_2)
     u.l[0] = u.l[1] = 0;
-    r &= ((* (const lzo_ushortp) (const lzo_voidp) &u.c[1]) == 0);
+	r = 0; //  r &= ((* (const lzo_ushortp) (const lzo_voidp) &u.c[1]) == 0);
 #endif
 #if defined(LZO_UNALIGNED_OK_4)
     u.l[0] = u.l[1] = 0;
-    r &= ((* (const lzo_uint32p) (const lzo_voidp) &u.c[1]) == 0);
+	r = 0; //  r &= ((* (const lzo_uint32p) (const lzo_voidp) &u.c[1]) == 0);
 #endif
 #endif
 
     LZO_UNUSED(u);
-    return r == 1 ? LZO_E_OK : LZO_E_ERROR;
+    return r == 1 ? LZO_E_OK : LZO_E_ERROR; //-V547
 }
 
 

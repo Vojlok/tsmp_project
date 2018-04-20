@@ -231,7 +231,7 @@ public:
 		// test items
 		xr_vector<ISpatial*>::iterator _it	=	N->items.begin	();
 		xr_vector<ISpatial*>::iterator _end	=	N->items.end	();
-		for (; _it!=_end; _it++)
+		for (; _it!=_end; ++_it)
 		{
 			ISpatial*		S	= *_it;
 			if (mask!=(S->spatial.type&mask))	continue;

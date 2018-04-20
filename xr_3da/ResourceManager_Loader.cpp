@@ -12,14 +12,14 @@ void	CResourceManager::OnDeviceDestroy(BOOL )
 //.	xr_delete			(m_description);
 
 	// Matrices
-	for (map_Matrix::iterator m=m_matrices.begin(); m!=m_matrices.end(); m++)	{
+	for (map_Matrix::iterator m=m_matrices.begin(); m!=m_matrices.end(); ++m)	{
 		R_ASSERT		(1==m->second->dwReference);
 		xr_delete		(m->second);
 	}
 	m_matrices.clear	();
     
 	// Constants
-	for (map_Constant::iterator c=m_constants.begin(); c!=m_constants.end(); c++)
+	for (map_Constant::iterator c=m_constants.begin(); c!=m_constants.end(); ++c)
 	{
 		R_ASSERT		(1==c->second->dwReference);
 		xr_delete		(c->second);
@@ -27,7 +27,7 @@ void	CResourceManager::OnDeviceDestroy(BOOL )
 	m_constants.clear	();
 
    	// Release blenders
-	for (map_BlenderIt b=m_blenders.begin(); b!=m_blenders.end(); b++)
+	for (map_BlenderIt b=m_blenders.begin(); b!=m_blenders.end(); ++b)
 	{
 		xr_free				((char*&)b->first);
 		IBlender::Destroy	(b->second);
@@ -35,7 +35,7 @@ void	CResourceManager::OnDeviceDestroy(BOOL )
 	m_blenders.clear	();
 
 	// destroy TD
-	for (map_TDIt _t=m_td.begin(); _t!=m_td.end(); _t++)
+	for (map_TDIt _t=m_td.begin(); _t!=m_td.end(); ++_t)
 	{
 		xr_free		((char*&)_t->first);
 		xr_free		((char*&)_t->second.T);

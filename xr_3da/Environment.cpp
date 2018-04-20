@@ -184,7 +184,7 @@ bool CEnvironment::SetWeatherFX(shared_str name)
 		CEnvDescriptor* CT	= CurrentWeather->at(CurrentWeather->size()-1);
 		C0->copy			(*Current[0]);	C0->exec_time = NormalizeTime(fGameTime-((rewind_tm/(Current[1]->exec_time-fGameTime))*current_length-rewind_tm));
 		C1->copy			(*Current[1]);	C1->exec_time = NormalizeTime(start_tm);
-		for (EnvIt t_it=CurrentWeather->begin()+2; t_it!=CurrentWeather->end()-1; t_it++)
+		for (EnvIt t_it=CurrentWeather->begin()+2; t_it!=CurrentWeather->end()-1; ++t_it)
 			(*t_it)->exec_time= NormalizeTime(start_tm+(*t_it)->exec_time_loaded);
 		SelectEnv			(PrevWeather,WFX_end_desc[0],CE->exec_time);
 		SelectEnv			(PrevWeather,WFX_end_desc[1],WFX_end_desc[0]->exec_time+0.5f);
@@ -322,7 +322,7 @@ void CEnvironment::OnFrame()
 	EM.hemi_color.set		( 0,0,0 );
 	Fvector	view			= Device.vCameraPosition;
 	float	mpower			= 0;
-	for (xr_vector<CEnvModifier>::iterator mit=Modifiers.begin(); mit!=Modifiers.end(); mit++)
+	for (xr_vector<CEnvModifier>::iterator mit=Modifiers.begin(); mit!=Modifiers.end(); ++mit)
 		mpower				+= EM.sum(*mit,view);
 
 	// final lerp

@@ -133,7 +133,7 @@ void CKinematics::Bone_Calculate	(CBoneData* bd, Fmatrix *parent)
         INST.mRenderTransform.mul_43(INST.mTransform,bd->m2b_transform);
 
         // Calculate children
-        for (xr_vector<CBoneData*>::iterator C=bd->children.begin(); C!=bd->children.end(); C++)
+        for (xr_vector<CBoneData*>::iterator C=bd->children.begin(); C!=bd->children.end(); ++C)
 			Bone_Calculate			(*C,&INST.mTransform);
 	}
 }

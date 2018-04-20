@@ -40,7 +40,7 @@ void	IGame_Level::SoundEvent_Register	( ref_sound_data_ptr S, float range )
 	// Iterate
 	xr_vector<ISpatial*>::iterator	it	= snd_ER.begin	();
 	xr_vector<ISpatial*>::iterator	end	= snd_ER.end	();
-	for (; it!=end; it++)	{
+	for (; it!=end; ++it)	{
 		Feel::Sound* L		= (*it)->dcast_FeelSound	();
 		if (0==L)			continue;
 		CObject* CO = (*it)->dcast_CObject();	VERIFY(CO);
@@ -125,7 +125,7 @@ IC int	CObjectSpace::GetNearest	( xr_vector<CObject*>&	q_nearest, const Fvector 
 	// Iterate
 	xr_vector<ISpatial*>::iterator	it	= r_spatial.begin	();
 	xr_vector<ISpatial*>::iterator	end	= r_spatial.end		();
-	for (; it!=end; it++)		{
+	for (; it!=end; ++it)		{
 		CObject* O				= (*it)->dcast_CObject		();
 		if (0==O)				continue;
 		if (O==ignore_object)	continue;

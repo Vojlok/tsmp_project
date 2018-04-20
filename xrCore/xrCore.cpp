@@ -171,7 +171,7 @@ void xrCore::_destroy		()
 //.		LogFile.reserve		(256);
 		break;
 	case DLL_THREAD_ATTACH:
-		CoInitializeEx	(NULL, COINIT_MULTITHREADED);
+		CoInitializeEx	(NULL, COINIT_MULTITHREADED); //-V718
 		timeBeginPeriod	(1);
 		break;
 	case DLL_THREAD_DETACH:

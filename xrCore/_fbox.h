@@ -250,6 +250,7 @@ public:
 		u32 WhichPlane = 0;
 		if(MaxT[1] > MaxT[0])			WhichPlane = 1;
 		if(MaxT[2] > MaxT[WhichPlane])	WhichPlane = 2;
+
 		
 		// Check final candidate actually inside box
 		if(IR(MaxT[WhichPlane])&0x80000000) return rpNone;
@@ -272,7 +273,7 @@ public:
 			if((coord[2] < min[2]) || (coord[2] > max[2]))	return rpNone;
 			return rpOriginOutside;
 		}
-		if (2==WhichPlane)
+		if (2==WhichPlane) //-V547
 		{
 			// 0 & 1
 			coord[0] = origin[0] + MaxT[2] * dir[0];

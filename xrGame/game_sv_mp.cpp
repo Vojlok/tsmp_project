@@ -39,6 +39,10 @@ float		g_sv_mp_fVoteQuota				= VOTE_QUOTA;
 int			g_sv_mp_fVoteTime				= 60;
 int			g_sv_mp_Timer1Interval			= 15;
 int			g_sv_mp_Timer2Interval			= 15;
+int			g_sv_mp_RadioAntiSpam			= 0;
+int			g_sv_mp_RadioMaxMsgs			= 7;
+int			g_sv_mp_RadioInterval			= 60;
+int			g_sv_mp_RadioMuteInterval		= 10;
 int			g_sv_mp_Timer1Enabled			= 1;
 int			g_sv_mp_Timer2Enabled			= 0;
 int			g_sv_mp_DisablerEnabled			= 0;
@@ -1627,44 +1631,119 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 		}
 };
 
-void		game_sv_mp::OnPlayerSpeechMessage	(NET_Packet& P, ClientID sender)
+void		game_sv_mp::OnPlayerSpeechMessage(NET_Packet& P, ClientID sender)
 {
-		if (0 != strstr(Core.Params, "-nospeech"))
+	if (0 != strstr(Core.Params, "-nospeech"))
 	{
-			NET_Packet			PP;
-		GenerateGameMessage (PP);
-		PP.w_u32				(GAME_EVENT_SERVER_STRING_MESSAGE);
-		PP.w_stringZ			("Рация заблокирована на этом сервере (radio is disabled on this server)");
-		m_server->SendTo( sender, PP );
-	//	return;
-	} else	{
+		NET_Packet			PP;
+		GenerateGameMessage(PP);
+		PP.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
+		PP.w_stringZ("Рация заблокирована на этом сервере (radio is disabled on this server)");		
+		m_server->SendTo(sender, PP);
+		return;
+	}
+	else {
 
-	xrClientData*	pClient	= (xrClientData*)m_server->ID_to_client	(sender);	
+		xrClientData*	pClient = (xrClientData*)m_server->ID_to_client(sender);
 
-	if (!pClient || !pClient->net_Ready) return;
-	game_PlayerState* ps = pClient->ps;
-	if (!ps) return;
-
-	if (pClient->owner)
-	{
-		NET_Packet			NP;
-		GenerateGameMessage(NP);
-		NP.w_u32(GAME_EVENT_SPEECH_MESSAGE);
-		NP.w_u16(ps->GameID);
-		NP.w_u8(P.r_u8());
-		NP.w_u8(P.r_u8());
-		NP.w_u8(P.r_u8());		
-		//---------------------------------------------------		
-		u32	cnt = get_players_count();	
-		for(u32 it=0; it<cnt; it++)	
+		if (g_sv_mp_RadioAntiSpam == 1)
 		{
-			xrClientData *l_pC = (xrClientData*)	m_server->client_Get	(it);
-			game_PlayerState* ps	= l_pC->ps;
-			if (!l_pC || !l_pC->net_Ready || !ps) continue;
-			m_server->SendTo(l_pC->ID, NP, net_flags(TRUE, TRUE, TRUE));
+			u32 CTime = Level().timeServer();
+		//	Msg("Time server: %i",CTime);
+		//	Msg("Ban Since: %i", pClient->m_radio_usage.m_BanSince);
+		//	if (pClient->m_radio_usage.m_HasBan) Msg("HasBan:true");
+		//	else Msg("HasBan:false");
+		//	Msg("Uslovie: %i", CTime - (g_sv_mp_RadioMuteInterval * 60000));
+
+			if ((pClient->m_radio_usage.m_HasBan) && ((CTime - (g_sv_mp_RadioMuteInterval*60000)) > pClient->m_radio_usage.m_BanSince))
+			{
+				pClient->m_radio_usage.m_HasBan = false;
+		//		Msg("ban finished");
+			}
+			
+			
+			if (pClient->m_radio_usage.m_HasBan)
+			{
+				NET_Packet			PPP;
+				GenerateGameMessage(PPP);
+				PPP.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
+				PPP.w_stringZ("Рация заблокирована для вас за флуд \n (radio is disabled for you because of flood)");
+				game_PlayerState* psC=pClient->ps;
+				Msg("! radio blocked for player %s", psC->getName());
+				m_server->SendTo(sender, PPP);
+				return;
+			}
+			pClient->m_radio_usage.m_UsageHistory[pClient->m_radio_usage.m_Counter] = CTime;
+			
+			if (pClient->m_radio_usage.m_Counter >= 60)
+			{
+				pClient->m_radio_usage.m_Counter = 0;
+			}
+			else
+			{
+				++pClient->m_radio_usage.m_Counter;
+			}
+
+			int iCountInTime = 0;
+			u32 MaxTime = 0;
+			for (int i = 0; i < 60; ++i)
+			{
+				if (pClient->m_radio_usage.m_UsageHistory[i] != 0)
+				{
+					if (pClient->m_radio_usage.m_UsageHistory[i] > MaxTime) MaxTime = pClient->m_radio_usage.m_UsageHistory[i];
+				}
+			}
+			if (MaxTime == 0)
+			{
+		//		Msg("#first radio usage");
+			}
+			else
+			{
+			//	std::string Debg = "MaxTime= " + std::to_string(MaxTime) + std::to_string(MaxTime - g_sv_mp_RadioInterval * 1000);
+			//	Msg(Debg.c_str());
+				MaxTime -= g_sv_mp_RadioInterval * 1000;
+
+				for (int i = 0; i < 60; ++i)
+				{
+					if (pClient->m_radio_usage.m_UsageHistory[i] > MaxTime)	iCountInTime++;
+				}
+
+				if ((iCountInTime >= g_sv_mp_RadioMaxMsgs)&&(!pClient->m_radio_usage.m_HasBan))
+				{
+					pClient->m_radio_usage.m_BanSince = CTime;
+					pClient->m_radio_usage.m_HasBan = true;
+		//			Msg("HasBanNowTrue");
+					return;
+				}
+			}
+
+		}
+
+		if (!pClient || !pClient->net_Ready) return;
+		game_PlayerState* ps = pClient->ps;
+		if (!ps) return;
+
+		if (pClient->owner)
+		{
+			NET_Packet			NP;
+			GenerateGameMessage(NP);
+			NP.w_u32(GAME_EVENT_SPEECH_MESSAGE);
+			NP.w_u16(ps->GameID);
+			NP.w_u8(P.r_u8());
+			NP.w_u8(P.r_u8());
+			NP.w_u8(P.r_u8());
+			//---------------------------------------------------		
+			u32	cnt = get_players_count();
+			for (u32 it = 0; it < cnt; it++)
+			{
+				xrClientData *l_pC = (xrClientData*)m_server->client_Get(it);
+				game_PlayerState* ps = l_pC->ps;
+				if (!l_pC || !l_pC->net_Ready || !ps) continue;
+				m_server->SendTo(l_pC->ID, NP, net_flags(TRUE, TRUE, TRUE));
+			};
 		};
 	};
-	}
+	
 };
 
 void		game_sv_mp::OnPlayerGameMenu(NET_Packet& P, ClientID sender)

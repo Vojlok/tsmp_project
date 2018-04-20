@@ -21,6 +21,7 @@ inline u32		Reflect		(u32 ref, char ch)		// Reflects CRC bits in the lookup tabl
 	return value; 
 } 
 
+
 void			crc32_init	() 
 {
 	// Call this function only once to initialize the CRC table. 
@@ -30,7 +31,7 @@ void			crc32_init	()
 	u32 ulPolynomial = 0x04c11db7; 
 
 	// 256 values representing ASCII character codes. 
-	for(int i = 0; i <= 0xFF; i++) 
+	for(int i = 0; i <= 255; i++) 
 	{ 
 		crc32_table[i]=Reflect(i, 8) << 24; 
 		for (int j = 0; j < 8; j++) 
@@ -38,6 +39,7 @@ void			crc32_init	()
 		crc32_table[i] = Reflect(crc32_table[i], 32); 
 	} 
 } 
+
 
 u32				crc32		(const void* P, u32 len) 
 {

@@ -315,7 +315,7 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='64bit|Win32'">X:\components;X:\components\ogg;X:\xrLua\src;X:\xrlua;X:\components\libtheora\include;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release_Dedicated|x64'">X:\components;X:\components\ogg;X:\xrLua\src;X:\xrlua;X:\components\libtheora\include;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='64bit|x64'">X:\components;X:\components\ogg;X:\xrLua\src;X:\xrlua;X:\components\libtheora\include;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_Dedicated|Win32'">X:\components\dx9sdk\lib;X:\output\libraries;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_Dedicated|Win32'">X:\components\dx9sdk\lib;X:\output\libraries_Release;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='64bit|Win32'">X:\components\dx9sdk\lib;X:\output\libraries;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_Dedicated|x64'">X:\components\dx9sdk\lib64;X:\output\libraries_x64;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='64bit|x64'">X:\components\dx9sdk\lib64;X:\output\libraries_x64;$(LibraryPath)</LibraryPath>
@@ -732,9 +732,9 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>

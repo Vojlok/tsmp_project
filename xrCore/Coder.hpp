@@ -69,13 +69,9 @@ static SUBRANGE SubRange = {0,0,0};
 static DWORD    low=0, code=0, range=0;
 
 
-inline void 
-rcEncNormalize( _PPMD_FILE* stream )
+inline void rcEncNormalize( _PPMD_FILE* stream )
 {
-    while(      (low ^ (low+range)) < TOP 
-            ||  range < BOT 
-            &&  ((range= -low & (BOT-1)),1)
-         ) 
+    while((low ^ (low+range)) < TOP ||  range < BOT &&  ((range= -low & (BOT-1)),1)) //-V648
     {
         _PPMD_E_PUTC( low >> 24, stream );
         range   <<= 8;                        
@@ -111,13 +107,9 @@ static inline void rcInitDecoder(_PPMD_FILE* stream)
             code=(code << 8) | _PPMD_D_GETC(stream);
 }
 
-inline void
-rcDecNormalize( _PPMD_FILE* stream )
+inline void rcDecNormalize( _PPMD_FILE* stream )
 {
-    while(      (low ^ (low+range)) < TOP 
-            ||  range < BOT 
-            &&  ((range= -low & (BOT-1)),1) 
-         ) 
+    while((low ^ (low+range)) < TOP ||  range < BOT &&  ((range= -low & (BOT-1)),1)) //-V648
     {
         code    = (code << 8) | _PPMD_D_GETC(stream);
         range <<= 8;                        

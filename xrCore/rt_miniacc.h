@@ -3951,7 +3951,7 @@ ACCLIB_EXTERN(int, acc_spawnve) (int mode, const char* fn, const char* const * a
     ACCCHK_ASSERT(sizeof(ptrdiff_t) >= sizeof(int))
     ACCCHK_ASSERT(sizeof(ptrdiff_t) >= sizeof(size_t))
 #if !defined(ACC_BROKEN_SIZEOF)
-    ACCCHK_ASSERT(sizeof(ptrdiff_t) == sizeof((char*)0 - (char*)0))
+    ACCCHK_ASSERT(sizeof(ptrdiff_t) == (sizeof((char*)0))) //sizeof((char*)0 - (char*)0))
 # if (ACC_HAVE_MM_HUGE_PTR)
     ACCCHK_ASSERT(4 == sizeof((char __huge*)0 - (char __huge*)0))
 # endif

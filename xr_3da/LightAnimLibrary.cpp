@@ -51,7 +51,7 @@ void CLAItem::Save(IWriter& F)
 
     F.open_chunk	(CHUNK_ITEM_KEYS);
     F.w_u32		(Keys.size());
-    for (KeyPairIt it=Keys.begin(); it!=Keys.end(); it++){
+    for (KeyPairIt it=Keys.begin(); it!=Keys.end(); ++it){
 		F.w_u32	(it->first);
 		F.w_u32	(it->second);
     }
@@ -236,7 +236,7 @@ void ELightAnimLibrary::Save()
 	F.close_chunk	();
     F.open_chunk	(CHUNK_ITEM_LIST);
     int count = 0;
-	for (LAItemIt it=Items.begin(); it!=Items.end(); it++){
+	for (LAItemIt it=Items.begin(); it!=Items.end(); ++it){
         F.open_chunk(count++);
 		(*it)->Save		(F);
         F.close_chunk();
@@ -259,7 +259,7 @@ void ELightAnimLibrary::Reload()
 LAItemIt ELightAnimLibrary::FindItemI(LPCSTR name)
 {
 	if (name&&name[0])
-		for (LAItemIt it=Items.begin(); it!=Items.end(); it++)
+		for (LAItemIt it=Items.begin(); it!=Items.end(); ++it)
 			if (0==xr_strcmp((*it)->cName,name)) return it;
 	return Items.end();
 }

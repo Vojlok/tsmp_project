@@ -36,9 +36,9 @@ CObjectList::~CObjectList	( )
 
 CObject*	CObjectList::FindObjectByName	( shared_str name )
 {
-	for (xr_vector<CObject*>::iterator I=objects_active.begin(); I!=objects_active.end(); I++)
+	for (xr_vector<CObject*>::iterator I=objects_active.begin(); I!=objects_active.end(); ++I)
 		if ((*I)->cName().equal(name))	return (*I);
-	for (xr_vector<CObject*>::iterator I=objects_sleeping.begin(); I!=objects_sleeping.end(); I++)
+	for (xr_vector<CObject*>::iterator I=objects_sleeping.begin(); I!=objects_sleeping.end(); ++I)
 		if ((*I)->cName().equal(name))	return (*I);
 	return	NULL;
 }
@@ -173,7 +173,7 @@ void CObjectList::Update		(bool bForce)
 	if (!destroy_queue.empty()) 
 	{
 		// Info
-		for (xr_vector<CObject*>::iterator oit=objects_active.begin(); oit!=objects_active.end(); oit++)
+		for (xr_vector<CObject*>::iterator oit=objects_active.begin(); oit!=objects_active.end(); ++oit)
 			for (int it = destroy_queue.size()-1; it>=0; it--){	
 				(*oit)->net_Relcase		(destroy_queue[it]);
 			}

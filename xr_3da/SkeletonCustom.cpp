@@ -178,7 +178,7 @@ void CBoneData::CalculateM2B(const Fmatrix& parent)
     m2b_transform.mul_43	(parent,bind_transform);
 
     // Calculate children
-    for (xr_vector<CBoneData*>::iterator C=children.begin(); C!=children.end(); C++)
+    for (xr_vector<CBoneData*>::iterator C=children.begin(); C!=children.end(); ++C)
         (*C)->CalculateM2B	(m2b_transform);
 
     m2b_transform.invert	();            
@@ -349,7 +349,7 @@ IC void iBuildGroups(CBoneData* B, U16Vec& tgt, u16 id, u16& last_id)
 {
     if (B->IK_data.ik_flags.is(SJointIKData::flBreakable)) id = ++last_id;
 	tgt[B->GetSelfID()]	= id;
-    for (xr_vector<CBoneData*>::iterator bone_it=B->children.begin(); bone_it!=B->children.end(); bone_it++)
+    for (xr_vector<CBoneData*>::iterator bone_it=B->children.begin(); bone_it!=B->children.end(); ++bone_it)
     	iBuildGroups	(*bone_it,tgt,id,last_id);
 }
 
@@ -488,7 +488,7 @@ void CKinematics::LL_SetBoneVisible(u16 bone_id, BOOL val, BOOL bRecursive)
 	}
 	bone_instances[bone_id].mRenderTransform.mul_43(bone_instances[bone_id].mTransform,(*bones)[bone_id]->m2b_transform);
     if (bRecursive)		{
-        for (xr_vector<CBoneData*>::iterator C=(*bones)[bone_id]->children.begin(); C!=(*bones)[bone_id]->children.end(); C++)
+        for (xr_vector<CBoneData*>::iterator C=(*bones)[bone_id]->children.begin(); C!=(*bones)[bone_id]->children.end(); ++C)
             LL_SetBoneVisible((*C)->GetSelfID(),val,bRecursive);
     }
 	Visibility_Invalidate			();
@@ -544,7 +544,7 @@ IC static void RecursiveBindTransform(CKinematics* K, xr_vector<Fmatrix>& matric
 	Fmatrix& BM				= matrices[bone_id];
 	// Build matrix
 	BM.mul_43				(parent,BD.bind_transform);
-    for (xr_vector<CBoneData*>::iterator C=BD.children.begin(); C!=BD.children.end(); C++)
+    for (xr_vector<CBoneData*>::iterator C=BD.children.begin(); C!=BD.children.end(); ++C)
 		RecursiveBindTransform(K,matrices,(*C)->GetSelfID(),BM);	
 }
 
@@ -668,7 +668,7 @@ void CKinematics::AddWallmark(const Fmatrix* parent_xform, const Fvector3& start
 	// fill vertices
 	for (u32 i=0; i<children.size(); i++){
 		CSkeletonX* S		= LL_GetChild(i);
-		for (U16It b_it=test_bones.begin(); b_it!=test_bones.end(); b_it++)
+		for (U16It b_it=test_bones.begin(); b_it!=test_bones.end(); ++b_it)
 			S->FillVertices		(mView,*wm,normal,size,*b_it);
 	}
 
@@ -686,7 +686,7 @@ void CKinematics::CalculateWallmarks()
 	if (!wallmarks.empty()&&(wm_frame!=Device.dwFrame)){
 		wm_frame			= Device.dwFrame;
 		bool need_remove	= false; 
-		for (SkeletonWMVecIt it=wallmarks.begin(); it!=wallmarks.end(); it++){
+		for (SkeletonWMVecIt it=wallmarks.begin(); it!=wallmarks.end(); ++it){
 			intrusive_ptr<CSkeletonWallmark>& wm = *it;
 			float w	= (Device.fTimeGlobal-wm->TimeStart())/LIFE_TIME;
 			if (w<1.f){

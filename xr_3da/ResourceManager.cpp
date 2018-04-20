@@ -31,7 +31,7 @@ BOOL	reclaim		(xr_vector<T*>& vec, const T* ptr)
 {
 	xr_vector<T*>::iterator it	= vec.begin	();
 	xr_vector<T*>::iterator end	= vec.end	();
-	for (; it!=end; it++)
+	for (; it!=end; ++it)
 		if (*it == ptr)	{ vec.erase	(it); return TRUE; }
 		return FALSE;
 }
@@ -265,7 +265,7 @@ void CResourceManager::Delete(const Shader* S)
 void	CResourceManager::DeferredUpload	()
 {
 	if (!Device.b_is_Ready)				return;
-	for (map_TextureIt t=m_textures.begin(); t!=m_textures.end(); t++)
+	for (map_TextureIt t=m_textures.begin(); t!=m_textures.end(); ++t)
 	{
 		t->second->Load();
 	}
@@ -304,7 +304,7 @@ void	CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u
 
 	map_Texture::iterator I = m_textures.begin	();
 	map_Texture::iterator E = m_textures.end	();
-	for (; I!=E; I++)
+	for (; I!=E; ++I)
 	{
 		u32 m = I->second->flags.MemoryUsage;
 		if (strstr(I->first,"lmap"))
@@ -325,7 +325,7 @@ void	CResourceManager::_DumpMemoryUsage		()
 	{
 		map_Texture::iterator I = m_textures.begin	();
 		map_Texture::iterator E = m_textures.end	();
-		for (; I!=E; I++)
+		for (; I!=E; ++I)
 		{
 			u32			m = I->second->flags.MemoryUsage;
 			shared_str	n = I->second->cName;
@@ -337,7 +337,7 @@ void	CResourceManager::_DumpMemoryUsage		()
 	{
 		xr_multimap<u32,std::pair<u32,shared_str> >::iterator I = mtex.begin	();
 		xr_multimap<u32,std::pair<u32,shared_str> >::iterator E = mtex.end		();
-		for (; I!=E; I++)
+		for (; I!=E; ++I)
 			Msg			("* %4.1f : [%4d] %s",float(I->first)/1024.f, I->second.first, I->second.second.c_str());
 	}
 }

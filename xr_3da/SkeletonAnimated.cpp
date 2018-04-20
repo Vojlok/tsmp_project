@@ -37,13 +37,13 @@ void		CBlendInstance::blend_remove	(CBlend* H)
 void	CKinematicsAnimated::Bone_Motion_Start		(CBoneData* bd, CBlend* handle) 
 {
 	LL_GetBlendInstance	(bd->GetSelfID()).blend_add	(handle);
-	for (vecBonesIt I=bd->children.begin(); I!=bd->children.end(); I++)                        
+	for (vecBonesIt I=bd->children.begin(); I!=bd->children.end(); ++I)                        
 		Bone_Motion_Start	(*I,handle);
 }
 void	CKinematicsAnimated::Bone_Motion_Stop		(CBoneData* bd, CBlend* handle) 
 {
 	LL_GetBlendInstance	(bd->GetSelfID()).blend_remove	(handle);
-	for (vecBonesIt I=bd->children.begin(); I!=bd->children.end(); I++)
+	for (vecBonesIt I=bd->children.begin(); I!=bd->children.end(); ++I)
 		Bone_Motion_Stop	(*I,handle);
 }
 void	CKinematicsAnimated::Bone_Motion_Start_IM	(CBoneData* bd,  CBlend* handle) 
@@ -625,7 +625,7 @@ void CKinematicsAnimated::Load(const char* N, IReader *data, u32 dwFlags)
     m_Partition				= m_Motions[0].motions.partition();
     
 	// initialize motions
-	for (MotionsSlotVecIt m_it=m_Motions.begin(); m_it!=m_Motions.end(); m_it++){
+	for (MotionsSlotVecIt m_it=m_Motions.begin(); m_it!=m_Motions.end(); ++m_it){
 		SMotionsSlot& MS	= *m_it;
 		MS.bone_motions.resize(bones->size());
 		for (u32 i=0; i<bones->size(); i++){
@@ -1183,7 +1183,7 @@ void CKinematicsAnimated::Bone_Calculate(CBoneData* bd, Fmatrix *parent)
 	CBoneInstance& BONE_INST	= LL_GetBoneInstance(SelfID);
 	CLBone(bd,BONE_INST,parent,BLEND_INST.blend_vector(),u8(-1));
 	// Calculate children
-	for (xr_vector<CBoneData*>::iterator C=bd->children.begin(); C!=bd->children.end(); C++)
+	for (xr_vector<CBoneData*>::iterator C=bd->children.begin(); C!=bd->children.end(); ++C)
 		Bone_Calculate(*C,&BONE_INST.mTransform);
 }
 

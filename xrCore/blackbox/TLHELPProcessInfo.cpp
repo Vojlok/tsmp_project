@@ -200,8 +200,7 @@ BOOL __stdcall TLHELPGetLoadedModules ( DWORD     dwPID        ,
                 // This is so we match the functionality of the NT4
                 // version of this function which will return the
                 // correct total needed.
-                if ( ( TRUE == bBuffToSmall     ) ||
-                     ( *pdwRealCount == uiCount )   )
+                if (*pdwRealCount == uiCount)
                 {
                     bBuffToSmall = TRUE ;
                     break ;

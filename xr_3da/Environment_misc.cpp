@@ -275,7 +275,7 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 //-----------------------------------------------------------------------------
 CEnvAmbient* CEnvironment::AppendEnvAmb		(const shared_str& sect)
 {
-	for (EnvAmbVecIt it=Ambients.begin(); it!=Ambients.end(); it++)
+	for (EnvAmbVecIt it=Ambients.begin(); it!=Ambients.end(); ++it)
 		if ((*it)->name().equal(sect)) return *it;
 	Ambients.push_back		(xr_new<CEnvAmbient>());
 	Ambients.back()->load	(sect);
@@ -370,7 +370,7 @@ void CEnvironment::load		()
 		// sorting weather envs
 		EnvsMapIt _I=WeatherFXs.begin();
 		EnvsMapIt _E=WeatherFXs.end();
-		for (; _I!=_E; _I++){
+		for (; _I!=_E; ++_I){
 			R_ASSERT3	(_I->second.size()>1,"Environment in weather must >=2",*_I->first);
 			std::sort(_I->second.begin(),_I->second.end(),sort_env_etl_pred);
 		}
@@ -383,8 +383,8 @@ void CEnvironment::unload	()
 	// clear weathers
 	_I		= WeatherCycles.begin();
 	_E		= WeatherCycles.end();
-	for (; _I!=_E; _I++){
-		for (EnvIt it=_I->second.begin(); it!=_I->second.end(); it++)
+	for (; _I!=_E; ++_I){
+		for (EnvIt it=_I->second.begin(); it!=_I->second.end(); ++it)
 			xr_delete	(*it);
 	}
 
@@ -393,7 +393,7 @@ void CEnvironment::unload	()
 	_I		= WeatherFXs.begin();
 	_E		= WeatherFXs.end();
 	for (; _I!=_E; _I++){
-		for (EnvIt it=_I->second.begin(); it!=_I->second.end(); it++)
+		for (EnvIt it=_I->second.begin(); it!=_I->second.end(); ++it)
 			xr_delete	(*it);
 	}
 	WeatherFXs.clear		();

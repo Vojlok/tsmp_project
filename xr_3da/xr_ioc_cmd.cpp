@@ -139,7 +139,7 @@ public:
 	virtual void Execute(LPCSTR args) {
 		Log("- --- Command listing: start ---");
 		CConsole::vecCMD_IT it;
-		for (it=Console->Commands.begin(); it!=Console->Commands.end(); it++)
+		for (it=Console->Commands.begin(); it!=Console->Commands.end(); ++it)
 		{
 			IConsole_Command &C = *(it->second);
 			TStatus _S; C.Status(_S);
@@ -241,7 +241,7 @@ public:
 		if ( b_allow ){
 			IWriter* F			= FS.w_open(cfg_full_name);
 				CConsole::vecCMD_IT it;
-				for (it=Console->Commands.begin(); it!=Console->Commands.end(); it++)
+				for (it=Console->Commands.begin(); it!=Console->Commands.end(); ++it)
 					it->second->Save(F);
 				FS.w_close			(F);
 				Msg("Config-file [%s] saved successfully",cfg_full_name);

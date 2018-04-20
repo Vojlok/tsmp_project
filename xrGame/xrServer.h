@@ -39,14 +39,19 @@ public:
 	game_PlayerState*		ps;
 	struct{
 		u8						m_maxPingWarnings;
-		u32						m_dwLastMaxPingWarningTime;
+		u32						m_dwLastMaxPingWarningTime;		
 	}m_ping_warn;
 	struct{
 		BOOL					m_has_admin_rights;
 		u32						m_dwLoginTime;
 	}m_admin_rights;
-
-							xrClientData			();
+	struct {
+		u32						m_UsageHistory[60];
+		int						m_Counter;
+		bool					m_HasBan;
+		u32						m_BanSince;
+	}m_radio_usage;
+	xrClientData();
 	virtual					~xrClientData			();
 	virtual void			Clear					();
 };
