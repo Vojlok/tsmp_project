@@ -6,7 +6,7 @@
 #define AFX_BUILD_H__C7D43EBA_1C15_4FF4_A3ED_E89F6D759F58__INCLUDED_
 #pragma once
 
-#include "communicate.h"
+#include "common_compilers\communicate.h"
 #include "b_globals.h"
 #include "fs.h"
 #include "xrLevel.h"

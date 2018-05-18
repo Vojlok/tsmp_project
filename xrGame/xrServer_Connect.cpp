@@ -1,4 +1,9 @@
 #include "stdafx.h"
+
+
+#include "..\..\sysmsgs.h"
+
+
 #include "xrServer.h"
 #include "game_sv_single.h"
 #include "game_sv_deathmatch.h"
@@ -8,6 +13,8 @@
 #include "game_cl_artefacthunt.h"
 #include "game_cl_single.h"
 #include "MainMenu.h"
+
+std::string ConPlayer = "123";
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -98,6 +105,8 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 
 	strcpy_s( new_name, cl_data->name );
 
+	ConPlayer = new_name;
+	Msg("new = %s", cl_data->new_code);
 
 	std::string Name_new = new_name;
 	Name_new.resize(70);
@@ -143,28 +152,158 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 	return CL;
 }
 
+struct SMyUserData {
+	xrServer* server; ClientID idOfPlayer;
+};
+
+void xrServer::SendCB(void* msg, unsigned int len, void* userdata)
+{
+	Msg("CD called from dll");
+	//((SMyUserData*)userdata)->server->SendTo_LL(((SMyUserData*)userdata)->idOfPlayer, msg, len, net_flags(TRUE, TRUE, TRUE, TRUE));
+	((SMyUserData*)userdata)->server->IPureServer::SendTo_LL(((SMyUserData*)userdata)->idOfPlayer, msg, len, net_flags(TRUE, TRUE, TRUE, TRUE));
+
+
+	Msg("xrServer::SendCB");
+};
+
 void xrServer::AttachNewClient			(IClient* CL)
 {
+//	Msg("CL NAME = %s",ConPlayer.c_str());	
+
+	if (g_dedicated_server)
+	{
+
+		if (ConPlayer == "server") Msg("connecting server");
+		else
+		{
+
+				typedef bool(__stdcall *FZSysMsgsInit)();
+				typedef bool(__stdcall *FZSysMsgsFlags)();
+				typedef void* FZSysMsgsProcessClientModDll;
+				typedef void(__stdcall *FZSysMsgSender) (void* msg, unsigned int len, void* userdata);
+				typedef void(__stdcall *FZSysMsgsSendSysMessage_SOC)(void*, void*, FZSysMsgSender, void*);
+
+				Msg("load dll");
+
+				HMODULE dll = LoadLibrary("sysmsgs.dll");
+
+				Msg("After load dll");
+				if (dll == nullptr) Msg("1");
+
+				FZSysMsgsSendSysMessage_SOC SendSysMessage = (FZSysMsgsSendSysMessage_SOC)GetProcAddress(dll, "FZSysMsgsSendSysMessage_SOC");
+				if (SendSysMessage == nullptr) Msg("2");
+
+				FZSysMsgsInit SysInit = (FZSysMsgsInit)GetProcAddress(dll, "FZSysMsgsInit");
+				if (SysInit == nullptr) Msg("3");
+
+				FZSysMsgsProcessClientModDll writer = (FZSysMsgsProcessClientModDll)GetProcAddress(dll, "FZSysMsgsProcessClientModDll");
+				if (writer == nullptr) Msg("4");
+
+				(*SysInit)();
+
+				//flags
+				typedef int FZSysmsgsCommonFlags;
+				const FZSysmsgsCommonFlags FZ_SYSMSGS_ENABLE_LOGS = 1;
+				const FZSysmsgsCommonFlags FZ_SYSMSGS_PATCH_UI_PROGRESSBAR = 2;
+
+				typedef void(__stdcall *SetCommonSysmsgsFlags)(FZSysmsgsCommonFlags);
+
+				SetCommonSysmsgsFlags SetFlags = (SetCommonSysmsgsFlags)GetProcAddress(dll, "FZSysMsgsSetCommonSysmsgsFlags");
+
+				if (SetFlags == nullptr) Msg("5");
+				else SetFlags(FZ_SYSMSGS_ENABLE_LOGS | FZ_SYSMSGS_PATCH_UI_PROGRESSBAR);
+				//flags end
+
+
+				SMyUserData userdata = {};
+				userdata.idOfPlayer = CL->ID;
+				userdata.server = this;
+
+				FZDllDownloadInfo moddllinfo = {};
+
+				moddllinfo.fileinfo.filename = "";
+				moddllinfo.fileinfo.url = "";
+				moddllinfo.fileinfo.crc32 = 0x274A4EBD;
+				moddllinfo.fileinfo.progress_msg = "In Progress"; //Сообщение, выводимое пользователю во время закачки
+				moddllinfo.fileinfo.error_already_has_dl_msg = "Error happens";  //Сообщение, выводимое пользователю при возникновении ошибки во время закачки
+				moddllinfo.fileinfo.compression = FZ_COMPRESSION_NO_COMPRESSION; //Используемый тип компрессии
+				moddllinfo.procname = "ModLoad";  //Имя процедуры в dll мода, которая должна быть вызвана; должна иметь тип FZDllModFun
+				moddllinfo.procarg1 = "sace3"; //Аргументы для передачи в процедуру
+				moddllinfo.procarg2 = "mod parameters"; //Аргументы для передачи в процедуру
+				moddllinfo.dsign = "";
+				moddllinfo.name_lock = "123";  //Цифровая подпись для загруженной DLL - проверяется перед тем, как передать управление в функцию мода
+				moddllinfo.reconnect_addr.ip = "127.0.0.1";  //IP-адрес и порт для реконнекта. Если IP нулевой, то параметры реконнекта автоматически берутся игрой из тех, во время которых произошел дисконнект.
+				moddllinfo.reconnect_addr.port = 5445; // Порт
+			//	moddllinfo.is_reconnect_needed = 0;
+
+
+
+
+
+				
+
+	//-binlist <URL> - ссылка на адрес, по которому берется список файлов движка (для работы требуется запуск клиента с ключлм -fz_custom_bin)
+	//-gamelist <URL> - ссылка на адрес, по которому берется список файлов мода (геймдатных\патчей)
+	//-srv <IP> - IP-адрес сервера, к которому необходимо присоединиться после запуска мода
+	//-srvname <domainname> - доменное имя, по которому располагается сервер. Можно использовать вместо параметра -srv в случае динамического IP сервера
+	//-port <number> - порт сервера
+	//-gamespymode - стараться использовать загрузку средствами GameSpy
+	//-fullinstall - мод представляет собой самостоятельную копию игры, связь с файлами оригинальной не требуется
+	//-sharedpatches - использовать общую с инсталляцией игры директорию патчей
+	//-logsev <number> - уровень серьезности логируемых сообщений, по умолчанию FZ_LOG_ERROR
+	//-configsdir <string> - директория конфигов
+	//-exename <string> - имя исполняемого файла мода
+
+				
+
+
+				Msg("After this send sysmsgs");
+
+				SendSysMessage(writer, &moddllinfo, xrServer::SendCB, &userdata);
+
+				Msg("Before this send sysmsgs");
+
+				FreeLibrary(dll);
+
+				Msg("library free");
+				Msg("0");
+			}
+		}
+
+
+
 	MSYS_CONFIG	msgConfig;
 	msgConfig.sign1 = 0x12071980;
 	msgConfig.sign2 = 0x26111975;
 	msgConfig.is_battleye = 0;
 
+
+	
+		
+
+
+
 #ifdef BATTLEYE
-	msgConfig.is_battleye = (g_pGameLevel && Level().battleye_system.server != 0)? 1 : 0;
+		msgConfig.is_battleye = (g_pGameLevel && Level().battleye_system.server != 0)? 1 : 0;
 #endif // BATTLEYE
 
-	if(psNET_direct_connect)  //single_game
-	{
-        SV_Client			= CL;
-		CL->flags.bLocal	= 1;
-		SendTo_LL( SV_Client->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE,TRUE,TRUE,TRUE) );
-	}
-	else
-	{
-		SendTo_LL				(CL->ID,&msgConfig,sizeof(msgConfig), net_flags(TRUE, TRUE, TRUE, TRUE));
-		Server_Client_Check		(CL); 
-	}
+	
+			if (psNET_direct_connect)  //single_game
+			{
+				SV_Client = CL;
+				CL->flags.bLocal = 1;
+				SendTo_LL(SV_Client->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE, TRUE, TRUE, TRUE));
+			}
+			else
+
+
+			{
+
+				SendTo_LL(CL->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE, TRUE, TRUE, TRUE));
+				Server_Client_Check(CL);
+
+			}
+		
 
 	// gen message
 	if (!NeedToCheckClient_GameSpy_CDKey(CL))

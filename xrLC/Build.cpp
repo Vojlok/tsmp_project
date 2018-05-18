@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "xrThread.h"
+#include "common_compilers\xrThread.h"
 #include "xrSyncronize.h"
 
 //using namespace			std;

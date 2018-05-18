@@ -2,6 +2,7 @@
 
 
 
+
 #include "xr_level.h"
 #include "xr_level_geom.h"
 #include "xr_level_visuals.h"
@@ -581,38 +582,35 @@ void level_tools::split_lod_textures() const
 	path += m_objects_ref;
 	path += "lod";
 
-
-
-	
-
-		for (std::string::iterator it = path.begin() + 8, end = path.end(); it != end; ++it) {
+		for (std::string::iterator it = path.begin() + 8, end = path.end(); it != end; ++it) 
+		{
 			int c = *it;
-			*it = (c == '\\') ? '_' : std::tolower(c);
+			*it = (c == '\\') ? '_' : std::tolower(c);			
 		}
+
+	xr_name_gen reference(path.c_str(), false);	
+
+	std::string LCount = "lods count: " + std::to_string(m_mu_models.size())+", work started";
+	msg(LCount.c_str());
 	
-	
-
-
-
-	xr_name_gen reference(path.c_str(), false);
-
-
-
-
-
-
-	for (xr_ogf_vec_cit it = m_mu_models.begin(), end = m_mu_models.end();
-		it != end; ++it, reference.next()) {
+	//это тот самый цикл с лодами
+	// оригинал	for (xr_ogf_vec_cit it = m_mu_models.begin(), end = m_mu_models.end(); it != end; ++it, reference.next()) 
+		
+#pragma omp parallel for
+	for (int iii = 0; iii<m_mu_models.size(); ++iii)
+	{
 		frect uvs;
 		uvs.invalidate();
-		const ogf4_lod_face* lod_faces = (*it)->lod_faces();
+		const ogf4_lod_face* lod_faces = (m_mu_models[iii])->lod_faces();
 
-		for (uint_fast32_t i = 8; i != 0;) {
+		for (uint_fast32_t i = 8; i != 0;)
+		{
 			const ogf4_lod_vertex* vert = lod_faces[--i].v;
 
-
 			for (uint_fast32_t j = 4; j != 0;)
+			{
 				uvs.extend(vert[--j].t);
+			}
 		}
 
 		irect rect;
@@ -626,12 +624,18 @@ void level_tools::split_lod_textures() const
 		path = reference.get();
 		lods->save_dds(PA_GAME_TEXTURES, path + ".dds", &rect);
 		lods_nm->save_dds(PA_GAME_TEXTURES, path + "_nm.dds", &rect);
+
+
+	//	msg("it = %i",it);
+		msg("processing lod %i", iii);		
+		
+		reference.next();
 	}
 
 
 
 	
-
+	msg("work finished");
 	m_level->clear_lods();
 	m_level->clear_lods_nm();
 }

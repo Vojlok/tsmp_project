@@ -515,6 +515,8 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 	CTimer t;
 	t.Start();
 	Log				("Initializing File System...");
+
+
 	u32	M1			= Memory.mem_usage();
 
 	m_Flags.set		(flags,TRUE);
@@ -614,6 +616,7 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 			lp_def				=(cnt>=5)?def:0;
 			lp_capt				=(cnt>=6)?capt:0;
 			
+			
 			PathPairIt p_it		= pathes.find(root);
 
 			std::pair<PathPairIt, bool> I;
@@ -631,6 +634,7 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 		R_ASSERT		(path_exist("$app_data_root$"));
 	};
 		
+	//Msg("Init FileSystem before ProcExternal %f sec", t.GetElapsed_sec());
 	ProcessExternalArch		();
 
 

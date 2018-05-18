@@ -142,7 +142,10 @@ void CBuild::xrPhase_AdaptiveHT	()
 		Light_prepare				();
 
 		// calc approximate normals for vertices + base lighting
-		for (u32 vit=0; vit<g_vertices.size(); vit++)	
+		int VSize = g_vertices.size();
+
+//#pragma omp parallel for
+		for (int vit=0; vit<VSize; vit++)	
 		{
 			base_color_c		vC;
 			Vertex*		V		= g_vertices[vit];

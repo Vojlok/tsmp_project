@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "build.h"
 #include "std_classes.h"
-#include "xrThread.h"
+#include "common_compilers\xrThread.h"
 
 extern void Jitter_Select	(Fvector2* &Jitter, u32& Jcount);
 

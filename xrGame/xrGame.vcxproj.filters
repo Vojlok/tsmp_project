@@ -4656,9 +4656,6 @@
     <ClInclude Include="script_stack_tracker_inline.h">
       <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
     </ClInclude>
-    <ClInclude Include="doug_lea_memory_allocator.h">
-      <Filter>AI\AScript\memory_allocator</Filter>
-    </ClInclude>
     <ClInclude Include="ai_sounds.h">
       <Filter>AI\ASound</Filter>
     </ClInclude>
@@ -6552,6 +6549,7 @@
     <ClInclude Include="ui\UIGameTutorial.h">
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="..\xr_3da\doug_lea_memory_allocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -7768,9 +7766,6 @@
     </ClCompile>
     <ClCompile Include="script_stack_tracker.cpp">
       <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
-    </ClCompile>
-    <ClCompile Include="doug_lea_memory_allocator.c">
-      <Filter>AI\AScript\memory_allocator</Filter>
     </ClCompile>
     <ClCompile Include="ai_sounds.cpp">
       <Filter>AI\ASound</Filter>
@@ -9701,6 +9696,7 @@
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
     </ClCompile>
+    <ClCompile Include="..\xr_3da\doug_lea_memory_allocator.c" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="graph_abstract.h">

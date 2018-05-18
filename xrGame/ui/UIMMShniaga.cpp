@@ -289,7 +289,8 @@ bool CUIMMShniaga::OnMouse(float x, float y, EUIMessages mouse_action){
 	return CUIWindow::OnMouse(x,y,mouse_action);
 }
 
-void CUIMMShniaga::OnBtnClick(){
+void CUIMMShniaga::OnBtnClick()
+{
 	if (0 == xr_strcmp("btn_new_game", m_selected->WindowName()))
             ShowNewGame();
 		else if (0 == xr_strcmp("btn_new_back", m_selected->WindowName()))

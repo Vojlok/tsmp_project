@@ -38,11 +38,12 @@
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
 #include "../resourcemanager.h"
-#include "doug_lea_memory_allocator.h"
+#include "..\xr_3da\doug_lea_memory_allocator.h"
 #include "cameralook.h"
 
 #include "GameSpy/GameSpy_Full.h"
 #include "GameSpy/GameSpy_Patching.h"
+
 
 #ifdef DEBUG
 #	include "PHDebug.h"
@@ -526,6 +527,7 @@ public:
 	}
 };
 
+
 class CCC_LoadLastSave : public IConsole_Command {
 public:
 					CCC_LoadLastSave	(LPCSTR N) : IConsole_Command(N)
@@ -581,6 +583,17 @@ public:
 		LogFile->clear_not_free	();
 		FlushLog				();
 		Msg						("* Log file has been cleaned successfully!");
+	}
+};
+
+class CCC_L : public IConsole_Command {
+public:
+	CCC_L(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+	virtual void Execute(LPCSTR) 
+	{
+		LPCSTR newstr = "1,0007";
+		LPCSTR newurl = "http://dark-stalker.clan.su/hlam/old.7z";
+		MainMenu()->CMainMenu::OnNewPatchFound(newstr,newurl);
 	}
 };
 
@@ -1372,6 +1385,8 @@ void CCC_RegisterCommands()
 
 	CMD1(CCC_FlushLog,			"flush"					);		// flush log
 	CMD1(CCC_ClearLog,			"clear_log"					);
+
+	CMD1(CCC_L, "loader");
 
 #ifndef MASTER_GOLD
 	CMD1(CCC_ALifeTimeFactor,		"al_time_factor"		);		// set time factor

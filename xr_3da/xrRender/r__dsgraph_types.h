@@ -7,7 +7,7 @@
 #endif // USE_MEMORY_MONITOR
 
 #ifdef USE_DOUG_LEA_ALLOCATOR_FOR_RENDER
-#	include	"doug_lea_memory_allocator.h"
+#	include	"..\xr_3da\doug_lea_memory_allocator.h"
 
 	template <class T>
 	class doug_lea_alloc {

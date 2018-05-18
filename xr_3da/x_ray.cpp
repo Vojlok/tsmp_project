@@ -1278,10 +1278,11 @@ void CApplication::load_draw_internal()
 //draw level-specific screenshot
 		if(hLevelLogo){
 			Frect						r;
-			r.lt.set					(257,369);
+			r.lt.set					(0,169);
 			r.lt.x						+= offs;
 			r.lt.y						+= offs;
-			r.rb.add					(r.lt,Fvector2().set(512,256));
+		//	r.rb.add					(r.lt,Fvector2().set(512,256));
+			r.rb.add(r.lt, Fvector2().set(1024, 512));
 			r.lt.mul					(k);						
 			r.rb.mul					(k);						
 			pv							= (FVF::TL*) RCache.Vertex.Lock(4,ll_hGeom.stride(),Offset);

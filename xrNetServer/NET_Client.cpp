@@ -325,6 +325,9 @@ BOOL IPureClient::Connect	(LPCSTR options)
 				strcpy(password_str, PSW);
 		}
 
+
+		
+
 		string64				user_name_str = "";
 		if (strstr(options, "name="))
 		{
@@ -445,6 +448,10 @@ BOOL IPureClient::Connect	(LPCSTR options)
 
 			SClientConnectData			cl_data;
 			cl_data.process_id			= GetCurrentProcessId();
+
+			strcpy_s(cl_data.new_code, "tsmp");
+		
+
 			strcpy_s( cl_data.name, user_name_str );
 			strcpy_s( cl_data.pass, user_pass );
 

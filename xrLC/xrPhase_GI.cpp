@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "xrHemisphere.h"
-#include "xrThread.h"
+#include "common_compilers\xrThread.h"
 #include "xrSyncronize.h"
 
 #define	GI_THREADS		2

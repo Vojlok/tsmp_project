@@ -10,7 +10,7 @@
 #include "script_storage.h"
 #include "script_thread.h"
 #include <stdarg.h>
-#include "doug_lea_memory_allocator.h"
+#include "..\xr_3da\doug_lea_memory_allocator.h"
 
 LPCSTR	file_header_old = "\
 local function script_name() \

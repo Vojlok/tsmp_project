@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "build.h"
-#include "xrThread.h"
+#include "common_compilers\xrThread.h"
 #include "xrSyncronize.h"
 
 xrCriticalSection	task_CS

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "communicate.h"
+#include "common_compilers\communicate.h"
 #include "xruvpoint.h"
 #include "progmesh.h"
 #include "xrSpherical.h"

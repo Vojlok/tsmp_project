@@ -69,9 +69,6 @@
     <ClInclude Include="..\xrRender\r__dsgraph_types.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRender\doug_lea_memory_allocator.h">
-      <Filter>Core\memory</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\DetailFormat.h">
       <Filter>Details</Filter>
     </ClInclude>
@@ -210,6 +207,7 @@
     <ClInclude Include="..\xrRender\LightTrack.h">
       <Filter>Lights</Filter>
     </ClInclude>
+    <ClInclude Include="..\doug_lea_memory_allocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -256,9 +254,6 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\tga.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrRender\doug_lea_memory_allocator.c">
-      <Filter>Core\memory</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\DetailManager.cpp">
       <Filter>Details</Filter>
@@ -413,6 +408,7 @@
     <ClCompile Include="..\xrRender\LightTrack.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
+    <ClCompile Include="..\doug_lea_memory_allocator.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Pipeline.txt" />

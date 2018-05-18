@@ -254,6 +254,11 @@ void	CDetailManager::hw_Render_dump		(ref_constant x_array, u32 var_id, u32 lod_
 				RCache.stat.r.s_details.add	(dwCNT_verts);
 			}
 			// Clean up
+#ifndef _EDITOR
+			if ((ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_SMAP == RImplementation.phase))										// phase smap with shadows
+				|| (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_NORMAL == RImplementation.phase))		// phase normal with shadows without sun
+				|| (!ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_NORMAL == RImplementation.phase)))
+#endif
 			vis.clear_not_free			();
 		}
 		vOffset		+=	hw_BatchSize * Object.number_vertices;

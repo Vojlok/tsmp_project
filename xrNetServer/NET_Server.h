@@ -10,10 +10,11 @@ struct SClientConnectData
 	string64		name;
 	string64		pass;
 	u32				process_id;
+	string64		new_code;
 
 	SClientConnectData()
 	{
-		name[0] = pass[0] = 0;
+		name[0] = pass[0]=new_code[0] = 0;
 		process_id = 0;
 	}
 };

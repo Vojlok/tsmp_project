@@ -264,12 +264,12 @@ void CGamePersistent::WeathersUpdate()
 void CGamePersistent::start_logo_intro		()
 {
 #if 1//def DEBUG
-	if (0!=strstr(Core.Params,"-nointro")){
+	//if (0!=strstr(Core.Params,"-nointro")){
 		m_intro_event			= 0;
 		Console->Show			();
 		Console->Execute		("main_menu on");
 		return;
-	}
+	//}
 #endif
 	if (Device.dwPrecacheFrame==0)
 	{
@@ -295,10 +295,10 @@ void CGamePersistent::update_logo_intro			()
 void CGamePersistent::start_game_intro		()
 {
 #if 1//def DEBUG
-	if (0!=strstr(Core.Params,"-nointro")){
+	//if (0!=strstr(Core.Params,"-nointro")){
 		m_intro_event			= 0;
 		return;
-	}
+	//}
 #endif
 	if (g_pGameLevel && g_pGameLevel->bReady && Device.dwPrecacheFrame<=2){
 		m_intro_event.bind		(this,&CGamePersistent::update_game_intro);

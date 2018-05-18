@@ -492,7 +492,8 @@ u16 NET_Compressor::Decompress	(BYTE* dest, const u32 &dest_size, BYTE* src, con
 	if( *src != NET_TAG_COMPRESSED ) 
 	{
 		if (count) {
-			CopyMemory	( dest, src+1, count-1 );
+	//		CopyMemory	( dest, src+1, count-1 );
+			CopyMemory(dest, src + 1, (count - 1 <= dest_size) ? count - 1 : dest_size);
 			return		( u16(count-1) );
 		}
 

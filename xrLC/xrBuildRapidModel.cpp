@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "cl_collector.h"
 #include "build.h"
-#include "communicate.h"
+#include "common_compilers\communicate.h"
 
 CDB::MODEL*	RCAST_Model	= 0;
 

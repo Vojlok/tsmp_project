@@ -73,7 +73,7 @@ private:
 
 	u16							m_iCurUpdatePacket;
 	xr_vector<NET_Packet>		m_aUpdatePackets;
-
+private:
 	struct DelayedPacket
 	{
 		ClientID		SenderID;
@@ -146,9 +146,11 @@ public:
 	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
 	
 	xrClientData*			SelectBestClientToMigrateTo		(CSE_Abstract* E, BOOL bForceAnother=FALSE);
-	void					SendConnectResult		(IClient* CL, u8 res, u8 res1, char* ResultStr);
+	void 					SendConnectResult		(IClient* CL, u8 res, u8 res1, char* ResultStr);
 
-	void					AttachNewClient			(IClient* CL);
+	void 					AttachNewClient			(IClient* CL);
+
+	static void	__stdcall				SendCB(void* msg, unsigned int len, void* userdata);
 	virtual void			OnBuildVersionRespond				(IClient* CL, NET_Packet& P);
 protected:
 	bool					CheckAdminRights		(const shared_str& user, const shared_str& pass, string512 reason);
