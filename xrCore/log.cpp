@@ -72,13 +72,6 @@ void Log				(const char *s)
 	int		i,j;
 	char	split[1024];
 
-#ifdef _WIN64
-	std::string MMMM = s;
-	std::string XMXM = "s=:" + MMMM;
-	Msg(XMXM.c_str());
-
-#endif
-
 	for (i=0,j=0; s[i]!=0; i++) {
 		if (s[i]=='\n') {
 			split[j]=0;	// end of line
@@ -97,9 +90,9 @@ void __cdecl Msg		( const char *format, ...)
 {
 	va_list mark;
 	string1024	buf;
-	va_start	(mark, format );
-	int sz		= _vsnprintf(buf, sizeof(buf)-1, format, mark ); buf[sizeof(buf)-1]=0;
-    va_end		(mark);
+	va_start(mark, format);
+	int sz = _vsnprintf(buf, sizeof(buf) - 1, format, mark); buf[sizeof(buf) - 1] = 0;
+	va_end(mark);
 	if (sz)		Log(buf);
 }
 
