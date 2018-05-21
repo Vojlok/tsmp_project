@@ -54,9 +54,34 @@ void AddOne				(const char *split)
 
 //	DUMP_PHASE;
 	{
-		shared_str			temp = shared_str(split);
-//		DUMP_PHASE;
-		LogFile->push_back	(temp);
+		
+
+		if (0 != strstr(Core.Params, "-log_with_time"))
+		{
+			time_t t = time(NULL);
+			tm* ti = localtime(&t);
+			char buf[64];			
+			strftime(buf, 64, "[%x %X]\t", ti);
+			std::string TSTR1 = split; 
+			std::string buff = buf;
+			buff = " " + buff;
+			std::string TSTR="  ";
+
+			if (TSTR1[0] == '*') TSTR[0] = '*';
+			if (TSTR1[0] == '-') TSTR[0] = '-';
+			if (TSTR1[0] == '!') TSTR[0] = '!';
+			if (TSTR1[0] == '`') TSTR[0] = '`';
+			if (TSTR1[0] == '#') TSTR[0] = '#';
+
+			TSTR =TSTR+ buff + TSTR1;
+			shared_str			temp1 = shared_str(TSTR.c_str());
+			LogFile->push_back(temp1);
+		}
+		else
+		{			
+			shared_str			temp = shared_str(split);
+			LogFile->push_back(temp);
+		}
 	}
 
 	//exec CallBack
