@@ -570,6 +570,9 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 	//-----------------------------------------------------------
 	// append application data path
 	// target folder 
+
+	
+
 	if (m_Flags.is(flTargetFolderOnly))
 	{
 		append_path		("$target_folder$",target_folder,0,TRUE);
@@ -581,6 +584,8 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 		LPCSTR			lp_add, lp_def, lp_capt;
 		string16		b_v;
 		string4096		temp;
+
+		
 
 		while(!pFSltx->eof())
 		{
@@ -634,7 +639,7 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 		R_ASSERT		(path_exist("$app_data_root$"));
 	};
 		
-	//Msg("Init FileSystem before ProcExternal %f sec", t.GetElapsed_sec());
+
 	ProcessExternalArch		();
 
 

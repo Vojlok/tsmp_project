@@ -139,21 +139,51 @@ void CBuild::xrPhase_AdaptiveHT	()
 		FPU::m64r					();
 		Status						("Precalculating : base hemisphere ...");
 		mem_Compact					();
+
+
+
 		Light_prepare				();
+
+
 
 		// calc approximate normals for vertices + base lighting
 		int VSize = g_vertices.size();
 
+//		Progress(p_total += p_cost);
+//	}
+//	Progress(1.f);
+		float fProgr = 0;
+		float fStep = 1.f/VSize;
+		Progress(fProgr);
+
+		Msg("iterations count %i", VSize);
+
+//		omp_set_num_threads(1);
+
 //#pragma omp parallel for
 		for (int vit=0; vit<VSize; vit++)	
 		{
+		//	Msg("iteration %i", vit);
 			base_color_c		vC;
-			Vertex*		V		= g_vertices[vit];
+			Vertex*		V = g_vertices[vit];
+		//		Msg("V");
 			V->normalFromAdj	();
-			LightPoint			(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb+LP_dont_sun,0);
+		//	Msg("normal");
+
+
+				LightPoint(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb + LP_dont_sun, 0);
+			
+			//	Msg("light");
 			vC.mul				(0.5f);
+		//	Msg("mul");
 			V->C._set			(vC);
+		//	Msg("set");
+
+			fProgr += fStep;
+			Progress(fProgr);
 		}
+
+		Progress(1.f);
 	}
 
 	//////////////////////////////////////////////////////////////////////////

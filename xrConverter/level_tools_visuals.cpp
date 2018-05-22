@@ -1,6 +1,7 @@
 #include <cctype>
 
-
+#include <stdio.h>
+#include <omp.h>
 
 
 #include "xr_level.h"
@@ -596,9 +597,13 @@ void level_tools::split_lod_textures() const
 	//это тот самый цикл с лодами
 	// оригинал	for (xr_ogf_vec_cit it = m_mu_models.begin(), end = m_mu_models.end(); it != end; ++it, reference.next()) 
 		
-#pragma omp parallel for
-	for (int iii = 0; iii<m_mu_models.size(); ++iii)
+//	omp_set_num_threads(2);
+
+//#pragma omp parallel for
+	for (int iii = 0; iii<m_mu_models.size(); iii++)
 	{
+		msg("processing lod %i", iii);
+
 		frect uvs;
 		uvs.invalidate();
 		const ogf4_lod_face* lod_faces = (m_mu_models[iii])->lod_faces();
@@ -622,12 +627,35 @@ void level_tools::split_lod_textures() const
 		xr_assert(is_power_of_two(rect.y2 - rect.y1 + 1));
 
 		path = reference.get();
-		lods->save_dds(PA_GAME_TEXTURES, path + ".dds", &rect);
-		lods_nm->save_dds(PA_GAME_TEXTURES, path + "_nm.dds", &rect);
 
+//#pragma omp critical
+	//	{
+	//	bool xr_image::save_dds(const char* path, const std::string& name, const irect* rect) const
+	/*	{
+			xr_memory_writer* w = new xr_memory_writer();
+			bool status = save_dds(*w, rect) && w->save_to(path, name);
+			delete w;
+			return status;
+		}
+		*/
+	
+
+#pragma omp parallel sections
+		{
+#pragma omp section
+			lods->save_dds(PA_GAME_TEXTURES, path + ".dds", &rect);
+
+#pragma omp section
+			lods_nm->save_dds(PA_GAME_TEXTURES, path + "_nm.dds", &rect);
+		}		
+
+	//	lods->save_dds(PA_GAME_TEXTURES, path + ".dds", &rect);
+	//	lods_nm->save_dds(PA_GAME_TEXTURES, path + "_nm.dds", &rect);
+		
+	//	msg("processed lod %i", iii);
 
 	//	msg("it = %i",it);
-		msg("processing lod %i", iii);		
+			
 		
 		reference.next();
 	}

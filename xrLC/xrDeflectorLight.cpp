@@ -201,7 +201,12 @@ void LightPoint(CDB::COLLIDER* DB, CDB::MODEL* MDL, base_color_c &C, Fvector &P,
 	if (0==(flags&LP_dont_rgb))
 	{
 		DB->ray_options	(0);
+
 		R_Light	*L	= &*lights.rgb.begin(), *E = &*lights.rgb.end();
+
+
+
+
 		for (;L!=E; L++)
 		{
 			switch (L->type)
