@@ -148,7 +148,12 @@ void InitConsole	()
 #endif
 	Console->Initialize			( );
 
-	strcpy_s						(Console->ConfigFile,"tsmp_user.ltx");
+#ifdef TSMP_CLIENT
+	strcpy_s(Console->ConfigFile, "user.ltx");
+#else
+	strcpy_s(Console->ConfigFile, "tsmp_user.ltx");
+#endif
+
 	if (strstr(Core.Params,"-ltx ")) {
 		string64				c_name;
 		sscanf					(strstr(Core.Params,"-ltx ")+5,"%[^ ] ",c_name);
@@ -906,6 +911,9 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	} 
 	else if (E==eDisconnect) 
 	{
+
+		Msg("event disconnect");
+
 		if (g_pGameLevel) 
 		{
 			Console->Hide			();
@@ -1179,7 +1187,11 @@ void doBenchmark(LPCSTR name)
 
 		Engine.External.Initialize	( );
 
-		strcpy_s						(Console->ConfigFile,"tsmp_user.ltx");
+#ifdef TSMP_CLIENT
+		strcpy_s						(Console->ConfigFile,"user.ltx");
+#else
+		strcpy_s(Console->ConfigFile, "tsmp_user.ltx");
+#endif
 		if (strstr(Core.Params,"-ltx ")) {
 			string64				c_name;
 			sscanf					(strstr(Core.Params,"-ltx ")+5,"%[^ ] ",c_name);

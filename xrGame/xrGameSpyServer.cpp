@@ -171,7 +171,7 @@ void			xrGameSpyServer::OnCL_Disconnected	(IClient* _CL)
 
 	if (m_bCDKey_Initialized)
 	{
-		Msg("xrGS::CDKey::Server : Disconnecting Client");
+		Msg("xrGS::CDKey::Server : Disconnecting Client [ %s ]", _CL->name.c_str());
 		m_GCDServer.DisconnectUser(int(_CL->ID.value()));
 	};
 

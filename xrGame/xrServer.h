@@ -150,6 +150,7 @@ public:
 
 	void 					AttachNewClient			(IClient* CL);
 
+	void					UnloadDll();
 	static void	__stdcall				SendCB(void* msg, unsigned int len, void* userdata);
 	virtual void			OnBuildVersionRespond				(IClient* CL, NET_Packet& P);
 protected:
@@ -170,7 +171,7 @@ protected:
 public:
 	// constr / destr
 	xrServer				();
-	virtual ~xrServer		();
+	virtual ~xrServer();
 
 	// extended functionality
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned

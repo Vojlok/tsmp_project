@@ -908,7 +908,7 @@ void level_tools::split_lod_textures() const
 		}
 	} // end 16 threads 
 
-
+	delete Paths;
 
 	msg("work finished");
 	m_level->clear_lods();

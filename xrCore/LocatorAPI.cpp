@@ -37,7 +37,13 @@ CLocatorAPI*		xr_FS = NULL;
 #ifdef _EDITOR
 #	define FSLTX	"fs.ltx"
 #else
+
+#ifdef TSMP_CLIENT
+#	define FSLTX	"fsgame_.ltx"
+#else
 #	define FSLTX	"fsgame.ltx"
+#endif
+
 #endif
 
 struct _open_file
@@ -507,9 +513,52 @@ bool CLocatorAPI::Recurse		(const char* path)
 }
 
 
-
-void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
+void CLocatorAPI::_initialize(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 {
+
+	/*
+#ifdef TSMP_CLIENT
+
+	string256 CDir, cfg_name;
+	_getcwd(CDir, sizeof(CDir));
+
+	Msg("Current directory: %s", CDir);
+
+	std::string a = CDir, b, c;
+	b.assign(a.begin(), a.end() - 21);
+
+	c.assign(a.begin(), a.end() - 5);
+
+	c += "/appdata/tsmp_user.ltx";
+
+	
+
+	b += "user.ltx";
+
+	Msg("a %s b %s c %s", a.c_str(), b.c_str(), b.c_str());
+
+	bool LTX_Exists1 = access(c.c_str(), 0) != -1;
+
+	if (!LTX_Exists1)
+	{
+		Msg("cant find tsmp_user.ltx , searching for same from 10006");
+
+		bool LTX_Exists = access(b.c_str(), 0) != -1;
+
+		if (LTX_Exists)
+		{
+			Msg("Ltx from 10006 found, using it");
+
+			Msg("%s -> %s", b.c_str(), c.c_str());
+
+			CopyFile(b.c_str(), c.c_str(), true);
+		}
+	}
+	else Msg("exists");
+
+#endif
+*/
+
 	char _delimiter = '|'; //','
 	if (m_Flags.is(flReady))return;
 	CTimer t;

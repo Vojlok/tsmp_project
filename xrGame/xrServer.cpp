@@ -64,6 +64,8 @@ xrServer::xrServer():IPureServer(Device.GetTimerGlobal(), g_dedicated_server)
 
 xrServer::~xrServer()
 {
+	UnloadDll();
+
 	while (net_Players.size())
 	{
 		

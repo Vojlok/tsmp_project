@@ -5,6 +5,9 @@
 #include "../Level.h"
 
 #include "../game_sv_artefacthunt.h"
+
+std::string nm = "Промзона";
+
 //--------------------------- QR2 callbacks ---------------------------------------
 #define ADD_KEY_VAL(g, q, qf, o, gf)		{if (g) {q->qf(o, g->gf);} else q->BufferAdd(o, "");}
 #define ADD_KEY_VAL_INT(g, q, qf, o, gf)		{if (g) {q->qf(o, int(g->gf));} else q->BufferAdd(o, "");}
@@ -17,7 +20,6 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void *userdata)
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
 
-	
 
 	game_sv_mp* gmMP = smart_cast<game_sv_mp*>(pServer->game);
 	game_sv_Deathmatch* gmDM = smart_cast<game_sv_Deathmatch*>(pServer->game);
@@ -29,7 +31,12 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void *userdata)
 	switch (keyid)
 	{
 	case HOSTNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->HostName.c_str()); break;
-	case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->MapName.c_str()); break;
+	//case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->MapName.c_str()); break;
+
+		
+
+	case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, nm.c_str()); break;
+
 	case GAMEVER_KEY:		pQR2->BufferAdd(outbuf, pQR2->GetGameVersion(game_version)); break;
 	case NUMPLAYERS_KEY:	pQR2->BufferAdd_Int(outbuf, pServer->GetPlayersCount()); break;
 	case MAXPLAYERS_KEY:	pQR2->BufferAdd_Int(outbuf, pServer->m_iMaxPlayers); break;

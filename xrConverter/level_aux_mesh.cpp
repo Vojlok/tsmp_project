@@ -91,7 +91,7 @@ void level_aux_mesh::build(const xr_level_som& som, const xr_gamemtls_lib& gamem
 		pattern.snd_occlusion_factor = it->occ;
 		xr_gamemtl_vec_cit gamemtl_it = std::lower_bound(gamemtls.begin(), gamemtls.end(),
 				&pattern, sound_occ_pred());
-		xr_assert(gamemtl_it != gamemtls.end() && (*gamemtl_it)->snd_occlusion_factor == it->occ);
+		xr_assert(gamemtl_it != gamemtls.end() && (*gamemtl_it)->snd_occlusion_factor == it->occ); //-V612
 		face_template.surface.set(0, 0, (*gamemtl_it)->id, it->b2sided ? RSF_TWO_SIDED : 0);
 		m_faces.push_back(face_template);
 	}

@@ -32,7 +32,7 @@ public:
 public:
 								CLocatorAPI		();
 								~CLocatorAPI	();
-	void						_initialize		(u32 flags, LPCSTR target_folder=0, LPCSTR fs_fname=0);
+	void						_initialize		(u32 flags, LPCSTR target_folder=0, LPCSTR fs_fname=0);	
 	void						_destroy		();
 
 	IReader*					r_open			(LPCSTR initial, LPCSTR N);

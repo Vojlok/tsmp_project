@@ -98,6 +98,7 @@ void CLevel::remove_objects	()
 
 void CLevel::net_Stop		()
 {
+	Msg("CLevel::net_Stop - Disconnect");
 	Msg							("- Disconnect");
 	bReady						= false;
 	m_bGameConfigStarted		= FALSE;
@@ -105,6 +106,7 @@ void CLevel::net_Stop		()
 
 	remove_objects				();
 	
+
 	IGame_Level::net_Stop		();
 	IPureClient::Disconnect		();
 

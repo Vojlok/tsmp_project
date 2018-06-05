@@ -60,6 +60,9 @@ extern	int		g_sv_mp_RadioMaxMsgs			;
 extern	int		g_sv_mp_Timer2Interval			;
 extern	int		g_sv_mp_Timer1Enabled			;
 extern	int		g_sv_mp_Timer2Enabled			;
+extern	std::string	g_sv_mp_loader_ip			;
+extern	std::string	g_sv_mp_loader_port			;
+extern	int		g_sv_mp_ModLoaderEnabled		;
 extern	int		g_sv_mp_DisablerEnabled			;
 extern	int		g_sv_mp_nickname_change_mode	;
 
@@ -514,6 +517,28 @@ public:
 	};
 
 	virtual void	Info	(TInfo& I){strcpy(I,"Ban Player by IP"); }
+};
+
+class CCC_TSMP_SetPort : public IConsole_Command {
+public:
+	CCC_TSMP_SetPort(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+	virtual void	Execute(LPCSTR args_)
+	{
+		g_sv_mp_loader_port = args_;
+	}
+
+	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
+};
+
+class CCC_TSMP_SetIp : public IConsole_Command {
+public:
+	CCC_TSMP_SetIp(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+	virtual void	Execute(LPCSTR args_)
+	{
+		g_sv_mp_loader_ip = args_;
+	}
+
+	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
 };
 
 class CCC_UnBanPlayerByIP : public IConsole_Command {
@@ -1602,6 +1627,9 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_nickname_change_mode"	,	(int*)&g_sv_mp_nickname_change_mode, 1, 3);
 	CMD4(CCC_SV_Integer,	"tsmp_vote_time"			,	(int*)&g_sv_mp_fVoteTime, 15, 180);
 	CMD1(CCC_WeaponDisable, "tsmp_weapon_disable");
+	CMD4(CCC_SV_Integer,	"tsmp_loader_enabled"		,	(int*)&g_sv_mp_ModLoaderEnabled, 0, 1);
+	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
+	CMD1(CCC_TSMP_SetPort,	"tsmp_loader_reconnect_port");
 
 
 	CMD4(CCC_SV_Integer,	"sv_artefact_stay_time"		,	(int*)&g_sv_ah_dwArtefactStayTime		, 0,180);	//min

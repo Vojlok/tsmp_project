@@ -45,9 +45,11 @@ int			g_sv_mp_RadioInterval			= 60;
 int			g_sv_mp_RadioMuteInterval		= 10;
 int			g_sv_mp_Timer1Enabled			= 1;
 int			g_sv_mp_Timer2Enabled			= 0;
+int			g_sv_mp_ModLoaderEnabled		= 1;
 int			g_sv_mp_DisablerEnabled			= 0;
 int			g_sv_mp_nickname_change_mode	= 3;
-
+std::string		g_sv_mp_loader_ip =  "0.0.0.0" ;
+std::string		g_sv_mp_loader_port = "4554" ;
 int			g_sv_mp_Counter = 0;
 //-----------------------------------------------------------------
 

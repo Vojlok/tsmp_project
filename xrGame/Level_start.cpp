@@ -11,8 +11,16 @@
 #include "../xr_ioconsole.h"
 #include "MainMenu.h"
 
+//#include "ui\UIOptConCom.h"
+#include "RegistryFuncs.h"
+
 BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 {
+	string128 m_pl_name;
+	ReadRegistry_StrValue(REGISTRY_VALUE_USERNAME, m_pl_name);
+	if (xr_strlen(m_pl_name)>17)
+		m_pl_name[17] = 0;
+
 	net_start_result_total				= TRUE;
 
 	pApp->LoadBegin				();
@@ -24,7 +32,11 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 		string512 tmp;
 		strcpy_s(tmp, op_client);
 		strcat_s(tmp, "/name=");
-		strcat_s(tmp, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
+	//	strcat_s(tmp, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
+	
+		strcat_s(tmp,xr_strlen(m_pl_name)? m_pl_name: (xr_strlen(Core.UserName) ? Core.UserName : Core.CompName));
+
+
 		m_caClientOptions			= tmp;
 	} else {
 		string1024	ret="";
@@ -36,6 +48,7 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 			strcpy_s(tmpstr, op_client);
 			*(strstr(tmpstr, "name=")+5) = 0;
 			strcat_s(tmpstr, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
+		
 			const char* ptmp = strstr(strstr(op_client, "name="), "/");
 			if (ptmp)
 				strcat_s(tmpstr, ptmp);

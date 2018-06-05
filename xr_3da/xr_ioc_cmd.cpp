@@ -15,6 +15,14 @@
 
 #include "xr_object.h"
 
+
+#include <stdio.h> 
+#include <direct.h>
+
+#include <io.h>
+
+
+
 xr_token							snd_freq_token							[ ]={
 	{ "22khz",						sf_22K										},
 	{ "44khz",						sf_44K										},
@@ -271,15 +279,20 @@ void CCC_LoadCFG::Execute(LPCSTR args)
 		IReader* F						= FS.r_open(cfg_full_name);
 		
 		string1024						str;
-		if (F!=NULL) {
-			while (!F->eof()) {
+
+		if (F!=NULL) 
+		{
+			while (!F->eof()) 
+			{
 				F->r_string				(str,sizeof(str));
 				if(allow(str))
 					Console->Execute	(str);
 			}
 			FS.r_close(F);
 			Msg("[%s] successfully loaded.",cfg_full_name);
-		} else {
+		} 
+		else 
+		{
 			Msg("! Cannot open script file [%s]",cfg_full_name);
 		}
 }

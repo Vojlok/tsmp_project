@@ -110,6 +110,7 @@ public:
 								CLocatorAPI		();
 								~CLocatorAPI	();
 	void						_initialize		(u32 flags, LPCSTR target_folder=0, LPCSTR fs_name=0);
+
 	void						_destroy		();
 
 	CStreamReader*				rs_open			(LPCSTR initial, LPCSTR N);

@@ -165,7 +165,7 @@ static bool write_file(xr_file_system& fs, const std::string& path, const uint8_
 		lzo_uint size = size_real;
 		uint8_t* temp = new uint8_t[size];
 		if (lzo1x_decompress_safe(data, size_compressed, temp, &size, 0) != LZO_E_OK) {
-			delete temp;
+			delete [] temp;
 			return false;
 		}
 		data = temp;
@@ -195,7 +195,6 @@ void db_unpacker::extract_1114(const std::string& prefix, const std::string& mas
 		unsigned size = s->r_u32();
 
 		if (mask.length() && (offset != 0))
-		//if (path.compare(path.size()-mask.size(),mask.size(),mask) != 0)
 		if (path.find(mask) == -1)
 		continue;
 
@@ -235,7 +234,6 @@ void db_unpacker::extract_2215(const std::string& prefix, const std::string& mas
 		unsigned size_compressed = s->r_u32();
 
 		if (mask.length() && (offset != 0))
-		//if (path.compare(path.size()-mask.size(),mask.size(),mask) != 0)
 		if (path.find(mask) == -1)
 		continue;
 
@@ -263,7 +261,6 @@ void db_unpacker::extract_2945(const std::string& prefix, const std::string& mas
 		unsigned size_compressed = s->r_u32();
 
 		if (mask.length() && (offset != 0))
-		//if (path.compare(path.size()-mask.size(),mask.size(),mask) != 0)
 		if (path.find(mask) == -1)
 		continue;
 
@@ -295,7 +292,6 @@ void db_unpacker::extract_2947(const std::string& prefix, const std::string& mas
 		uint32_t offset = s->r_u32();
 
 		if (mask.length() && (offset != 0))
-		//if (path.compare(path.size()-mask.size(),mask.size(),mask) != 0)
 		if (path.find(mask) == -1)
 		continue;
 

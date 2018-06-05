@@ -14,7 +14,27 @@
 #include "game_cl_single.h"
 #include "MainMenu.h"
 
+typedef bool(__stdcall *FZSysMsgsInit)();
+typedef bool(__stdcall *FZSysMsgsFlags)();
+typedef void* FZSysMsgsProcessClientModDll;
+//typedef void(__stdcall *FZSysMsgSender) (void* msg, unsigned int len, void* userdata);
+typedef void(__stdcall *FZSysMsgsSendSysMessage_SOC)(void*, void*, FZSysMsgSender, void*);
+
+typedef int FZSysmsgsCommonFlags;
+const FZSysmsgsCommonFlags FZ_SYSMSGS_ENABLE_LOGS = 1;
+const FZSysmsgsCommonFlags FZ_SYSMSGS_PATCH_UI_PROGRESSBAR = 2;
+
+typedef void(__stdcall *SetCommonSysmsgsFlags)(FZSysmsgsCommonFlags);
+
+SetCommonSysmsgsFlags SetFlags;
+
 std::string ConPlayer = "123";
+bool bIsSysMsgsDllLoaded = false;
+HMODULE dll;
+FZSysMsgsSendSysMessage_SOC SendSysMessage;
+FZSysMsgsInit SysInit;
+FZSysMsgsProcessClientModDll writer;
+
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -156,64 +176,80 @@ struct SMyUserData {
 	xrServer* server; ClientID idOfPlayer;
 };
 
+extern	int		g_sv_mp_ModLoaderEnabled;
+extern std::string g_sv_mp_loader_ip;
+extern std::string g_sv_mp_loader_port;
+
 void xrServer::SendCB(void* msg, unsigned int len, void* userdata)
 {
-	Msg("CD called from dll");
+//	Msg("CD called from dll");
 	//((SMyUserData*)userdata)->server->SendTo_LL(((SMyUserData*)userdata)->idOfPlayer, msg, len, net_flags(TRUE, TRUE, TRUE, TRUE));
 	((SMyUserData*)userdata)->server->IPureServer::SendTo_LL(((SMyUserData*)userdata)->idOfPlayer, msg, len, net_flags(TRUE, TRUE, TRUE, TRUE));
 
 
-	Msg("xrServer::SendCB");
+//	Msg("xrServer::SendCB");
+};
+
+void xrServer::UnloadDll()
+{	
+	if (bIsSysMsgsDllLoaded)
+	{
+		typedef bool(__stdcall *FZSysMsgsFree)();
+
+		FZSysMsgsFree FreeFZ=	(FZSysMsgsFree)GetProcAddress(dll, "FZSysMsgsFree");
+		if (FreeFZ == nullptr) Msg("cant free");
+		else FreeFZ();
+
+		FreeLibrary(dll);
+		Msg("unloaded dll");
+	}
 };
 
 void xrServer::AttachNewClient			(IClient* CL)
 {
 //	Msg("CL NAME = %s",ConPlayer.c_str());	
 
+	
+//#ifdef DEDICATED_SERVER
 	if (g_dedicated_server)
 	{
-
-		if (ConPlayer == "server") Msg("connecting server");
-		else
+		if (g_sv_mp_ModLoaderEnabled == 1)
 		{
 
-				typedef bool(__stdcall *FZSysMsgsInit)();
-				typedef bool(__stdcall *FZSysMsgsFlags)();
-				typedef void* FZSysMsgsProcessClientModDll;
-				typedef void(__stdcall *FZSysMsgSender) (void* msg, unsigned int len, void* userdata);
-				typedef void(__stdcall *FZSysMsgsSendSysMessage_SOC)(void*, void*, FZSysMsgSender, void*);
+			if (ConPlayer == "server") Msg("connecting server");
+			else
+			{
+				Msg("sending magic packet to %s",ConPlayer.c_str());
 
-				Msg("load dll");
+				if (!bIsSysMsgsDllLoaded)
+				{
+					Msg("load dll");
 
-				HMODULE dll = LoadLibrary("sysmsgs.dll");
+					dll = LoadLibrary("sysmsgs.dll");
 
-				Msg("After load dll");
-				if (dll == nullptr) Msg("1");
+					Msg("After loading dll");
+					if (dll == nullptr) Msg("cant load dll");
+					else bIsSysMsgsDllLoaded = true;
 
-				FZSysMsgsSendSysMessage_SOC SendSysMessage = (FZSysMsgsSendSysMessage_SOC)GetProcAddress(dll, "FZSysMsgsSendSysMessage_SOC");
-				if (SendSysMessage == nullptr) Msg("2");
+					SendSysMessage = (FZSysMsgsSendSysMessage_SOC)GetProcAddress(dll, "FZSysMsgsSendSysMessage_SOC");
+					if (SendSysMessage == nullptr) Msg("2");
 
-				FZSysMsgsInit SysInit = (FZSysMsgsInit)GetProcAddress(dll, "FZSysMsgsInit");
-				if (SysInit == nullptr) Msg("3");
+					SysInit = (FZSysMsgsInit)GetProcAddress(dll, "FZSysMsgsInit");
+					if (SysInit == nullptr) Msg("3");
 
-				FZSysMsgsProcessClientModDll writer = (FZSysMsgsProcessClientModDll)GetProcAddress(dll, "FZSysMsgsProcessClientModDll");
-				if (writer == nullptr) Msg("4");
+					writer = (FZSysMsgsProcessClientModDll)GetProcAddress(dll, "FZSysMsgsProcessClientModDll");
+					if (writer == nullptr) Msg("4");
 
-				(*SysInit)();
+					(*SysInit)();
 
-				//flags
-				typedef int FZSysmsgsCommonFlags;
-				const FZSysmsgsCommonFlags FZ_SYSMSGS_ENABLE_LOGS = 1;
-				const FZSysmsgsCommonFlags FZ_SYSMSGS_PATCH_UI_PROGRESSBAR = 2;
+					//flags
+					SetFlags = (SetCommonSysmsgsFlags)GetProcAddress(dll, "FZSysMsgsSetCommonSysmsgsFlags");
 
-				typedef void(__stdcall *SetCommonSysmsgsFlags)(FZSysmsgsCommonFlags);
-
-				SetCommonSysmsgsFlags SetFlags = (SetCommonSysmsgsFlags)GetProcAddress(dll, "FZSysMsgsSetCommonSysmsgsFlags");
-
-				if (SetFlags == nullptr) Msg("5");
-				else SetFlags(FZ_SYSMSGS_ENABLE_LOGS | FZ_SYSMSGS_PATCH_UI_PROGRESSBAR);
-				//flags end
-
+					if (SetFlags == nullptr) Msg("5");
+					else SetFlags(FZ_SYSMSGS_ENABLE_LOGS | FZ_SYSMSGS_PATCH_UI_PROGRESSBAR);
+					//flags end
+					Msg("dll load end");
+				}
 
 				SMyUserData userdata = {};
 				userdata.idOfPlayer = CL->ID;
@@ -228,8 +264,30 @@ void xrServer::AttachNewClient			(IClient* CL)
 				moddllinfo.fileinfo.error_already_has_dl_msg = "Error happens";  //Сообщение, выводимое пользователю при возникновении ошибки во время закачки
 				moddllinfo.fileinfo.compression = FZ_COMPRESSION_NO_COMPRESSION; //Используемый тип компрессии
 				moddllinfo.procname = "ModLoad";  //Имя процедуры в dll мода, которая должна быть вызвана; должна иметь тип FZDllModFun
-				moddllinfo.procarg1 = "sace3"; //Аргументы для передачи в процедуру
-				moddllinfo.procarg2 = "mod parameters"; //Аргументы для передачи в процедуру
+				moddllinfo.procarg1 = "tsmp_project"; //Аргументы для передачи в процедуру
+
+			//	std::string procargs2 = "-srv " + g_sv_mp_loader_ip + " -srvport " + g_sv_mp_loader_port;
+			
+
+				
+				ip_address Address;
+				DWORD dwPort = 0;
+
+				Level().GetServerAddress(Address, &dwPort);
+
+
+			//	std::string adr = Address.to_string().c_str();
+
+
+		
+				std::string procargs2 = "-srv " + g_sv_mp_loader_ip + " -srvport " +std::to_string(dwPort);
+
+				
+				char ar[30];
+				Msg("args for reconnect: %s", procargs2.c_str());
+				 strcpy(ar,procargs2.c_str());
+
+				moddllinfo.procarg2 =ar; //Аргументы для передачи в процедуру
 				moddllinfo.dsign = "";
 				moddllinfo.name_lock = "123";  //Цифровая подпись для загруженной DLL - проверяется перед тем, как передать управление в функцию мода
 				moddllinfo.reconnect_addr.ip = "127.0.0.1";  //IP-адрес и порт для реконнекта. Если IP нулевой, то параметры реконнекта автоматически берутся игрой из тех, во время которых произошел дисконнект.
@@ -240,7 +298,7 @@ void xrServer::AttachNewClient			(IClient* CL)
 
 
 
-				
+
 
 	//-binlist <URL> - ссылка на адрес, по которому берется список файлов движка (для работы требуется запуск клиента с ключлм -fz_custom_bin)
 	//-gamelist <URL> - ссылка на адрес, по которому берется список файлов мода (геймдатных\патчей)
@@ -254,23 +312,24 @@ void xrServer::AttachNewClient			(IClient* CL)
 	//-configsdir <string> - директория конфигов
 	//-exename <string> - имя исполняемого файла мода
 
-				
 
 
-				Msg("After this send sysmsgs");
+
+		//		Msg("After this send sysmsgs");
 
 				SendSysMessage(writer, &moddllinfo, xrServer::SendCB, &userdata);
 
-				Msg("Before this send sysmsgs");
+		//		Msg("Before this send sysmsgs");
 
-				FreeLibrary(dll);
+			//	FreeLibrary(dll);
 
-				Msg("library free");
-				Msg("0");
+			//	Msg("library free");
+			//	Msg("0");
 			}
 		}
-
-
+	}
+//#endif
+		
 
 	MSYS_CONFIG	msgConfig;
 	msgConfig.sign1 = 0x12071980;

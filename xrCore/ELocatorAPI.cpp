@@ -19,7 +19,13 @@ CLocatorAPI*	xr_FS	= NULL;
 #ifdef _EDITOR
 #define FSLTX	"fs.ltx"
 #else
-#define FSLTX	"fsgame.ltx"
+
+#ifdef TSMP_CLIENT
+#	define FSLTX	"fsgame_.ltx"
+#else
+#	define FSLTX	"fsgame.ltx"
+#endif
+
 #endif
 
 //////////////////////////////////////////////////////////////////////
