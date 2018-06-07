@@ -85,9 +85,16 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str &session_name)
 	
 
 	m_iReportToMasterServer = game->get_option_i		(*session_name,"public",0);
+	if (m_iReportToMasterServer == 2) m_iReportToMasterServer = 0;
+
 	m_iMaxPlayers	= game->get_option_i		(*session_name,"maxplayers",40);
 //	m_bCheckCDKey = game->get_option_i		(*session_name,"cdkey",0) != 0;
-	m_bCheckCDKey = game->get_option_i		(*session_name,"public",0) != 0;
+
+//	m_bCheckCDKey = game->get_option_i		(*session_name,"public",0) != 0;
+
+	if (0 != strstr(Core.Params, "-check_cd_key"))	m_bCheckCDKey = true ;
+	else m_bCheckCDKey = false;
+
 	//--------------------------------------------//
 	if (game->Type() != GAME_SINGLE) 
 	{
