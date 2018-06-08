@@ -16,9 +16,6 @@
     <Filter Include="External\NV_Basis">
       <UniqueIdentifier>{8f2061db-2b59-4fb3-be44-eff7d16645ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="- OLD -">
-      <UniqueIdentifier>{e98afbe2-7089-4800-b3b6-a1fca36138e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a">
       <UniqueIdentifier>{6af7db8d-a295-41c4-923c-af6839a0c465}</UniqueIdentifier>
     </Filter>
@@ -33,9 +30,6 @@
     </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa">
       <UniqueIdentifier>{e000557c-3c6b-4102-bb54-7cf2e230f81f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader">
-      <UniqueIdentifier>{9ae30efe-dd06-414a-86c7-ebbbee4feee0}</UniqueIdentifier>
     </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Model">
       <UniqueIdentifier>{92398260-d98d-47ae-a0ec-9126261493b7}</UniqueIdentifier>
@@ -126,9 +120,6 @@
     <ClInclude Include="xrUVpoint.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader</Filter>
-    </ClInclude>
     <ClInclude Include="fitter.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClInclude>
@@ -136,6 +127,9 @@
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClInclude>
     <ClInclude Include="xrGameMaterials.h" />
+    <ClInclude Include="Image.h">
+      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -152,36 +146,6 @@
     </ClCompile>
     <ClCompile Include="NV_Library\VertexCache.cpp">
       <Filter>External\NV_Strips</Filter>
-    </ClCompile>
-    <ClCompile Include="xrDetailPatch.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrFlex2LOD.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrHierrarhy.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrMergeLM.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrPVS.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrResolveMaterials.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrSoftenLights.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrTesselate.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrUVmapping.cpp">
-      <Filter>- OLD -</Filter>
-    </ClCompile>
-    <ClCompile Include="xrVis.cpp">
-      <Filter>- OLD -</Filter>
     </ClCompile>
     <ClCompile Include="Build.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
@@ -208,9 +172,6 @@
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
     <ClCompile Include="xrLight_Implicit.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
-    </ClCompile>
-    <ClCompile Include="xrOptimizeCFORM.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
     <ClCompile Include="xrOptimizeCFORM_qslim.cpp">
@@ -297,9 +258,6 @@
     <ClCompile Include="..\xr_3da\xrLoadSurface.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader</Filter>
-    </ClCompile>
     <ClCompile Include="fitter.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClCompile>
@@ -322,9 +280,6 @@
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClCompile>
     <ClCompile Include="xrMU_Model_export_cform_game.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="xrMU_Model_export_cform_game_s.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClCompile>
     <ClCompile Include="xrMU_Model_export_cform_rcast.cpp">

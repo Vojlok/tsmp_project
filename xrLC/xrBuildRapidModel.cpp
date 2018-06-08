@@ -33,72 +33,90 @@ void SaveUVM			(LPCSTR fname, xr_vector<b_rc_face>& vm)
 
 void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 {
-	float	p_total			= 0;
-	float	p_cost			= 1.f/(g_faces.size());
+	float	p_total = 0;
+	float	p_cost = 1.f / (g_faces.size());
 
-	xr_delete		(RCAST_Model);
+	xr_delete(RCAST_Model);
 
-	Status			("Converting faces...");
-	for				(u32 fit=0; fit<g_faces.size(); fit++)	g_faces[fit]->flags.bProcessed = false;
+	Status("Converting faces...");
+	for (u32 fit = 0; fit<g_faces.size(); fit++)	g_faces[fit]->flags.bProcessed = false;
 
-	xr_vector<Face*>	adjacent;	adjacent.reserve(6*2*3);
-	CDB::CollectorPacked	CL	(scene_bb,g_vertices.size(),g_faces.size());
-	for (vecFaceIt it=g_faces.begin(); it!=g_faces.end(); it++)
+	xr_vector<Face*>	adjacent;	adjacent.reserve(6 * 2 * 3);
+	CDB::CollectorPacked	CL(scene_bb, g_vertices.size(), g_faces.size());
+
+
+	for (vecFaceIt it = g_faces.begin(); it != g_faces.end(); it++)
 	{
-		Face*	F				= (*it);
-		Shader_xrLC&	SH		= F->Shader();
+		Face*	F = (*it);
+		Shader_xrLC&	SH = F->Shader();
 		if (!SH.flags.bLIGHT_CastShadow)					continue;
 
-		Progress	(float(it-g_faces.begin())/float(g_faces.size()));
+		Progress(float(it - g_faces.begin()) / float(g_faces.size()));
 
 		// Collect
-		adjacent.clear	();
-		for (int vit=0; vit<3; vit++)
+		adjacent.clear();
+		for (int vit = 0; vit<3; vit++)
 		{
 			Vertex* V = F->v[vit];
-			for (u32 adj=0; adj<V->adjacent.size(); adj++)
+			for (u32 adj = 0; adj<V->adjacent.size(); adj++)
 			{
 				adjacent.push_back(V->adjacent[adj]);
 			}
 		}
-		std::sort		(adjacent.begin(),adjacent.end());
-		adjacent.erase	(std::unique(adjacent.begin(),adjacent.end()),adjacent.end());
+		std::sort(adjacent.begin(), adjacent.end());
+		adjacent.erase(std::unique(adjacent.begin(), adjacent.end()), adjacent.end());
 
 		// Unique
-		BOOL			bAlready	= FALSE;
-		for (u32 ait=0; ait<adjacent.size(); ait++)
+		BOOL			bAlready = FALSE;
+		for (u32 ait = 0; ait<adjacent.size(); ait++)
 		{
-			Face*	Test					= adjacent[ait];
-			if (Test==F)					continue;
+			Face*	Test = adjacent[ait];
+			if (Test == F)					continue;
 			if (!Test->flags.bProcessed)	continue;
-			if (FaceEqual(*F,*Test)){
-				bAlready					= TRUE;
+			if (FaceEqual(*F, *Test)) {
+				bAlready = TRUE;
 				break;
 			}
 		}
 
 		//
-		if (!bAlready) 
+		if (!bAlready)
 		{
-			F->flags.bProcessed	= true;
+			F->flags.bProcessed = true;
 #ifdef _WIN64
-			CL.add_face_D		( F->v[0]->P,F->v[1]->P,F->v[2]->P, *((u64*)&F) );
+			CL.add_face_D(F->v[0]->P, F->v[1]->P, F->v[2]->P, *((u64*)&F));
 #else
-			CL.add_face_D		( F->v[0]->P,F->v[1]->P,F->v[2]->P, *((u32*)&F) );
+			CL.add_face_D(F->v[0]->P, F->v[1]->P, F->v[2]->P, *((u32*)&F));
 #endif
 		}
 	}
 
+
+
+
 	/*
 	clMsg					("Faces: original(%d), model(%d), ratio(%f)",
-		g_faces.size(),CL.getTS(),float(CL.getTS())/float(g_faces.size()));
+	g_faces.size(),CL.getTS(),float(CL.getTS())/float(g_faces.size()));
 	*/
+
 
 	// Export references
 	if (bSaveForOtherCompilers)		Phase	("Building rcast-CFORM-mu model...");
 	Status					("Models...");
-	for (u32 ref=0; ref<mu_refs.size(); ref++)
-		mu_refs[ref]->export_cform_rcast	(CL);
+
+	u32 MRS = mu_refs.size();
+	float fProgr = 0;
+	float fStep = 1.f / MRS;
+	Progress(fProgr);
+
+	
+	for (u32 ref = 0; ref < MRS; ref++)
+	{
+				mu_refs[ref]->export_cform_rcast(CL);
+
+		fProgr += fStep;
+		Progress(fProgr);
+	}
 
 	// "Building tree..
 	Status					("Building search tree...");

@@ -136,8 +136,18 @@ void CBuild::BuildCForm	()
 
 	// Models
 	Status			("Models...");
-	for (u32 ref=0; ref<mu_refs.size(); ref++)
+
+	u32 MRS = mu_refs.size();
+	float fProgr = 0;
+	float fStep = 1.f / MRS;
+
+
+	for (u32 ref = 0; ref < MRS; ref++)
+	{
 		mu_refs[ref]->export_cform_game(CL);
+		fProgr += fStep;
+		Progress(fProgr);
+	}
 
 	// Simplification
 	if (g_params.m_quality!=ebqDraft)

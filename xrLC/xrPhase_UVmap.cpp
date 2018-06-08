@@ -118,6 +118,8 @@ void	CBuild::xrPhase_UVmap()
 			}
 		}
 	}
+
+
 	clMsg("%d subdivisions...",g_XSplit.size());
 }
 

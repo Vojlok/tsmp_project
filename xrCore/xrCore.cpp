@@ -6,6 +6,8 @@
 #include <mmsystem.h>
 #include <objbase.h>
 #include "xrCore.h"
+
+#include <omp.h>
  
 #pragma comment(lib,"winmm.lib")
 
@@ -66,6 +68,9 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
         }
 		GetCurrentDirectory(sizeof(WorkingPath),WorkingPath);
 
+
+
+
 		// User/Comp Name
 		DWORD	sz_user		= sizeof(UserName);
 		GetUserName			(UserName,&sz_user);
@@ -83,6 +88,10 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 		InitLog				();
 		_initialize_cpu		();
 
+	
+
+
+
 //		Debug._initialize	();
 
 		rtc_initialize		();
@@ -91,6 +100,28 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 
 		xr_EFS				= xr_new<EFS_Utils>		();
 //.		R_ASSERT			(co_res==S_OK);
+
+
+
+		ProcCores = omp_get_num_procs();
+
+		int temp = ProcCores;
+		ThreadsCount = ProcCores;
+
+
+		if (temp <2) ThreadsCount = 1;
+		if (temp <3) ThreadsCount = 4;
+		if (temp <7) ThreadsCount = 8;
+		if (temp >7) ThreadsCount = 16;
+
+		if (0 != strstr(Core.Params, "-threads:1")) ThreadsCount = 1;
+		if (0 != strstr(Core.Params, "-threads:4")) ThreadsCount = 4;
+		if (0 != strstr(Core.Params, "-threads:8")) ThreadsCount = 8;
+		if (0 != strstr(Core.Params, "-threads:16")) ThreadsCount = 16;
+
+		Msg("* CPU Cores : %i ; Using Threads : %i", ProcCores, ThreadsCount);
+		Msg(" ");
+
 	}
 	if (init_fs){
 		u32 flags			= 0;

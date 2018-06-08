@@ -156,31 +156,41 @@ void CBuild::xrPhase_AdaptiveHT	()
 		float fStep = 1.f/VSize;
 		Progress(fProgr);
 
-		Msg("iterations count %i", VSize);
+		int itr = 0;
+
+	//	Msg("iterations count %i", VSize);
 
 //		omp_set_num_threads(1);
 
 //#pragma omp parallel for
+
 		for (int vit=0; vit<VSize; vit++)	
 		{
-		//	Msg("iteration %i", vit);
 			base_color_c		vC;
-			Vertex*		V = g_vertices[vit];
-		//		Msg("V");
-			V->normalFromAdj	();
-		//	Msg("normal");
+			Vertex*		V = g_vertices[vit];	
+
+				V->normalFromAdj();
 
 
-				LightPoint(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb + LP_dont_sun, 0);
+//#pragma omp parallel sections
+//				{
+//#pragma omp section
+					LightPoint(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb + LP_dont_sun, 0);
+
+
+			vC.mul				(0.5f);		
+			V->C._set			(vC);		
+
+
+			if (itr == 500)
+			{
+				itr = 0;
+				
+				Progress(fStep*vit);
+			}
+			itr++;
+
 			
-			//	Msg("light");
-			vC.mul				(0.5f);
-		//	Msg("mul");
-			V->C._set			(vC);
-		//	Msg("set");
-
-			fProgr += fStep;
-			Progress(fProgr);
 		}
 
 		Progress(1.f);
