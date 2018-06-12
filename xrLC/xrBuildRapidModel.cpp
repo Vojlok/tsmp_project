@@ -109,14 +109,25 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	float fStep = 1.f / MRS;
 	Progress(fProgr);
 
-	
-	for (u32 ref = 0; ref < MRS; ref++)
-	{
-				mu_refs[ref]->export_cform_rcast(CL);
 
-		fProgr += fStep;
-		Progress(fProgr);
-	}
+
+
+
+
+		for (int ref = 0; ref < MRS; ref+=2)
+		{
+			
+
+					mu_refs[ref]->export_cform_rcast(CL);
+
+
+
+
+			//	fProgr += fStep;
+			//	Progress(fProgr);
+		}
+
+	
 
 	// "Building tree..
 	Status					("Building search tree...");

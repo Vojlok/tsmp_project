@@ -1049,7 +1049,7 @@ if (*code == 6) {
   return ret;
 }
 
-#pragma todo(optimize factor==0.f)
+//#pragma todo(optimize factor==0.f)
 //****************************************************************************
 
 

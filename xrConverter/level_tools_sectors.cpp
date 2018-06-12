@@ -86,6 +86,12 @@ uint16_t level_tools::get_sector_idx(const fvector3& p) const
 			sector_idx = uint16_t((it - it0) & UINT16_MAX);
 		}
 	}
-	xr_assert(sector_idx != UINT16_MAX);
+//	msg("sectors idx:%i",sector_idx);
+	//xr_assert(sector_idx != UINT16_MAX);
+	if (sector_idx != UINT16_MAX)
+	{
+		msg("error in sectors tools, ignoing");
+		return 0;
+	}
 	return sector_idx;
 }

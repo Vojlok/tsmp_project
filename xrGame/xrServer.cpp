@@ -129,19 +129,38 @@ IClient*	xrServer::client_Find_Get	(ClientID ID)
 			IClient* CLX	= net_Players_disconnected[i];
 
 			if ( CLX->m_cAddress == cAddress )
-			{				
-				net_Players_disconnected.erase( net_Players_disconnected.begin()+i );
+			{
+			//	xrClientData*	C = (xrClientData*)ID_to_client(ID);
+			//	game_PlayerState*	ps_con = C->ps;
 
-				CLX->m_dwPort				= dwPort;
-				CLX->flags.bReconnect		= TRUE;
+			//	if (ps_con->money_for_round < 10) Msg("poor player");
+
 				
-				csPlayers.Enter();
-				net_Players.push_back( CLX );
-				net_Players.back()->server = this;
-				csPlayers.Leave();
+				/*
 
-				Msg							( "# Player found" );
-				return						CLX;
+				xrClientData*	C = (xrClientData*) ID_to_client(ID);
+				game_PlayerState*	ps_con = C->ps;
+
+				s32 m = ps_con->money_for_round;
+				Msg("money: %i", m);
+
+				if (m != 0)
+				{ */
+
+					net_Players_disconnected.erase(net_Players_disconnected.begin() + i);
+
+					CLX->m_dwPort = dwPort;
+					CLX->flags.bReconnect = TRUE;
+
+					csPlayers.Enter();
+					net_Players.push_back(CLX);
+					net_Players.back()->server = this;
+					csPlayers.Leave();
+
+					Msg("# Player found");
+					return						CLX;
+
+				
 			};
 		};
 	};

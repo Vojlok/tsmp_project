@@ -31,11 +31,10 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void *userdata)
 	switch (keyid)
 	{
 	case HOSTNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->HostName.c_str()); break;
-	//case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->MapName.c_str()); break;
 
-		
 
-	case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, nm.c_str()); break;
+	case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->MapName.c_str()); break;
+	//case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, nm.c_str()); break;
 
 	case GAMEVER_KEY:		pQR2->BufferAdd(outbuf, pQR2->GetGameVersion(game_version)); break;
 	case NUMPLAYERS_KEY:	pQR2->BufferAdd_Int(outbuf, pServer->GetPlayersCount()); break;

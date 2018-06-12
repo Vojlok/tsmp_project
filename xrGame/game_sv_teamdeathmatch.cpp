@@ -161,6 +161,9 @@ void game_sv_TeamDeathmatch::OnPlayerConnect	(ClientID id_who)
 	if (ps_who->IsSkip()) return;
 
 	if (!xrCData->flags.bReconnect) Money_SetStart(id_who);
+
+	if (ps_who->money_for_round==0) Money_SetStart(id_who);
+
 	SetPlayersDefItems(ps_who);
 }
 

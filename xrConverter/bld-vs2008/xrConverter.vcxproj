@@ -368,7 +368,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />
-    <LibraryPath>$(SolutionDir)\output\libraries_x64_release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\output\libraries_tools_x64;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Users\maks\Downloads\XrConverter\nvtt\;C:\Users\maks\Downloads\XrConverter\converter\bld-vs2008;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_x64</TargetName>
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
