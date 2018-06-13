@@ -237,7 +237,7 @@ void	CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 //	INT Width = wRC.right - wRC.left;
 	INT Height = wRC.bottom - wRC.top;
 	wRC = *pRect;
-	int y_top_max = (int)(0.3f * Height);
+	int y_top_max = (int)(0.3f * Height) -40;
 	//---------------------------------------------------------------------------------
 	char		buf	[MAX_LEN+5];
 	strcpy_s		(buf,ioc_prompt);
@@ -249,6 +249,8 @@ void	CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 	TextOut( hDC, 0, Height-tm.tmHeight, buf, xr_strlen(buf) );
 
 	int YPos = Height - tm.tmHeight - tm.tmHeight;
+	//Msg("ypos %i , topmax %i", YPos,y_top_max);
+
 	for ( int i = LogFile->size() - 1 - scroll_delta; i >= 0; i-- ) 
 	{
 		YPos -= tm.tmHeight;
@@ -296,10 +298,12 @@ void	CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 	}
 
 	YPos = 5;
+	//Msg("server info size %i", server_info.Size());
 	for ( u32 i = 0; i < server_info.Size(); ++i )
 	{
 		SetTextColor( hDC, server_info[i].color );
-		TextOut( hDC, 10, YPos, server_info[i].name, xr_strlen(server_info[i].name) );
+	//	TextOut( hDC, 10, YPos, server_info[i].name, xr_strlen(server_info[i].name) );
+		TextOut(hDC, 10, YPos, server_info[i].name, xr_strlen(server_info[i].name));
 
 		YPos += tm.tmHeight;
 		if ( YPos > y_top_max )	break;

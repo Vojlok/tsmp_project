@@ -13,6 +13,7 @@
 
 BOOL	g_SV_Force_Artefact_Spawn = FALSE;
 
+
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #endif
@@ -28,6 +29,7 @@ int		g_sv_ah_iReinforcementTime		= 20;		//0 - Immediate, -1 - after artefact spa
 BOOL	g_sv_ah_bBearerCantSprint		= TRUE;
 BOOL	g_sv_ah_bShildedBases			= TRUE;
 BOOL	g_sv_ah_bAfReturnPlayersToBases = TRUE;
+
 //-------------------------------------------------------
 int		game_sv_ArtefactHunt::Get_ArtefactsCount		() {return g_sv_ah_dwArtefactsNum; };
 u32		game_sv_ArtefactHunt::Get_ArtefactsRespawnDelta	() {return g_sv_ah_dwArtefactRespawnDelta; };
@@ -36,6 +38,8 @@ int		game_sv_ArtefactHunt::Get_ReinforcementTime		() {return g_sv_ah_iReinforcem
 BOOL	game_sv_ArtefactHunt::Get_BearerCantSprint		() { return g_sv_ah_bBearerCantSprint; }
 BOOL	game_sv_ArtefactHunt::Get_ShieldedBases			() { return g_sv_ah_bShildedBases; };
 BOOL	game_sv_ArtefactHunt::Get_ReturnPlayers			() {return g_sv_ah_bAfReturnPlayersToBases; };
+
+
 //-------------------------------------------------------
 void	game_sv_ArtefactHunt::Create					(shared_str& options)
 {
@@ -833,6 +837,7 @@ void game_sv_ArtefactHunt::Assign_Artefact_RPoint(CSE_Abstract* E)
 */	
 	u32 ID				= ArtefactChooserRandom.randI((int)rp.size());
 //.	Msg					("---select artefact RPoint [%d]", ID);
+
 	r					= rp[ID];
 	E->o_Position.set	(r.P);
 	E->o_Angle.set		(r.A);

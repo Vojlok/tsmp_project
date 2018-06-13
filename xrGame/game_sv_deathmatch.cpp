@@ -34,6 +34,7 @@ u32		g_sv_dm_dwAnomalySetLengthTime	= 3;
 BOOL	g_sv_dm_bPDAHunt				= TRUE;
 u32		g_sv_dm_dwWarmUp_MaxTime		= 0;
 BOOL	g_sv_dm_bDMIgnore_Money_OnBuy	= FALSE;
+
 //-----------------------------------------------------------------
 BOOL				game_sv_Deathmatch::IsDamageBlockIndEnabled	() {return g_sv_dm_bDamageBlockIndicators; };
 s32					game_sv_Deathmatch::GetTimeLimit			() {return g_sv_dm_dwTimeLimit; };

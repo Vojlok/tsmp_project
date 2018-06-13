@@ -650,7 +650,7 @@ public:
 	virtual void	Execute(LPCSTR args)
 	{
 		Msg("'%s' build %d, %s\n", "xrCore", build_id, build_date);
-		Msg("tsmp version 1.3.7");
+		Msg("tsmp version 1.3.9");
 
 	};
 

@@ -59,6 +59,7 @@ protected:
 public:
 	shared_str					HostName;
 	shared_str					MapName;
+	shared_str					MapNameRus;
 	shared_str					Password;
 	Flags8						ServerFlags;
 

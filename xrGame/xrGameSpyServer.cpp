@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 #include "level.h"
 #include "xrServer.h"
 
@@ -82,6 +81,39 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str &session_name)
 	const char* SName = *session_name;
 	strncpy(tMapName, *session_name, strchr(SName, '/') - SName);
 	MapName._set(tMapName);// = (session_name);
+
+	MapNameRus._set(MapName);
+
+
+	{
+	
+		string_path						cfg_name="level.name";
+
+		string_path cfg_full_name;
+
+		FS.update_path(cfg_full_name, "$level$", cfg_name);
+
+		if (NULL == FS.exist(cfg_full_name))
+			strcpy_s(cfg_full_name, cfg_name);
+
+		IReader* F = FS.r_open(cfg_full_name);
+
+		string1024						str;
+
+		if (F != NULL)
+		{
+				F->r_string(str, sizeof(str));
+				if (sizeof(str)!=NULL) MapNameRus._set(str);
+			
+			FS.r_close(F);
+			Msg("[%s] successfully loaded.", cfg_full_name);
+		}
+		else
+		{
+			Msg("! Cannot open script file [%s]", cfg_full_name);
+		}
+
+	}
 	
 
 	m_iReportToMasterServer = game->get_option_i		(*session_name,"public",0);
@@ -385,18 +417,31 @@ void xrGameSpyServer::GetServerInfo( CServerInfo* si )
 
 	//MapName="eee";
 
-	si->AddItem( "Server name", HostName.c_str(), RGB(128,128,255) );
-	si->AddItem( "Map", MapName.c_str(), RGB(255,0,128) );
+	std::string rus = MapNameRus.c_str();
+	std::string eng = MapName.c_str();
+	std::string inf,host,port,p2,p3;
+
+	host = HostName.c_str();
+
+	if (rus !=eng ) inf = rus + " ("+ eng+") ";
+	else inf = rus;
+
+	inf = inf + " ; Имя сервера = " + host;
+
+//	si->AddItem( "Имя сервера", HostName.c_str(), RGB(128,128,255) );
+	si->AddItem( "Карта", inf.c_str(), RGB(255,0,128) );
 	
 	
 	strcpy_s( tmp, itoa( GetPlayersCount(), tmp2, 10 ) );
 	strcat_s( tmp, " / ");
 	strcat_s( tmp, itoa( m_iMaxPlayers, tmp2, 10 ) );
-	si->AddItem( "Players", tmp, RGB(255,128,255) );
+	si->AddItem( "Игроки", tmp, RGB(255,128,255) );
 
 	string256 res;
-	si->AddItem( "Game version", QR2()->GetGameVersion( res ), RGB(0,158,255) );
+	si->AddItem( "Версия сервера", "tsmp 1.3.9", RGB(0,158,255) );
 	
+	/*
+
 	strcpy_s( res, "" );
 	if ( HasProtected() || Password.size() > 0 || HasBattlEye() )
 	{
@@ -410,6 +455,11 @@ void xrGameSpyServer::GetServerInfo( CServerInfo* si )
 	}
 	si->AddItem( "Access to server", res, RGB(200,155,155) );
 
-	si->AddItem( "GameSpy port", itoa( iGameSpyBasePort, tmp, 10 ), RGB(200,5,155) );
+	*/
+	p2 = std::to_string(iGameSpyBasePort);
+	p3 = std::to_string(GetPort());
+	port ="GameSpy:"+ p2 +" Сервера:"+ p3;
+
+	si->AddItem( "Порты", port.c_str(), RGB(200,5,155) );
 	inherited::GetServerInfo( si );
 }

@@ -1199,42 +1199,51 @@ extern	s32		g_sv_dm_dwTimeLimit;
 extern	int		g_sv_ah_iReinforcementTime;
 
 xr_token game_types[];
+
 void xrServer::GetServerInfo( CServerInfo* si )
 {
 	string32  tmp;
 	string256 tmp256;
-
-	si->AddItem( "Server port", itoa( GetPort(), tmp, 10 ), RGB(128,128,255) );
+	
+//	si->AddItem( "Server port", itoa( GetPort(), tmp, 10 ), RGB(128,128,255) );
 	LPCSTR time = InventoryUtilities::GetTimeAsString( Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay ).c_str();
-	si->AddItem( "Uptime", time, RGB(255,228,0) );
+	si->AddItem( "Время работы сервера", time, RGB(255,228,0) );
 
-	strcpy_s( tmp256, get_token_name(game_types, game->Type() ) );
+	//strcpy_s( tmp256, get_token_name(game_types, game->Type() ) );
+	std::string tp = get_token_name(game_types, game->Type());
+
+	if (tp == "deathmatch") strcpy_s(tmp256, "Все против всех");
+	if (tp == "teamdeathmatch") strcpy_s(tmp256, "Команда против команды");
+	if (tp == "artefacthunt") strcpy_s(tmp256, "Охота за артефактом");
+
 	if ( game->Type() == GAME_DEATHMATCH || game->Type() == GAME_TEAMDEATHMATCH )
 	{
-		strcat_s( tmp256, " [" );
+		strcat_s(tmp256, " ; лимит фрагов: ");
 		strcat_s( tmp256, itoa( g_sv_dm_dwFragLimit, tmp, 10 ) );
-		strcat_s( tmp256, "] " );
+		strcat_s(tmp256, " ; ");
 	}
 	else if ( game->Type() == GAME_ARTEFACTHUNT )
 	{
-		strcat_s( tmp256, " [" );
+		strcat_s(tmp256, " ; артефактов:");
 		strcat_s( tmp256, itoa( g_sv_ah_dwArtefactsNum, tmp, 10 ) );
-		strcat_s( tmp256, "] " );
+		strcat_s(tmp256, " ; ");
 		g_sv_ah_iReinforcementTime;
 	}
 	
 	//if ( g_sv_dm_dwTimeLimit > 0 )
 	{
-		strcat_s( tmp256, " time limit [" );
+		strcat_s( tmp256, "ограничение времени: " );
 		strcat_s( tmp256, itoa( g_sv_dm_dwTimeLimit, tmp, 10 ) );
-		strcat_s( tmp256, "] " );
+		strcat_s(tmp256, " ; ");
 	}
 	if ( game->Type() == GAME_ARTEFACTHUNT )
 	{
-		strcat_s( tmp256, " RT [" );
+		strcat_s( tmp256, "время возрождения: " );
 		strcat_s( tmp256, itoa( g_sv_ah_iReinforcementTime, tmp, 10 ) );
-		strcat_s( tmp256, "]" );
+		strcat_s(tmp256, " ; ");
 	}
-	si->AddItem( "Game type", tmp256, RGB(128,255,255) );
+
+
+	si->AddItem("Режим", tmp256, RGB(128, 255, 255));
 }
 
