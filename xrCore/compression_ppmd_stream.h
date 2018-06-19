@@ -5,12 +5,12 @@ namespace compression { namespace ppmd  {
 
 class stream {
 private:
-	u32				m_buffer_size;
+	size_t				m_buffer_size;
 	u8				*m_buffer;
 	u8				*m_pointer;
 
 public:
-	inline			stream		(const void *buffer, const u32 &buffer_size);
+	inline			stream		(const void *buffer, const size_t &buffer_size);
 	inline	void	put_char	(const u8 &object);
 	inline	int		get_char	();
 	inline	void	rewind		();

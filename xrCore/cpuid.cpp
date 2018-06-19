@@ -9,17 +9,6 @@ int _cpuid(_processor_info *pinfo)
 {
 	_processor_info&	P = *pinfo;
 
-	/*
-	strcpy				(P.v_name,		"AuthenticAMD");
-	strcpy				(P.model_name,	"AMD64 family");
-	P.family			=	8;
-	P.model				=	8;
-	P.stepping			=	0;
-	P.feature			=	_CPU_FEATURE_SSE | _CPU_FEATURE_SSE2;
-	P.os_support		=	_CPU_FEATURE_SSE | _CPU_FEATURE_SSE2;
-	return P.feature;
-	*/
-
 	ZeroMemory(&P, sizeof(_processor_info));
 
 	int cpinfo[4];

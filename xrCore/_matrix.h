@@ -484,7 +484,7 @@ public:
 	IC	SelfRef	inertion(const Self &mat, T v)
 	{
 		T iv = 1.f-v;
-		for (int i=0; i<4; i++)
+		for (u8 i=0; i<4; i++) //-V112 
 		{
 			m[i][0] = m[i][0]*v + mat.m[i][0]*iv;
 			m[i][1] = m[i][1]*v + mat.m[i][1]*iv;
@@ -493,6 +493,7 @@ public:
 		}
 		return *this; 
 	}
+
 	ICF	void	transform_tiny		(Tvector &dest, const Tvector &v)	const // preferred to use
 	{
 		dest.x = v.x*_11 + v.y*_21 + v.z*_31 + _41;

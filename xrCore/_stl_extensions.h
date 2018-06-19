@@ -77,7 +77,7 @@ public:
 													xalloc			(const xalloc<T>&)						{	}
 	template<class _Other>							xalloc			(const xalloc<_Other>&)					{	}
 	template<class _Other>	xalloc<T>&				operator=		(const xalloc<_Other>&)					{	return (*this);	}
-							pointer					allocate		(size_type n, const void* p=0) const	{	return xr_alloc<T>((u32)n);	}
+							pointer					allocate		(size_type n, const void* p=0) const	{	return xr_alloc<T>(n);	}
 							char*					_charalloc		(size_type n)							{	return (char*)allocate(n); }
 							void					deallocate		(pointer p, size_type n) const			{	xr_free	(p);				}
 							void					deallocate		(void* p, size_type n) const			{	xr_free	(p);				}
@@ -92,7 +92,7 @@ struct xr_allocator {
 		typedef xalloc<T>	result;
 	};
 
-	static	void	*alloc		(const u32 &n)	{	return xr_malloc((u32)n);	}
+	static	void	*alloc		(const size_t &n)	{	return xr_malloc(n);	}
 	template <typename T>
 	static	void	dealloc		(T *&p)			{	xr_free(p);					}
 };
@@ -122,11 +122,21 @@ public:
 			xr_vector			()									: inherited	()					{}
 			xr_vector			(size_t _count, const T& _value)	: inherited	(_count,_value)		{}
 	explicit xr_vector			(size_t _count)						: inherited (_count)			{}
-	u32		size				() const							{ return (u32)inherited::size();} 
+	size_t		size				() const							{ return inherited::size();} 
 
 	void	clear_and_free		()									{ inherited::clear();			}
-	void	clear_not_free		()									{ erase(begin(),end());			}
-	void	clear_and_reserve	()									{ if ( capacity() <= (size()+size()/4) ) clear_not_free(); else { u32 old=size(); clear_and_free(); reserve(old); } }
+	void	clear_not_free		()									{ erase(begin(),end());	}
+
+	void	clear_and_reserve	()									
+	{ 
+		if ( capacity() <= (size()+size()/4) ) clear_not_free(); 
+		else 
+		{ 
+			size_t old=size(); 
+			clear_and_free(); 
+			reserve(old); 
+		} 
+	}
 
 #ifdef M_DONTDEFERCLEAR_EXT
 	void	clear				()									{ clear_and_free	();			}

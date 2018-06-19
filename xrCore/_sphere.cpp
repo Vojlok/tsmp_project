@@ -279,7 +279,7 @@ bool Basis::push (const Fvector& p)
 	}
 	else
 	{
-		int i;
+		size_t i;
 		const float eps = 1e-16f;
 
 		// set v_m to Q_m
@@ -326,11 +326,11 @@ bool Basis::push (const Fvector& p)
 	return true;
 }
 
-void Fsphere_compute(Fsphere& dest, const Fvector *verts, int count)
+void Fsphere_compute(Fsphere& dest, const Fvector *verts, size_t count)
 {
 	Miniball mb;
 
-	for(int i=0;i<count;i++)
+	for(size_t i=0;i<count;i++)
 		mb.check_in(verts[i]);
 
 	mb.build	();

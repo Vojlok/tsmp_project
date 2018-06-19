@@ -3,7 +3,7 @@
 
 namespace compression { namespace ppmd  { 
 
-inline stream::stream			(const void *buffer, const u32 &buffer_size)
+inline stream::stream			(const void *buffer, const size_t &buffer_size)
 {
 	m_buffer_size	= buffer_size;
 	m_buffer		= (u8*)buffer;

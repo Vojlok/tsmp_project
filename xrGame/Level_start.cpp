@@ -260,6 +260,7 @@ bool xr_stdcall net_start_finalizer()
 		}else
 		if(g_connect_server_err==xrServer::ErrNoLevel)
 		{
+			Msg("cant find level %s",ln);
 			MainMenu()->SwitchToMultiplayerMenu();
 			MainMenu()->OnLoadError(ln.c_str());
 		}

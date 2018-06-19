@@ -36,7 +36,7 @@ public:
 	}
 
 	// kernel
-	virtual void	seek	(u32 pos)						= 0;
+	virtual void	seek	(size_t pos)						= 0;
 	virtual u32		tell	()								= 0;
 
 	virtual void	w		(const void* ptr, u32 count)	= 0;
@@ -111,7 +111,7 @@ public:
 	// kernel
 	virtual void	w			(const void* ptr, u32 count);
 
-	virtual void	seek		(u32 pos)	{	position = pos;				}
+	virtual void	seek		(size_t pos)	{	position = pos;				}
 	virtual u32		tell		() 			{	return position;			}
 
 	// specific
@@ -228,8 +228,8 @@ public:
 class XRCORE_API IReader : public IReaderBase<IReader> {
 protected:
 	char *			data	;
-	int				Pos		;
-	int				Size	;
+	size_t			Pos		;
+	size_t				Size	;
 	int				iterpos	;
 
 public:
@@ -257,12 +257,12 @@ protected:
 	u32 			advance_term_string			();
 
 public:
-	IC int			elapsed		()	const		{	return Size-Pos;		};
+	IC size_t			elapsed		()	const	{	return Size-Pos;		};
 	IC int			tell		()	const		{	return Pos;				};
-	IC void			seek		(int ptr)		{	Pos=ptr; VERIFY((Pos<=Size) && (Pos>=0));};
+	IC void			seek		(size_t ptr)	{	Pos=ptr; VERIFY((Pos<=Size) && (Pos>=0));};
 	IC int			length		()	const		{	return Size;			};
 	IC void*		pointer		()	const		{	return &(data[Pos]);	};
-	IC void			advance		(int cnt)		{	Pos+=cnt;VERIFY((Pos<=Size) && (Pos>=0));};
+	IC void			advance		(size_t cnt)	{	Pos+=cnt;VERIFY((Pos<=Size) && (Pos>=0));};
 
 public:
 	void			r			(void *p,int cnt);

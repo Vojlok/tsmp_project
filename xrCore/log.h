@@ -8,6 +8,11 @@ void 	XRCORE_API		Log			(LPCSTR msg);
 void 	XRCORE_API		Log			(LPCSTR msg);
 void 	XRCORE_API		Log			(LPCSTR msg, LPCSTR			dop);
 void 	XRCORE_API		Log			(LPCSTR msg, u32			dop);
+
+#ifdef _WIN64
+void 	XRCORE_API		Log			(LPCSTR msg, size_t			dop);
+#endif
+
 void 	XRCORE_API		Log			(LPCSTR msg, int  			dop);
 void 	XRCORE_API		Log			(LPCSTR msg, float			dop);
 void 	XRCORE_API		Log			(LPCSTR msg, const Fvector& dop);

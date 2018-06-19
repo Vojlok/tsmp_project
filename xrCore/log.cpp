@@ -137,6 +137,17 @@ void Log				(const char *msg, u32 dop) {
 	Log			(buf);
 }
 
+#ifdef _WIN64
+
+void Log(const char *msg, size_t dop) {
+	char buf[1024];
+
+	sprintf_s(buf, sizeof(buf), "%s %d", msg, dop);
+	Log(buf);
+}
+
+#endif
+
 void Log				(const char *msg, int dop) {
 	char buf[1024];
 

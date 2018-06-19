@@ -202,11 +202,11 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</LinkIncremental>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">X:\components\FreeImage\Source;X:\xrCDB;X:\xr_3da;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='tools|Win32'">X:\components\FreeImage\Source;X:\xrCDB;X:\xr_3da;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='tools|Win32'">$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\xrCDB;$(SolutionDir)\xr_3da;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrCore;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='tsmp_client|Win32'">X:\components\FreeImage\Source;X:\xrCDB;X:\xr_3da;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='TSMP_CLIENT_RELEASE|Win32'">X:\components\FreeImage\Source;X:\xrCDB;X:\xr_3da;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">X:\output\libraries;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='tools|Win32'">X:\output\libraries;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='tools|Win32'">$(SolutionDir)\output\libraries_tools;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='tsmp_client|Win32'">X:\output\libraries;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='TSMP_CLIENT_RELEASE|Win32'">X:\output\libraries;$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">X:\trunk\xray\xrLua\src;X:\trunk\3rd party\FreeImage\FreeImage\Source;X:\trunk\xray\xrCore;X:\trunk\3rd party\MagicSoftware\FreeMagic\Include;X:\trunk\3rd party\OpenAL\Include;X:\trunk\3rd party\luabind_old\luabind;X:\trunk\3rd party\loki;X:\trunk\3rd party\eax\Include;X:\trunk\3rd party\boost;$(WindowsSdkDir)include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
@@ -219,8 +219,8 @@
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='tools|Win32'">
-    <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\output\binaries_tools\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate\tools\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='tsmp_client|Win32'">
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
@@ -229,6 +229,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TSMP_CLIENT_RELEASE|Win32'">
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='tools|x64'">
+    <OutDir>$(SolutionDir)\output\binaries_tools_x64\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate_x64\tools\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)\components\FreeImage;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\output\libraries_tools_x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -398,7 +404,7 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -428,7 +434,7 @@
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <ImportLibrary>$(SolutionDir)\output\libraries_$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)\output\libraries_tools\$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='tsmp_client|Win32'">
@@ -626,9 +632,9 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -895,9 +901,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='TSMP_CLIENT_RELEASE|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="compiler.cpp" />
-    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\cl_log.cpp" />
-    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\tga.cpp" />
-    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\xrThread.cpp" />
+    <ClCompile Include="..\COMMON_COMPILERS\cl_log.cpp" />
+    <ClCompile Include="..\COMMON_COMPILERS\tga.cpp" />
+    <ClCompile Include="..\COMMON_COMPILERS\xrThread.cpp" />
     <ClCompile Include="xrDO_Light.cpp" />
     <ClCompile Include="..\..\xr_3da\xrLoadSurface.cpp" />
   </ItemGroup>
@@ -916,7 +922,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="X:\xrLC\COMMON_COMPILERS\resource.rc" />
+    <ResourceCompile Include="..\COMMON_COMPILERS\resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

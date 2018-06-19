@@ -5,7 +5,7 @@ using namespace std;
 
 XRCORE_API	smem_container*	g_pSharedMemoryContainer	= NULL;
 
-smem_value*			smem_container::dock			(u32 dwCRC, u32 dwLength, void* ptr)
+smem_value*			smem_container::dock			(u32 dwCRC, size_t dwLength, void* ptr)
 {
 	VERIFY						(dwCRC && dwLength && ptr);
 

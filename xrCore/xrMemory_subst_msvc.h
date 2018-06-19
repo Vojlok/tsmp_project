@@ -72,7 +72,8 @@ IC	T*		xr_new		()
 }
 // new(1)
 template <class T, class P1>
-IC	T*		xr_new		(const P1& p1) {
+IC	T*		xr_new		(const P1& p1) 
+{
 	T* ptr	= (T*)Memory.mem_alloc(sizeof(T));
 	return new (ptr) T(p1);
 }

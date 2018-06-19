@@ -19,19 +19,11 @@
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="xrDO_Light.cpp" />
     <ClCompile Include="..\..\xr_3da\xrLoadSurface.cpp" />
-    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\cl_log.cpp">
-      <Filter>Kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\tga.cpp">
-      <Filter>Kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="X:\xrLC\COMMON_COMPILERS\xrThread.cpp">
-      <Filter>Kernel</Filter>
-    </ClCompile>
+    <ClCompile Include="..\COMMON_COMPILERS\cl_log.cpp" />
+    <ClCompile Include="..\COMMON_COMPILERS\tga.cpp" />
+    <ClCompile Include="..\COMMON_COMPILERS\xrThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="X:\xrLC\COMMON_COMPILERS\resource.rc">
-      <Filter>Kernel</Filter>
-    </ResourceCompile>
+    <ResourceCompile Include="..\COMMON_COMPILERS\resource.rc" />
   </ItemGroup>
 </Project>

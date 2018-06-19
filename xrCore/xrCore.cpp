@@ -110,12 +110,12 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 
 
 		if (temp <2) ThreadsCount = 1;
-		if (temp <3) ThreadsCount = 4;
+		if (temp <3) ThreadsCount = 4; //-V112
 		if (temp <7) ThreadsCount = 8;
 		if (temp >7) ThreadsCount = 16;
 
 		if (0 != strstr(Core.Params, "-threads:1")) ThreadsCount = 1;
-		if (0 != strstr(Core.Params, "-threads:4")) ThreadsCount = 4;
+		if (0 != strstr(Core.Params, "-threads:4")) ThreadsCount = 4; //-V112
 		if (0 != strstr(Core.Params, "-threads:8")) ThreadsCount = 8;
 		if (0 != strstr(Core.Params, "-threads:16")) ThreadsCount = 16;
 

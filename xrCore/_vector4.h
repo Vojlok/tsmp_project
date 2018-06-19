@@ -11,8 +11,8 @@ struct _vector4 {
 public:
 	T x,y,z,w;
 
-	IC	T&			operator[] (int i)					{ return *((T*)this + i); }
-	IC	T&			operator[] (int i)	const			{ return *((T*)this + i); }
+	IC	T&			operator[] (size_t i)					{ return *((T*)this + i); }
+	IC	T&			operator[] (size_t i)	const			{ return *((T*)this + i); }
 
 	IC	SelfRef 	set(T _x, T _y, T _z, T _w=1)		{ x=_x;		y=_y;		z=_z;		w=_w;		return *this; }
 	IC	SelfRef		set(const Self& v)					{ x=v.x;	y=v.y;		z=v.z;		w=v.w;		return *this; }
