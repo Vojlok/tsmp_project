@@ -1,7 +1,10 @@
 #include <cctype>
 
 #include <stdio.h>
-#include <omp.h>
+
+#include <thread>
+#include <mutex>
+std::mutex mtx;
 
 
 #include "xr_level.h"
@@ -82,8 +85,8 @@ xr_surface* level_tools::create_surface(const xr_raw_surface& raw_surface) const
 			const xr_gamemtl* gamemtl = m_gamemtls_lib->get_material(raw_surface.gamemtl);
 			if (gamemtl)
 				surface->gamemtl() = gamemtl->name;
-			else
-				msg("can't resolve game material %u", raw_surface.gamemtl);
+		//	else
+				//msg("can't resolve game material %u", raw_surface.gamemtl);
 		}
 		if (raw_surface.automatic()) {
 			if (m_level->xrlc_version() <= XRLC_VERSION_8)
@@ -414,7 +417,7 @@ void level_tools::push_ext_meshes(level_mesh* mesh)
 			// FIXME: what if there are many different materials?
 			gamemtl = m_gamemtls_lib->get_material(ogf->bones().front()->gamemtl().c_str());
 			if (gamemtl == 0) {
-				msg("can't resolve game material %s", ogf->bones().front()->gamemtl().c_str());
+			//	msg("can't resolve game material %s", ogf->bones().front()->gamemtl().c_str());
 				goto skip;
 			}
 			if (ogf->hierarchical()) {
@@ -589,12 +592,14 @@ void level_tools::split_lod_textures() const
 			*it = (c == '\\') ? '_' : std::tolower(c);			
 		}
 
-		int ModelsSize = m_mu_models.size();
+		size_t ModelsSize = m_mu_models.size();
 
 	xr_name_gen reference(path.c_str(), false);	
 
 	irect *Rects = new irect[ModelsSize];
 	std::string *Paths = new std::string[ModelsSize];
+
+	msg("lods count: %i",ModelsSize);
 
 	for (int ii = 0; ii<ModelsSize; ii++)
 	{
@@ -628,292 +633,188 @@ void level_tools::split_lod_textures() const
 
 	msg("preparing completed");
 
-	int Threads = omp_get_num_procs();
-	msg("%i cores found on pc", Threads);
+	int threads_count = std::thread::hardware_concurrency();
+	threads_count = 8;
 
-	if (Threads < 2) // 2 threads
+	msg("cores on pc detected: %i",threads_count);
+
+	auto LodThreadsManager = [](const xr_image *lods, const xr_image *lods_nm, const std::string path[], const irect rect[],const size_t from,const size_t to,int ThrNumber)
 	{
-		msg("using 2 threads");
+		std::unique_lock<std::mutex> cs(mtx, std::defer_lock);
 
-		for (int iii = 0; iii < ModelsSize; iii++)
-		{
-			msg("saving lod %i", iii);
+		cs.lock();
+		msg("# thread %i started", ThrNumber);
+		cs.unlock();
 
-#pragma omp parallel sections
-			{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-			}			
+		for (size_t i = from; i < to; i++)
+		{			
+			cs.lock();
+			msg("saving lod %i", i);
+			cs.unlock();
+			
+			lods->save_dds(PA_GAME_TEXTURES, path[i] + ".dds", &rect[i]);
+			lods_nm->save_dds(PA_GAME_TEXTURES, path[i] + "_nm.dds", &rect[i]);
 		}
-	} // end 2 threads
 
-	if((Threads<4)&&(Threads>1)) // 4 threads
-	{
-		msg("using 4 threads");
-		
-		for (int iii = 0; iii < ModelsSize; iii += 2)
-		{
-			int iiii = iii + 1;
-			msg("saving lod %i", iii);
+		cs.lock();
+		msg("# thread %i finished", ThrNumber);
+		cs.unlock();
 
-			if ((iiii) < ModelsSize)
-			{
-				msg("saving lod %i", iiii);
+	};
 
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iiii] + ".dds", &Rects[iiii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iiii] + "_nm.dds", &Rects[iiii]);
-				}
-			}
-			else
-			{
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-				}
-			}
-		}
-	} // end 4 threads 
-	
-	if ((Threads<8) && (Threads>3)) // 8 threads
-	{
-		msg("using 8 threads");
+	bool taskcompleted = false;
 
-		int ChangeOn = 1;
-
-		for (int iii = 0; iii < ModelsSize; iii += ChangeOn)
-		{
-			int i1 = iii + 1;
-			int i2 = iii + 2;
-			int i3 = iii + 3;
-
-			msg("saving lod %i", iii);
-			bool workcompleted = false;
-
-			if ((i3) < ModelsSize)
-			{
-				ChangeOn = 4;
-
-				msg("saving lod %i", i1);
-				msg("saving lod %i", i2);
-				msg("saving lod %i", i3);
-
-				workcompleted = true;
-
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i1] + ".dds", &Rects[i1]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i1] + "_nm.dds", &Rects[i1]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i2] + ".dds", &Rects[i2]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i2] + "_nm.dds", &Rects[i2]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i3] + ".dds", &Rects[i3]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i3] + "_nm.dds", &Rects[i3]);
-				}
-			}
-
-			if ((i1 < ModelsSize) && (!workcompleted))
-			{
-				ChangeOn = 2;
-
-				msg("saving lod %i", i1);
-
-				workcompleted = true;
-
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i1] + ".dds", &Rects[i1]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i1] + "_nm.dds", &Rects[i1]);
-				}
-			}
-
-			if ((iii < ModelsSize) && (!workcompleted))
-			{
-				ChangeOn = 1;
-
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-				}
-			}
-		}
-	} // end 8 threads 
-
-	
-	if (Threads>7) // 16 threads
+	if ((threads_count >7 ) && (!taskcompleted) && (ModelsSize>16))
 	{
 		msg("using 16 threads");
 
-		int ChangeOn = 1;
+		int ii, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17;
+		
+		ii = ModelsSize;
+			i17 = ii;
+			i10 = ii / 2;
+			ii = ii / 4;
+			i1 = 0;
+			i2 = ii / 4;
+			i3 = ii / 2;
+			i4 = i2 + i3;
+			i5 = ii;
+			i6 = i10 / 2 + i2;
+			i7 = i10 / 2 + i3;
+			i8 = i10 / 2 + i4;
+			i9 = i10;
+			i10 = i9 + i2;
+			i11 = i9 + i3;
+			i12 = i9 + i4;
+			i13 = i9 + i5;
+			i14 = i9 + i6;
+			i15 = i9 + i7;
+			i16 = i9 + i8;
 
-		for (int iii = 0; iii < ModelsSize; iii += ChangeOn)
-		{
-			int i1 = iii + 1;
-			int i2 = iii + 2;
-			int i3 = iii + 3;
-			int i4 = iii + 4;
-			int i5 = iii + 5;
-			int i6 = iii + 6;
-			int i7 = iii + 7;
+		std::thread thread_16_1(LodThreadsManager, lods, lods_nm, Paths, Rects, i1, i2, 1);
+		std::thread thread_16_2(LodThreadsManager, lods, lods_nm, Paths, Rects, i2, i3, 2);
+		std::thread thread_16_3(LodThreadsManager, lods, lods_nm, Paths, Rects, i3, i4, 3);
+		std::thread thread_16_4(LodThreadsManager, lods, lods_nm, Paths, Rects, i4, i5, 4);
+		std::thread thread_16_5(LodThreadsManager, lods, lods_nm, Paths, Rects, i5, i6, 5);
+		std::thread thread_16_6(LodThreadsManager, lods, lods_nm, Paths, Rects, i6, i7, 6);
+		std::thread thread_16_7(LodThreadsManager, lods, lods_nm, Paths, Rects, i7, i8, 7);
+		std::thread thread_16_8(LodThreadsManager, lods, lods_nm, Paths, Rects, i8, i9, 8);
+		std::thread thread_16_9(LodThreadsManager, lods, lods_nm, Paths, Rects, i9, i10, 9);
+		std::thread thread_16_10(LodThreadsManager, lods, lods_nm, Paths, Rects, i10, i11, 10);
+		std::thread thread_16_11(LodThreadsManager, lods, lods_nm, Paths, Rects, i11, i12, 11);
+		std::thread thread_16_12(LodThreadsManager, lods, lods_nm, Paths, Rects, i12, i13, 12);
+		std::thread thread_16_13(LodThreadsManager, lods, lods_nm, Paths, Rects, i13, i14, 13);
+		std::thread thread_16_14(LodThreadsManager, lods, lods_nm, Paths, Rects, i14, i15, 14);
+		std::thread thread_16_15(LodThreadsManager, lods, lods_nm, Paths, Rects, i15, i16, 15);
+		std::thread thread_16_16(LodThreadsManager, lods, lods_nm, Paths, Rects, i16, i17, 16);
+		thread_16_1.join();
+		thread_16_2.join();
+		thread_16_3.join();
+		thread_16_4.join();
+		thread_16_5.join();
+		thread_16_6.join();
+		thread_16_7.join();
+		thread_16_8.join();
+		thread_16_9.join();
+		thread_16_10.join();
+		thread_16_11.join();
+		thread_16_12.join();
+		thread_16_13.join();
+		thread_16_14.join();
+		thread_16_15.join();
+		thread_16_16.join();
 
-			msg("saving lod %i", iii);
-			bool workcompleted = false;
+		taskcompleted = true;
+	}
 
-			if (i7 < ModelsSize)
-			{
-				ChangeOn = 8;
+	if ((!taskcompleted) && (ModelsSize>7)&&(threads_count > 3))
+	{
+		msg("using 8 threads");
 
-				msg("saving lod %i", i1);
-				msg("saving lod %i", i2);
-				msg("saving lod %i", i3);
-				msg("saving lod %i", i4);
-				msg("saving lod %i", i5);
-				msg("saving lod %i", i6);
-				msg("saving lod %i", i7);
+		int ii, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10;
+			
+		ii = ModelsSize;
+		i10 = ii;
+		ii = ii / 2;
+		i1 = 0;
+		i2 = ii / 4;
+		i3 = ii / 2;
+		i4 = i2 + i3;
+		i5 = ii;
+		i6 = i10 / 2 + i2;
+		i7 = i10 / 2 + i3;
+		i8 = i10 / 2 + i4;
+		i9 = i10;
 
-				workcompleted = true;
+		std::thread thread_8_1(LodThreadsManager, lods, lods_nm, Paths, Rects, i1, i2, 1);
+		std::thread thread_8_2(LodThreadsManager, lods, lods_nm, Paths, Rects, i2, i3, 2);
+		std::thread thread_8_3(LodThreadsManager, lods, lods_nm, Paths, Rects, i3, i4, 3);
+		std::thread thread_8_4(LodThreadsManager, lods, lods_nm, Paths, Rects, i4, i5, 4);
+		std::thread thread_8_5(LodThreadsManager, lods, lods_nm, Paths, Rects, i5, i6, 5);
+		std::thread thread_8_6(LodThreadsManager, lods, lods_nm, Paths, Rects, i6, i7, 6);
+		std::thread thread_8_7(LodThreadsManager, lods, lods_nm, Paths, Rects, i7, i8, 7);
+		std::thread thread_8_8(LodThreadsManager, lods, lods_nm, Paths, Rects, i8, i9, 8);
+		thread_8_1.join();
+		thread_8_2.join();
+		thread_8_3.join();
+		thread_8_4.join();
+		thread_8_5.join();
+		thread_8_6.join();
+		thread_8_7.join();
+		thread_8_8.join();
 
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i1] + ".dds", &Rects[i1]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i1] + "_nm.dds", &Rects[i1]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i2] + ".dds", &Rects[i2]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i2] + "_nm.dds", &Rects[i2]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i3] + ".dds", &Rects[i3]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i3] + "_nm.dds", &Rects[i3]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i4] + ".dds", &Rects[i4]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i4] + "_nm.dds", &Rects[i4]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i5] + ".dds", &Rects[i5]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i5] + "_nm.dds", &Rects[i5]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i6] + ".dds", &Rects[i6]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i6] + "_nm.dds", &Rects[i6]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i7] + ".dds", &Rects[i7]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i7] + "_nm.dds", &Rects[i7]);
-				}
-			}
+		taskcompleted = true;
+	}
 
-				if ((i3 < ModelsSize)&&(!workcompleted))
-				{
-					ChangeOn = 4;
 
-					msg("saving lod %i", i1);
-					msg("saving lod %i", i2);
-					msg("saving lod %i", i3);
+	if ((threads_count > 1) &&(!taskcompleted)&&(ModelsSize>3))
+	{
+		msg("using 4 threads");
 
-					workcompleted = true;
+		int ii, i1, i2, i3, i4,i5;
 
-#pragma omp parallel sections
-					{
-#pragma omp section
-						lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-						lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-#pragma omp section
-						lods->save_dds(PA_GAME_TEXTURES, Paths[i1] + ".dds", &Rects[i1]);
-#pragma omp section
-						lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i1] + "_nm.dds", &Rects[i1]);
-#pragma omp section
-						lods->save_dds(PA_GAME_TEXTURES, Paths[i2] + ".dds", &Rects[i2]);
-#pragma omp section
-						lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i2] + "_nm.dds", &Rects[i2]);
-#pragma omp section
-						lods->save_dds(PA_GAME_TEXTURES, Paths[i3] + ".dds", &Rects[i3]);
-#pragma omp section
-						lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i3] + "_nm.dds", &Rects[i3]);
-					}
-				}
+		ii = ModelsSize;
+		i1 = 0;
+		i2 = ii / 4;
+		i3 = ii / 2;
+		i4 = i2 + i3;
+		i5 = ii;
 
-			if ((i1 < ModelsSize) && (!workcompleted))
-			{
-				ChangeOn = 2;
+		std::thread thread_4_1(LodThreadsManager, lods, lods_nm, Paths, Rects, i1, i2,1);
+		std::thread thread_4_2(LodThreadsManager, lods, lods_nm, Paths, Rects, i2, i3,2);
+		std::thread thread_4_3(LodThreadsManager, lods, lods_nm, Paths, Rects, i3, i4,3);
+		std::thread thread_4_4(LodThreadsManager, lods, lods_nm, Paths, Rects, i4, i5,4);
+		thread_4_1.join();
+		thread_4_2.join();
+		thread_4_3.join();
+		thread_4_4.join();
 
-				msg("saving lod %i", i1);
+		taskcompleted = true;
+	}
 
-				workcompleted = true;
+	if (!taskcompleted)
+	{
+		msg("using 2 threads");
+		int ind = ModelsSize / 2;
 
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[i1] + ".dds", &Rects[i1]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[i1] + "_nm.dds", &Rects[i1]);
-				}
-			}
+		std::thread thread_2_1(LodThreadsManager, lods, lods_nm, Paths, Rects, 0, ind,1);
+		std::thread thread_2_2(LodThreadsManager, lods, lods_nm, Paths, Rects, ind, ModelsSize,2);
+		thread_2_1.join();
+		thread_2_2.join();
 
-			if ((iii < ModelsSize) && (!workcompleted))
-			{
-				ChangeOn = 1;
+		taskcompleted = true;
+	}		
 
-#pragma omp parallel sections
-				{
-#pragma omp section
-					lods->save_dds(PA_GAME_TEXTURES, Paths[iii] + ".dds", &Rects[iii]);
-#pragma omp section
-					lods_nm->save_dds(PA_GAME_TEXTURES, Paths[iii] + "_nm.dds", &Rects[iii]);
-				}
-			}
-		}
-	} // end 16 threads 
 
-	delete Paths;
+	delete[] Paths;
+	delete[] Rects;
 
-	msg("work finished");
 	m_level->clear_lods();
 	m_level->clear_lods_nm();
+
+	msg("# work completed");
 }
+
 
 uint16_t level_tools::get_terrain_texture() const
 {
@@ -1228,11 +1129,13 @@ void level_tools::paint_automatic(xr_surface* surface, uint16_t flags) const
 			return;
 		surface->cshader().assign(preset, p - preset);
 
-		msg("%s -> %s, %s, %s", gamemtl,
-				surface->texture().c_str(), surface->eshader().c_str(),
-				surface->cshader().c_str());
-	} else {
-		msg("no invisible collider preset for game material %s", gamemtl);
+	//	msg("%s -> %s, %s, %s", gamemtl,
+		//		surface->texture().c_str(), surface->eshader().c_str(),
+		//		surface->cshader().c_str());
+	}
+	else
+	{
+	//	msg("no invisible collider preset for game material %s", gamemtl);
 		surface->texture() = "prop\\prop_fake_kollision";
 		surface->eshader() = "def_shaders\\def_vertex";
 	}

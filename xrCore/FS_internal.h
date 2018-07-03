@@ -66,7 +66,7 @@ public:
 		}
     };
 #ifdef _WIN64
-	virtual void	seek(size_t pos)	{	if (0!=hf) _fseeki64(hf,pos,SEEK_SET);		};
+	virtual void	seek(u32 pos)	{	if (0!=hf) _fseeki64(hf,pos,SEEK_SET);		};
 	virtual u32		tell() { return (0 != hf) ? _ftelli64(hf) : 0; };
 #else
 	virtual void	seek(u32 pos) { if (0 != hf) fseek(hf, pos, SEEK_SET); };

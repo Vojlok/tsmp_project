@@ -34,12 +34,12 @@ static HWND hwPhaseTime	= 0;
 //************************* Log-thread data
 static INT_PTR CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 {
-	switch( msg ){
+	switch( msg )
+	{
 		case WM_DESTROY:
 			break;
 		case WM_CLOSE:
 			ExitProcess		(0);
-//			bClose = TRUE;
 			break;
 		case WM_COMMAND:
 			if( LOWORD(wp)==IDCANCEL )
@@ -53,6 +53,7 @@ static INT_PTR CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 	}
 	return TRUE;
 }
+
 static void _process_messages(void)
 {
 	MSG msg;
@@ -85,13 +86,7 @@ void __cdecl Status	(const char *format, ...)
 
 void Progress		(const float F)
 {
-	// No critical section usage
 	progress		= F;
-	/*
-	LONG* target = (LONG *)(&progress);
-	LONG  src    = *( (LONG *)(&F)  );
-	InterlockedExchange(target, src);
-	*/
 }
 
 void Phase			(const char *phase_name)
@@ -126,13 +121,10 @@ void logThread(void *dummy)
 {
 	SetProcessPriorityBoost	(GetCurrentProcess(),TRUE);
 
-	logWindow = CreateDialog(
-		HINSTANCE(GetModuleHandle(0)),
-	 	MAKEINTRESOURCE(IDD_LOG),
-		0, logDlgProc );
-	if (!logWindow) {
-		R_CHK			(GetLastError());
-	};
+	logWindow = CreateDialog(HINSTANCE(GetModuleHandle(0)),	MAKEINTRESOURCE(IDD_LOG),0, logDlgProc );
+
+	if (!logWindow) R_CHK			(GetLastError());
+	
 	SetWindowPos(logWindow,HWND_NOTOPMOST,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE|SWP_SHOWWINDOW);
 	hwLog		= GetDlgItem(logWindow, IDC_LOG);
 	hwProgress	= GetDlgItem(logWindow, IDC_PROGRESS);
@@ -145,7 +137,6 @@ void logThread(void *dummy)
 	SendMessage(hwProgress, PBM_SETRANGE,	0, MAKELPARAM(0, 1000)); 
 	SendMessage(hwProgress, PBM_SETPOS,		0, 0); 
 
-//	Msg("\"LevelBuilder v4.1\" beta build\nCompilation date: %s\n",__DATE__);
 	{
 		char tmpbuf[128];
 		Msg("Startup time: %s",_strtime(tmpbuf));
@@ -163,13 +154,15 @@ void logThread(void *dummy)
 	float	PrSave	= 0;
 	while (TRUE)
 	{
-		SetPriorityClass	(GetCurrentProcess(),IDLE_PRIORITY_CLASS);	// bHighPriority?NORMAL_PRIORITY_CLASS:IDLE_PRIORITY_CLASS
+		//SetPriorityClass	(GetCurrentProcess(),IDLE_PRIORITY_CLASS);
 
 		// transfer data
-		while (!csLog.TryEnter())	{
+		while (!csLog.TryEnter())	
+		{
 			_process_messages	( );
 			Sleep				(1);
 		}
+
 		if (progress>1.f)		progress = 1.f;
 		else if (progress<0)	progress = 0;
 
@@ -186,10 +179,11 @@ void logThread(void *dummy)
 				SendMessage	( hwLog, LB_ADDSTRING, 0, (LPARAM) S);
 			}
 			SendMessage		( hwLog, LB_SETTOPINDEX, LogSize-1, 0);
-			FlushLog		( );
+			FlushLog();
 		}
 		csLog.Leave		();
-		if (_abs(PrSave-progress)>EPS_L) {
+		if (_abs(PrSave-progress)>EPS_L) 
+		{
 			bWasChanges = TRUE;
 			PrSave = progress;
 			SendMessage		( hwProgress, PBM_SETPOS, u32(progress*1000.f), 0);
@@ -207,7 +201,9 @@ void logThread(void *dummy)
 					make_time(secRemain).c_str()
 					);
 				SetWindowText	( hwTime, tbuf );
-			} else {
+			} 
+			else 
+			{
 				SetWindowText	( hwTime, "" );
 			}
 
@@ -216,12 +212,15 @@ void logThread(void *dummy)
 			SetWindowText	( hwPText, tbuf );
 		}
 
-		if (bStatusChange) {
+		if (bStatusChange) 
+		{
 			bWasChanges		= TRUE;
 			bStatusChange	= FALSE;
 			SetWindowText	( hwInfo,	status);
 		}
-		if (bWasChanges) {
+
+		if (bWasChanges) 
+		{
 			UpdateWindow	( logWindow);
 			bWasChanges		= FALSE;
 		}

@@ -210,7 +210,9 @@ void vfCopyGlobals(CLuaVirtualMachine *tpLuaVM)
 	lua_pushstring	(tpLuaVM,"_G");
 	lua_gettable	(tpLuaVM,LUA_GLOBALSINDEX);
 	lua_pushnil		(tpLuaVM);
-	while (lua_next(tpLuaVM, -2)) {
+
+	while (lua_next(tpLuaVM, -2)) 
+	{
 		lua_pushvalue	(tpLuaVM,-2);
 		lua_pushvalue	(tpLuaVM,-2);
 		lua_settable	(tpLuaVM,-6);
@@ -314,13 +316,11 @@ void vfSetNamespace(CLuaVirtualMachine *tpLuaVM)
 
 bool Script::bfLoadFileIntoNamespace(CLuaVirtualMachine *tpLuaVM, LPCSTR caScriptName, LPCSTR caNamespaceName, bool bCall)
 {
-	if (!bfCreateNamespaceTable(tpLuaVM,caNamespaceName))
-		return		(false);
+	if (!bfCreateNamespaceTable(tpLuaVM,caNamespaceName)) return false;
 	vfCopyGlobals	(tpLuaVM);
-	if (!bfDoFile(tpLuaVM,caScriptName,caNamespaceName,bCall))
-		return		(false);
+	if (!bfDoFile(tpLuaVM,caScriptName,caNamespaceName,bCall)) return false;
 	vfSetNamespace	(tpLuaVM);
-	return			(true);
+	return	true;
 }
 
 bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR N)

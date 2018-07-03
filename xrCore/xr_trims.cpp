@@ -95,7 +95,7 @@ LPSTR _GetItems ( LPCSTR src, int idx_start, int idx_end, LPSTR dst, char separa
 
 u32 _ParseItem ( LPCSTR src, xr_token* token_list )
 {
-	for(size_t i=0; token_list[i].name; i++ )
+	for(int i=0; token_list[i].name; i++ )
 		if( !stricmp(src,token_list[i].name) ) return token_list[i].id;
 	return u32(-1);
 }

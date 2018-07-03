@@ -354,7 +354,7 @@ struct SimplifyMemFunc< SINGLE_MEMFUNCPTR_SIZE + sizeof(int) >  {
 			XFuncType func;
 			struct {	 
 				GenericMemFuncType funcaddress; // points to the actual member function
-				size_t delta;	     // #BYTES to be added to the 'this' pointer
+				int delta;	     // #BYTES to be added to the 'this' pointer
 			}s;
         } u;
 		// Check that the horrible_cast will work
@@ -490,16 +490,16 @@ struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + 3*sizeof(int) >
 			// is internally defined as:
 			struct {
 				GenericMemFuncType m_funcaddress; // points to the actual member function
-				size_t delta;		// #bytes to be added to the 'this' pointer
-				size_t vtordisp;		// #bytes to add to 'this' to find the vtable
-				size_t vtable_index; // or 0 if no virtual inheritance
+				int delta;		// #bytes to be added to the 'this' pointer
+				int vtordisp;		// #bytes to add to 'this' to find the vtable
+				int vtable_index; // or 0 if no virtual inheritance
 			} s;
 		} u;
 		// Check that the horrible_cast will work
 		typedef int ERROR_CantUsehorrible_cast[sizeof(XFuncType)==sizeof(u.s)? 1 : -1];
 		u.func = function_to_bind;
 		bound_func = u.s.funcaddress;
-		size_t virtual_delta = 0;
+		int virtual_delta = 0;
 		if (u.s.vtable_index) { // Virtual inheritance is used
 			// First, get to the vtable. 
 			// It is 'vtordisp' bytes from the start of the class.

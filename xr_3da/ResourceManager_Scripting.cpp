@@ -139,6 +139,7 @@ void	CResourceManager::LS_Load			()
 	luaopen_table	(LSVM);
 	luaopen_string	(LSVM);
 	luaopen_math	(LSVM);
+
 #ifdef USE_JIT
 	luaopen_jit		(LSVM);
 #endif
@@ -209,7 +210,9 @@ void	CResourceManager::LS_Load			()
 	// load shaders
 	xr_vector<char*>*	folder			= FS.file_list_open	("$game_shaders$",::Render->getShaderPath(),FS_ListFiles|FS_RootOnly);
 	VERIFY								(folder);
-	for (u32 it=0; it<folder->size(); it++)	{
+
+	for (u32 it=0; it<folder->size(); it++)	
+	{
 		string_path						namesp,fn;
 		strcpy_s							(namesp,(*folder)[it]);
 		if	(0==strext(namesp) || 0!=xr_strcmp(strext(namesp),".s"))	continue;
@@ -217,10 +220,14 @@ void	CResourceManager::LS_Load			()
 		if		(0==namesp[0])			strcpy_s	(namesp,"_G");
 		strconcat						(sizeof(fn),fn,::Render->getShaderPath(),(*folder)[it]);
 		FS.update_path					(fn,"$game_shaders$",fn);
-		try {
-			Script::bfLoadFileIntoNamespace	(LSVM,fn,namesp,true);
-		} catch (...)
+		try 
 		{
+			Msg("trying to load %s %s",fn,namesp);
+			Script::bfLoadFileIntoNamespace	(LSVM,fn,namesp,true);
+		} 
+		catch (...)
+		{
+			Msg("loading failed")
 			Log(lua_tostring(LSVM,-1));
 		}
 	}

@@ -25,8 +25,8 @@
 #define NOBITMAP
 #include <mmreg.h>
 
-#include <vorbis/codec.h>
-#include <vorbis/vorbisfile.h>
+#include "..\components\libvorbis\include\vorbis\codec.h"
+#include "..\components\libvorbis\include\vorbis\vorbisfile.h"
 
 #include "../xrCDB/xrCDB.h"
 #include "sound.h"

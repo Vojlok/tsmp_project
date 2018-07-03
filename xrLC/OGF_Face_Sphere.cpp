@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "build.h"
 #include "ogf_face.h"
+
 #pragma warning(disable:4995)
 #include "MgcCont3DMinSphere.h"
 
@@ -37,7 +38,8 @@ void				OGF_Base::CalcBounds	()
 
 	// 1: calc first variation
 	Fsphere	S1;
-	Fsphere_compute				(S1,&*V.begin(),(u32)V.size());
+	
+	Fsphere_compute				(S1,&*V.begin(), V.size());
 	BOOL B1						= SphereValid(V,S1);
 
 	// 2: calc ordinary algorithm (2nd)

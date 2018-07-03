@@ -53,19 +53,15 @@ void Help()
 // computing build id
 XRCORE_API	LPCSTR	build_date;
 XRCORE_API	u32		build_id;
-static LPSTR month_id[12] = {
-	"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
-};
+static LPSTR month_id[12] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
-static int days_in_month[12] = {
-	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
-};
+static int days_in_month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 static int start_day	= 31;	// 31
 static int start_month	= 1;	// January
 static int start_year	= 1999;	// 1999
 
-void compute_build_id	()
+void compute_build_id()
 {
 	build_date			= __DATE__;
 
@@ -77,9 +73,9 @@ void compute_build_id	()
 	strcpy_s				(buffer,__DATE__);
 	sscanf				(buffer,"%s %d %d",month,&days,&years);
 
-	for (int i=0; i<12; i++) {
-		if (_stricmp(month_id[i],month))
-			continue;
+	for (int i=0; i<12; i++) 
+	{
+		if (_stricmp(month_id[i],month)) continue;
 
 		months			= i;
 		break;
@@ -87,20 +83,20 @@ void compute_build_id	()
 
 	build_id			= (years - start_year)*365 + days - start_day;
 
-	for (int i=0; i<months; ++i)
-		build_id		+= days_in_month[i];
+	for (int i=0; i<months; ++i) build_id		+= days_in_month[i];
 
-	for (int i=0; i<start_month-1; ++i)
-		build_id		-= days_in_month[i];
+	for (int i=0; i<start_month-1; ++i) build_id		-= days_in_month[i];
 }
 
 void get_console_param(const char *cmd, const char *param_name, const char *expr, float* param)
 {
-	if (strstr(cmd, param_name)) {
+	if (strstr(cmd, param_name)) 
+	{
 		int						sz = xr_strlen(param_name);
 		sscanf					(strstr(cmd,param_name)+sz,expr,param);
 	}
 }
+
 void get_console_float(const char *cmd, const char *param_name, float* param)
 {
 	get_console_param(cmd, param_name, "%f", param);
@@ -111,7 +107,8 @@ typedef int __cdecl xrOptions(b_params* params, u32 version, bool bRunBuild);
 void Startup(LPSTR     lpCmdLine)
 {
 	char cmd[512],name[256];
-	BOOL bModifyOptions		= FALSE;
+
+	BOOL bModifyOptions = FALSE;
 
 	strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
@@ -129,22 +126,12 @@ void Startup(LPSTR     lpCmdLine)
 	get_console_float(lpCmdLine, "-lmap_quality ", &f_lmap_quality);
 	
 	// Give a LOG-thread a chance to startup
-	//_set_sbh_threshold(1920);
 	InitCommonControls		();
 	thread_spawn			(logThread, "log-update",	1024*1024,0);
 	Sleep					(150);
 	
 	// Faster FPU 
 	SetPriorityClass		(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
-
-	/*
-	u32	dwMin			= 1800*(1024*1024);
-	u32	dwMax			= 1900*(1024*1024);
-	if (0==SetProcessWorkingSetSize(GetCurrentProcess(),dwMin,dwMax))
-	{
-		clMsg("*** Failed to expand working set");
-	};
-	*/
 	
 	// Load project
 	name[0]=0;				sscanf(strstr(cmd,"-f")+2,"%s",name);
@@ -156,7 +143,8 @@ void Startup(LPSTR     lpCmdLine)
 	string256 inf;
 	extern  HWND logWindow;
 	IReader*	F			= FS.r_open(prjName);
-	if (NULL==F){
+	if (NULL==F)
+	{
 		sprintf				(inf,"Build failed!\nCan't find level: '%s'",name);
 		clMsg				(inf);
 		MessageBox			(logWindow,inf,"Error!",MB_OK|MB_ICONERROR);
@@ -187,7 +175,8 @@ void Startup(LPSTR     lpCmdLine)
 		xrOptions*	O = (xrOptions*)P;
 		int			R = O(&Params,version,false);
 		FreeLibrary	(L);
-		if (R==2)	{
+		if (R==2)	
+		{
 			ExitProcess(0);
 		}
 	}
@@ -216,8 +205,6 @@ void Startup(LPSTR     lpCmdLine)
 	bClose					= TRUE;
 	Sleep					(500);
 }
-
-
 
 typedef void DUMMY_STUFF (const void*,const u32&,void*);
 XRCORE_API DUMMY_STUFF	*g_temporary_stuff;

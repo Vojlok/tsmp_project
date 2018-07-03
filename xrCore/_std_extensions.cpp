@@ -23,7 +23,7 @@ char*							timestamp				(string64& dest)
 	* for the variable. 
 	*/
 	_tzset		();
-	size_t			it;
+	u32			it;
 
 	// date
 	_strdate	( temp );

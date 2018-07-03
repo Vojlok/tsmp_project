@@ -9,7 +9,7 @@ struct		XRCORE_API	smem_value
 {
 	u32					dwReference		;
 	u32					dwCRC			;
-	size_t				dwLength		;
+	u32					dwLength		;
 	u32					_align_16		;
 	u8					value		[]	;
 };
@@ -30,7 +30,7 @@ IC bool					smem_search		(const smem_value* A, const smem_value* B)	{
 };
 
 // predicate for exact (byte level) comparition
-IC bool					smem_equal		(const smem_value* A, u32 dwCRC, size_t dwLength, u8* ptr)
+IC bool					smem_equal		(const smem_value* A, u32 dwCRC, u32 dwLength, u8* ptr)
 {
 	if (A->dwCRC !=		dwCRC)			return		false;
 	if (A->dwLength !=	dwLength)		return		false;
@@ -47,7 +47,7 @@ private:
 	xrCriticalSection					cs;
 	cdb									container;
 public:
-	smem_value*			dock			(u32 dwCRC, size_t dwLength, void* ptr);
+	smem_value*			dock			(u32 dwCRC, u32 dwLength, void* ptr);
 	void				clean			();
 	void				dump			();
 	u32					stat_economy	();
@@ -76,7 +76,7 @@ public:
 	ref_smem			(ref_smem<T> const &rhs)					{	p_ = 0;	_set(rhs);											}
 	~ref_smem			()											{	_dec();														}
 
-	void				create		(u32 dwCRC, size_t dwLength, T* ptr)
+	void				create		(u32 dwCRC, u32 dwLength, T* ptr)
 	{
 		smem_value* v	= g_pSharedMemoryContainer->dock(dwCRC,dwLength*sizeof(T),ptr); 
 		if (0!=v)		v->dwReference++; _dec(); p_ = v;	
@@ -89,7 +89,7 @@ public:
 	T&					operator[]	(size_t id)						{	return ((T*)(p_->value))[id];								}
 const T&				operator[]	(size_t id)	const				{	return ((T*)(p_->value))[id];								}
 	// misc func
-	size_t				size		()								{	if (0==p_) return 0; else return p_->dwLength/sizeof(T);	}
+	u32				size		()								{	if (0==p_) return 0; else return p_->dwLength/sizeof(T);	}
 	void				swap		(ref_smem<T> & rhs)				{	smem_value* tmp = p_; p_ = rhs.p_; rhs.p_ = tmp;			}
 	bool				equal		(ref_smem<T> & rhs)				{	return p_ == rhs.p_;										}
 	u32					ref_count	()								{	if (0==p_) return 0; else return p_->dwReference;			}

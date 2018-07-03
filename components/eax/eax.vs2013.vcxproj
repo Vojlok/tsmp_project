@@ -245,8 +245,8 @@
     <IntDir>X:\output\intermediate_x64\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='tsmp_client|x64'">
-    <OutDir>X:\output\libraries_x64\</OutDir>
-    <IntDir>X:\output\intermediate_x64\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\output\tsmp_client_libraries_x64\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate_x64\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TSMP_CLIENT_RELEASE|x64'">
     <OutDir>X:\output\libraries_x64\</OutDir>

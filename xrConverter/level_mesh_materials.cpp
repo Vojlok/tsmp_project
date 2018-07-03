@@ -149,8 +149,8 @@ bool level_mesh::search_path(uint32_t v0, uint32_t v1)
 	if (cost_v1 == xr_numeric_limits<float>::max()) {
 		const fvector3& p0 = m_points[v0];
 		const fvector3& p1 = m_points[v1];
-		msg("no edge path from %" PRIu32" (%f, %f, %f) to %" PRIu32" (%f, %f, %f)",
-				v0, p0.x, p0.y, p0.z, v1, p1.x, p1.y, p1.z);
+	//	msg("no edge path from %" PRIu32" (%f, %f, %f) to %" PRIu32" (%f, %f, %f)",
+	//			v0, p0.x, p0.y, p0.z, v1, p1.x, p1.y, p1.z);
 //		create_debug_face(v0, v1);
 		return false;
 	}

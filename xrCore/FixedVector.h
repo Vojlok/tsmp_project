@@ -15,28 +15,28 @@ public:
 
 private:
 	value_type	array[dim];
-	size_t			count;
+	u32			count;
 
 public:
 	svector() : count(0) 
 	{}
-	svector(iterator p, size_t c) 
+	svector(iterator p, int c) 
 	{ assign(p,c); }
 
 	IC iterator	begin()						{ return array;							}
 	IC iterator	end	 ()						{ return array+count;					}
 	IC const_iterator	begin()	const		{ return array;							}
 	IC const_iterator	end	 ()	const		{ return array+count;					}
-	IC size_t		size()		const		{ return count;							}
+	IC u32		size()		const		{ return count;							}
 	IC void		clear()						{ count=0;								}
-	IC void		resize(size_t c)				{ VERIFY(c<=dim); count=c;				}
+	IC void		resize(int c)				{ VERIFY(c<=dim); count=c;				}
 	IC void		reserve(int c)				{ }
 
 	IC void		push_back(value_type e)		{ VERIFY(count<dim); array[count++]=e;	}
 	IC void		pop_back()					{ VERIFY(count); count--;				}
 
-	IC reference		operator[] (size_t id)			{ VERIFY(id<count); return array[id];	}
-	IC const_reference	operator[] (size_t id)	const	{ VERIFY(id<count); return array[id];	}
+	IC reference		operator[] (u32 id)			{ VERIFY(id<count); return array[id];	}
+	IC const_reference	operator[] (u32 id)	const	{ VERIFY(id<count); return array[id];	}
 
 	IC reference		front()				{ return array[0];						}
 	IC reference		back()				{ return array[count-1];				}
@@ -50,7 +50,7 @@ public:
 	IC void		erase(u32 id)				{
 		VERIFY(id<count);
 		count--;
-		for (size_t i=id; i<count; i++)
+		for (u32 i=id; i<count; i++)
 			array[i] = array[i+1];
 	}
 	IC void		erase(iterator it)				{ erase(u32(it-begin()));	}
@@ -58,15 +58,15 @@ public:
 	IC void		insert(u32 id, reference V)
 	{
 		VERIFY(id<count);
-		for (size_t i=count; i>int(id); i--)	array[i] = array[i-1];
+		for (int i=count; i>int(id); i--)	array[i] = array[i-1];
 		count++;
 		array[id] = V;
 	}
-	IC void		assign(iterator p, size_t c) { VERIFY(c>0 && c<dim); CopyMemory(array,p,c*sizeof(value_type)); count=c; }
+	IC void		assign(iterator p, int c) { VERIFY(c>0 && c<dim); CopyMemory(array,p,c*sizeof(value_type)); count=c; }
 	IC BOOL		equal (const svector<value_type,dim>& base) const
 	{
 		if (size()!=base.size())	return FALSE;
-		for (size_t cmp=0; cmp<size(); cmp++)	if ((*this)[cmp]!=base[cmp])	return FALSE;
+		for (u32 cmp=0; cmp<size(); cmp++)	if ((*this)[cmp]!=base[cmp])	return FALSE;
 		return TRUE;
 	}
 };

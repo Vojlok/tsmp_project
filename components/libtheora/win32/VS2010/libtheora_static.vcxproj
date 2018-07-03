@@ -97,6 +97,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='64bit|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -294,7 +295,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='WIN64|Win32'">x:\output\intermediate\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\output\libraries_x64_release\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='tools|x64'">$(SolutionDir)\output\libraries_tools_x64\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='tsmp_client|x64'">$(SolutionDir)\output\libraries_x64_release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='tsmp_client|x64'">$(SolutionDir)\output\tsmp_client_libraries_x64\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='TSMP_CLIENT_RELEASE|x64'">$(SolutionDir)\output\libraries_x64_release\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='WIN64|x64'">x:\output\libraries_x64\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
@@ -562,7 +563,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Lib>
-      <OutputFile>$(SolutionDir)\output\libraries_x64_release\$(ProjectName).lib</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='TSMP_CLIENT_RELEASE|x64'">

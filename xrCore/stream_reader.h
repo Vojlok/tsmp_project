@@ -10,7 +10,7 @@ private:
 	u32		m_window_size;
 
 private:
-	size_t		m_current_offset_from_start;
+	u32		m_current_offset_from_start;
 	u32		m_current_window_size;
 	u8		*m_current_map_view_of_file;
 	u8		*m_start_pointer;
@@ -44,7 +44,7 @@ public:
 	IC		u32				elapsed				() const;
 	IC		const u32		&length				() const;
 	IC		void			seek				(const int &offset);
-	IC		size_t				tell				() const;
+	IC		u32				tell				() const;
 	IC		void			close				();
 
 public:

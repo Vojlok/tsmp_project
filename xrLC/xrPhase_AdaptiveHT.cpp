@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "build.h"
 
+#include <stdio.h>
+
+#include <thread>
+#include <mutex>
+std::mutex mtx;
+
 const	float	aht_max_edge	= c_SS_maxsize/2.5f;	// 2.0f;			// 2 m
 //const	float	aht_min_edge	= .2f;					// 20 cm
 //const	float	aht_min_err		= 16.f/255.f;			// ~10% error
@@ -139,12 +145,7 @@ void CBuild::xrPhase_AdaptiveHT	()
 		FPU::m64r					();
 		Status						("Precalculating : base hemisphere ...");
 		mem_Compact					();
-
-
-
 		Light_prepare				();
-
-
 
 		// calc approximate normals for vertices + base lighting
 		int VSize = g_vertices.size();
@@ -164,36 +165,30 @@ void CBuild::xrPhase_AdaptiveHT	()
 
 //#pragma omp parallel for
 
-		for (int vit=0; vit<VSize; vit++)	
+		auto ThreadsManager = [](const int from ,const int to, const CDB::COLLIDER DB1)
 		{
-			base_color_c		vC;
-			Vertex*		V = g_vertices[vit];	
+			for (int it = from; it < to; it++)
+			{
+				base_color_c		vC;
+				Vertex*		V = g_vertices[it];
 
 				V->normalFromAdj();
 
+				CDB::COLLIDER DB = DB1;
 
-//#pragma omp parallel sections
-//				{
-//#pragma omp section
-					LightPoint(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb + LP_dont_sun, 0);
+				LightPoint(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb + LP_dont_sun, 0);
 
-
-			vC.mul				(0.5f);		
-			V->C._set			(vC);		
-
-
-			if (itr == 500)
-			{
-				itr = 0;
-				
-				Progress(fStep*vit);
+				vC.mul(0.5f);
+				V->C._set(vC);			
 			}
-			itr++;
+		};
 
-			
-		}
+		int ind = VSize / 2;
 
-		Progress(1.f);
+		std::thread thread_2_1(ThreadsManager,0,ind,DB);
+		std::thread thread_2_2(ThreadsManager, ind, VSize, DB);
+		thread_2_1.join();
+		thread_2_2.join();
 	}
 
 	//////////////////////////////////////////////////////////////////////////
