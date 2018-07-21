@@ -35,7 +35,6 @@ FZSysMsgsSendSysMessage_SOC SendSysMessage;
 FZSysMsgsInit SysInit;
 FZSysMsgsProcessClientModDll writer;
 
-
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
@@ -135,19 +134,14 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 	std::string messages = "! nickname of connecting player "+Name_new+" is >70 symbols";
 	if (strlen(new_name) > 70) Msg(messages.c_str());
 	
-	//messages = "! connecting player - " + Name_new + " tried to use percent symbol in nick";
-	
 	while (Name_new.find('%') != std::string::npos)
 	{	
 		Name_new.replace(Name_new.find("%"), 1, "!");
-		//Msg(messages.c_str());
 	}
-	//messages = "! connecting player - " + Name_new + " tried to use _ symbol in nick";
 	
 	while (Name_new.find('_') != std::string::npos)
 	{
 		Name_new.replace(Name_new.find("_"), 1, "!");
-		//Msg(messages.c_str());
 	}
 	// чтобы хоть что то было в нике
 	while (Name_new.find(' ') != std::string::npos)

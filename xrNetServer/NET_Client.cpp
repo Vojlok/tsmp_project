@@ -206,13 +206,6 @@ IPureClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout )
 
 void  IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
 {
-	if (0 != strstr(Core.Params, "-debug"))
-	{
-		std::string Dat = " sysmessage size - "+std::to_string(data_size);
-		Msg(Dat.c_str());
-	}
-
-
     MSYS_PING*    cfg = (MSYS_PING*)data;
 
 	if(     (data_size>2*sizeof(u32)) 

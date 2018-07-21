@@ -121,7 +121,7 @@ void BattlEyeServer::AddConnected_OnePlayer( xrClientData* CL )
 	}
 }
 
-/*void BattlEyeServer::PrintMessage( char* message )
+void BattlEyeServer::PrintMessage( char* message )
 {
 	/*
 	//if( g_be_message_out )
@@ -137,8 +137,8 @@ void BattlEyeServer::AddConnected_OnePlayer( xrClientData* CL )
 				Level().game->CommonMessageOut( text );
 			}
 		}
-	}
-}*/
+	} */
+}
 
 void BattlEyeServer::SendPacket( int player, void* packet, int len )
 {

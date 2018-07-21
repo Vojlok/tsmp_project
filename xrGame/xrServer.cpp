@@ -943,15 +943,11 @@ CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 
 void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 {
-//	string256 ChatMsg;
-//	u16 PlayerID = P->r_u16();
 	s16 team = P->r_s16();
-//	P->r_stringZ(ChatMsg);
+
 	if (!CL->net_Ready) return;
 	game_PlayerState* Cps = CL->ps;
 
-//	s16 first;
-//	P->r_s16(first);
 	string128 str1;
 	P->r_stringZ(str1);
 	string4096 str2;
@@ -959,40 +955,16 @@ void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 	s16 second;
 	P->r_s16(second);
 
-//	string128 ResultStr;
-//	P->r_stringZ(ResultStr);
-//	Msg((LPCSTR)ResultStr);
-
-	//string128 ResultStr1;
-	//P->r_stringZ(ResultStr1);
-	//Msg((LPCSTR)ResultStr1);
 	int msg_size = strlen(str2);
 	std::string mess=str2;
-	std::string player = str1;
-	std::string srv_mes = "! player " + player + " used bad symbol in chat";
+	
+	if (msg_size > 200) Msg("! player [%s] used too many symbols in chat %i", str1, msg_size);
 
-//	unsigned int msg_size = static_cast<int>(mess.size);
-	std::string srv_mes_big = "! player " + player + " used too many symbols in chat - "+std::to_string((_Longlong)msg_size);
-	
-	
-	
-	if (msg_size > 70)
-		Msg(srv_mes_big.c_str());
+	mess.resize(200);
 
-	mess.resize(70);
-//	Msg(str1);
-	//Msg(player.c_str());
-	//Msg(str2);
-	//Msg(mess.c_str());
 	while (mess.find('%') != std::string::npos)
 	{
-		Msg(srv_mes.c_str());
-
-		//	for (std::string::size_type n = 0; (n = mess.find("%", n)) != std::string::npos; ++n)
-		//	{
-		//		mess.replace(n, 2, 1, ' ');
-		//	}
-		//}
+		Msg("! player [%s] used bad symbol % in chat", str1);
 		mess.replace(mess.find("%"), 1, "_");
 	}
 
@@ -1033,8 +1005,6 @@ void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 
 	}
 
-	//Msg(mess.c_str());
-
 	NET_Packet Np;  //создаем новый NetPacket в который помещается все из оригинального пакета, но с заменой %
 
 	Np.w_begin(M_CHAT_MESSAGE);
@@ -1042,15 +1012,6 @@ void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 	Np.w_stringZ(str1);
 	Np.w_stringZ(mess.c_str());
 	Np.w_s16(second);
-
-	//NET_Packet	P;
-	//P.w_begin(M_CHAT_MESSAGE);
-	//P.w_s16(local_player->team);
-	//P.w_stringZ(local_player->getName());
-	//P.w_stringZ(phrase.c_str());
-	//P.w_s16(local_player->team);
-	//u_EventSend(P);
-
 
 	for (u32 client=0; client<net_Players.size(); ++client)
 	{
@@ -1062,7 +1023,6 @@ void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 		if (Cps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD) && !ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))
 			continue;
 
-	//	SendTo(Client->ID, *P);
 		SendTo(Client->ID, Np);
 	};
 };
@@ -1126,12 +1086,10 @@ void xrServer::create_direct_client()
 	SClientConnectData cl_data;
 	cl_data.clientID.set(1);
 	strcpy_s( cl_data.name, "single_player" );
-	cl_data.process_id = GetCurrentProcessId();	
-	
+	cl_data.process_id = GetCurrentProcessId();		
 
 	new_client( &cl_data );
 }
-
 
 void xrServer::ProceedDelayedPackets()
 {
@@ -1140,7 +1098,6 @@ void xrServer::ProceedDelayedPackets()
 	{
 		DelayedPacket& DPacket	= *m_aDelayedPackets.begin();
 		OnDelayedMessage(DPacket.Packet, DPacket.SenderID);
-//		OnMessage(DPacket.Packet, DPacket.SenderID);
 		m_aDelayedPackets.pop_front();
 	}
 	DelayedPackestCS.Leave();
@@ -1205,11 +1162,9 @@ void xrServer::GetServerInfo( CServerInfo* si )
 	string32  tmp;
 	string256 tmp256;
 	
-//	si->AddItem( "Server port", itoa( GetPort(), tmp, 10 ), RGB(128,128,255) );
 	LPCSTR time = InventoryUtilities::GetTimeAsString( Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay ).c_str();
 	si->AddItem( "Время работы сервера", time, RGB(255,228,0) );
 
-	//strcpy_s( tmp256, get_token_name(game_types, game->Type() ) );
 	std::string tp = get_token_name(game_types, game->Type());
 
 	if (tp == "deathmatch") strcpy_s(tmp256, "Все против всех");
@@ -1230,12 +1185,10 @@ void xrServer::GetServerInfo( CServerInfo* si )
 		g_sv_ah_iReinforcementTime;
 	}
 	
-	//if ( g_sv_dm_dwTimeLimit > 0 )
-	{
 		strcat_s( tmp256, "ограничение времени: " );
 		strcat_s( tmp256, itoa( g_sv_dm_dwTimeLimit, tmp, 10 ) );
 		strcat_s(tmp256, " ; ");
-	}
+	
 	if ( game->Type() == GAME_ARTEFACTHUNT )
 	{
 		strcat_s( tmp256, "время возрождения: " );
@@ -1243,7 +1196,5 @@ void xrServer::GetServerInfo( CServerInfo* si )
 		strcat_s(tmp256, " ; ");
 	}
 
-
 	si->AddItem("Режим", tmp256, RGB(128, 255, 255));
 }
-
