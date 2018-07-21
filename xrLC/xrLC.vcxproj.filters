@@ -130,6 +130,7 @@
     <ClInclude Include="Image.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa</Filter>
     </ClInclude>
+    <ClInclude Include="xrThreadNew.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -306,6 +307,7 @@
     <ClCompile Include="COMMON_COMPILERS\cl_log.cpp" />
     <ClCompile Include="COMMON_COMPILERS\tga.cpp" />
     <ClCompile Include="COMMON_COMPILERS\xrThread.cpp" />
+    <ClCompile Include="xrThreadNew.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="COMMON_COMPILERS\resource.rc" />

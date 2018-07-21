@@ -23,20 +23,38 @@
 ENGINE_API CConsole*	Console = NULL;
 const char *			ioc_prompt = ">>> ";
 
-int str_insert(LPSTR dest, LPSTR src, int n_char)
+static char RusSymbols[] = { 'ô','è','ñ','â','ó','à','ï','ð','ø','î','ë','ä','ü','ò','ù','ç',
+'é','ê','û','å','ã','ì','ö','÷','í','ÿ','õ','ú','æ', 'ý','á','þ','.' };
+
+static char RusSymbolsBig[] = { 'Ô','È','Ñ','Â','Ó','À','Ï','Ð','Ø','Î','Ë','Ä','Ü','Ò','Ù','Ç',
+'É','Ê','Û','Å','Ã','Ì','Ö','×','Í','ß','Õ','Ú','Æ', 'Ý','Á','Þ',',' };
+
+static char EngSymbols[] = { 'a','b','c','d','e','f','g','h','i','g','k','l','m','n','o','p',
+'q','r','s','t','u','v','w','x','y','z' ,'[',']' ,';', '\'',',','.','/' };
+
+static char EngSymbolsBig[] = { 'A','B','C','D','E','F','G','H','I','G','K','L','M','N','O','P',
+'Q','R','S','T','U','V','W','X','Y','Z' ,'{','}' ,':', '"','<','>','?' };
+
+static u32 DIKS[] = { DIK_A, DIK_B, DIK_C, DIK_D, DIK_E, DIK_F, DIK_G, DIK_H, DIK_I,
+DIK_J, DIK_K, DIK_L, DIK_M, DIK_N, DIK_O, DIK_P, DIK_Q, DIK_R, DIK_S, DIK_T, DIK_U, DIK_V,
+DIK_W, DIK_X, DIK_Y, DIK_Z, DIK_LBRACKET, DIK_RBRACKET, DIK_SEMICOLON, DIK_APOSTROPHE,
+DIK_COMMA, DIK_PERIOD, DIK_SLASH };
+
+
+int CConsole::str_insert(LPSTR dest, LPSTR src, int m_char)
 {
 	int len = xr_strlen(dest);
 	int lna = xr_strlen(src);
-	if (len > n_char)
+	if (len > m_char)
 	{
 
-		for (int i = len - 1; i >= n_char; i--)
+		for (int i = len - 1; i >= m_char; i--)
 			if (i + lna < CConsole::MAX_LEN)
 				dest[i + lna] = dest[i]; // 
 
 		for (int i = 0; i < lna; i++)
 			if (i + n_char < CConsole::MAX_LEN)
-				dest[i + n_char] = src[i]; // 
+				dest[i + m_char] = src[i]; // 
 
 		dest[len + lna] = 0;
 	}
@@ -45,9 +63,8 @@ int str_insert(LPSTR dest, LPSTR src, int n_char)
 		strcat_s(dest, CConsole::MAX_LEN, src);
 	}
 
-	n_char += lna;
-	return n_char;
-
+	m_char += lna;
+	return m_char;
 }
 
 
@@ -64,17 +81,15 @@ void CConsole::RemoveCommand(IConsole_Command* C)
 	if (Commands.end() != it)
 		Commands.erase(it);
 }
-void CConsole::Reset()
-{
-	if (pFont)
-		xr_delete(pFont);
-}
+void CConsole::Reset() { if (pFont) xr_delete(pFont); }
 
 void CConsole::Initialize()
 {
 	scroll_delta = cmd_delta = old_cmd_delta = 0;
 	editor[0] = 0;
 	bShift = false;
+	bCtrl = false;
+	bIsRussian = false;
 	RecordCommands = false;
 	editor[0] = 0;
 	cur_time = rep_time = 0;
@@ -91,9 +106,7 @@ void CConsole::Initialize()
 void CConsole::Destroy()
 {
 	Execute("cfg_save");
-
 	xr_delete(pFont);
-
 	Commands.clear();
 }
 
@@ -106,14 +119,7 @@ void CConsole::OnFrame()
 
 	cur_time += fDelta;
 	rep_time += fDelta*fAccel;
-	if (cur_time > 0.5f) { cur_time -= 0.5f; bCursor = !bCursor; }
 	if (rep_time > 0.9f) { rep_time -= 0.9f; bRepeat = true;	fAccel += 0.2f; }
-	/*
-	cur_time+=Device.fTimeDelta;
-	rep_time+=Device.fTimeDelta*fAccel;
-	if (cur_time>0.1f) { cur_time-=0.1f; bCursor=!bCursor;	}
-	if (rep_time>0.2f) { rep_time-=0.2f; bRepeat=true;	fAccel+=0.2f;	}
-	*/
 }
 
 void out_font(CGameFont* pFont, LPCSTR text, float& pos_y)
@@ -159,8 +165,8 @@ void CConsole::OnRender()
 		pFont = xr_new<CGameFont>("hud_font_di", CGameFont::fsDeviceIndependent);
 
 	bGame = false;
-	if ((g_pGameLevel && g_pGameLevel->bReady) ||
-		(g_pGamePersistent && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive()))
+	if ((g_pGameLevel && g_pGameLevel->bReady) || (g_pGamePersistent &&
+		g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive()))
 		bGame = true;
 
 	if (g_dedicated_server)				bGame = false;
@@ -182,10 +188,7 @@ void CConsole::OnRender()
 	strcpy_s(buf, ioc_prompt);
 	strcat(buf, editor);
 
-	if (bCursor)
-		str_insert(buf, "|", n_char + xr_strlen(ioc_prompt));
-	else
-		str_insert(buf, ".", n_char + xr_strlen(ioc_prompt));
+	str_insert(buf, "|", n_char + xr_strlen(ioc_prompt));
 
 	pFont->SetColor(color_rgba(128, 128, 255, 255));
 	pFont->SetHeightI(0.025f);
@@ -202,32 +205,26 @@ void CConsole::OnRender()
 		case '~':
 			pFont->SetColor(color_rgba(255, 255, 0, 255));
 			out_font(pFont, &ls[2], ypos);
-			//.			pFont->OutI  (-1.f,ypos,"%s",&ls[2]);
 			break;
 		case '!':
 			pFont->SetColor(color_rgba(255, 0, 0, 255));
 			out_font(pFont, &ls[2], ypos);
-			//.			pFont->OutI  (-1.f,ypos,"%s",&ls[2]);
 			break;
 		case '*':
 			pFont->SetColor(color_rgba(128, 128, 128, 255));
 			out_font(pFont, &ls[2], ypos);
-			//.			pFont->OutI  (-1.f,ypos,"%s",&ls[2]);
 			break;
 		case '-':
 			pFont->SetColor(color_rgba(0, 255, 0, 255));
 			out_font(pFont, &ls[2], ypos);
-			//.			pFont->OutI  (-1.f,ypos,"%s",&ls[2]);
 			break;
 		case '#':
 			pFont->SetColor(color_rgba(0, 222, 205, 145));
 			out_font(pFont, &ls[2], ypos);
-			//.			pFont->OutI  (-1.f,ypos,"%s",&ls[2]);
 			break;
 		default:
 			pFont->SetColor(color_rgba(255, 255, 255, 255));
 			out_font(pFont, ls, ypos);
-			//.			pFont->OutI  (-1.f,ypos,"%s",ls);
 		}
 	}
 	pFont->OnRender();
@@ -241,16 +238,17 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 	char append[MAX_LEN];
 	ZeroMemory(&append, MAX_LEN);
 
-
-	switch (dik) {
+	switch (dik) 
+	{
 	case DIK_GRAVE:
 		if (bShift) strcpy_s(append, "~");
 		else		Hide();
 		break;
 	case DIK_ESCAPE:
-		if (!bHold) {
-			if (g_pGameLevel ||
-				(g_pGamePersistent && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive()))
+		if (!bHold) 
+		{
+			if (g_pGameLevel ||(g_pGamePersistent && g_pGamePersistent->m_pMainMenu && 
+				g_pGamePersistent->m_pMainMenu->IsActive()))
 				Hide();
 		}
 		break;
@@ -280,7 +278,8 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 		bool b_ra = (editor == strstr(editor, radmin_cmd_name));
 		int offset = (b_ra) ? xr_strlen(radmin_cmd_name) : 0;
 		vecCMD_IT I = Commands.lower_bound(editor + offset);
-		if (I != Commands.end()) {
+		if (I != Commands.end()) 
+		{
 			IConsole_Command &O = *(I->second);
 			strcpy_s(editor + offset, sizeof(editor) - offset, O.Name());
 			strcat(editor + offset, " ");
@@ -313,99 +312,67 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 	case DIK_LSHIFT:
 	case DIK_RSHIFT:
 		bShift = true;
+
+		if (bCtrl)
+		{
+			if (bIsRussian)
+			{
+				bIsRussian = false;
+				Msg("Input language: eng");
+			}
+			else
+			{
+				bIsRussian = true;
+				Msg("Input language: rus");
+			}
+		}
+		break;
+	
+	case DIK_0:
+		strcpy_s(append, bShift ? ")" : "0");
 		break;
 	case DIK_1:
-		if (bShift) strcpy_s(append, "!");
-		else		strcpy_s(append, "1");
+		strcpy_s(append, bShift ? "!" : "1");
 		break;
 	case DIK_2:
-		if (bShift) strcpy_s(append, "@");
-		else		strcpy_s(append, "2");
+		if (bIsRussian) strcpy_s(append, bShift ? "\"" : "2");
+		else strcpy_s(append, bShift ? "@" : "2");
 		break;
 	case DIK_3:
-		if (bShift) strcpy_s(append, "#");
-		else		strcpy_s(append, "3");
+		if (bIsRussian) strcpy_s(append, bShift ? "¹" : "3");
+		else strcpy_s(append, bShift ? "#" : "3");
 		break;
 	case DIK_4:
-		if (bShift) strcpy_s(append, "$");
-		else		strcpy_s(append, "4");
+		if (bIsRussian) strcpy_s(append, bShift ? ";" : "4");
+		else strcpy_s(append, bShift ? "$" : "4");
 		break;
 	case DIK_5:
-		if (bShift) strcpy_s(append, "%");
-		else		strcpy_s(append, "5");
+		strcpy_s(append, bShift ? "%" : "5");
 		break;
 	case DIK_6:
-		if (bShift) strcpy_s(append, "^");
-		else		strcpy_s(append, "6");
+		if (bIsRussian) strcpy_s(append, bShift ? ":" : "6");
+		else strcpy_s(append, bShift ? "^" : "6");
 		break;
 	case DIK_7:
-		if (bShift) strcpy_s(append, "&");
-		else		strcpy_s(append, "7");
+		if (bIsRussian) strcpy_s(append, bShift ? "?" : "7");
+		else strcpy_s(append, bShift ? "&" : "7");
 		break;
 	case DIK_8:
-		if (bShift) strcpy_s(append, "*");
-		else		strcpy_s(append, "8");
+		strcpy_s(append, bShift ? "*" : "8");
 		break;
 	case DIK_9:
-		if (bShift) strcpy_s(append, "(");
-		else		strcpy_s(append, "9");
+		strcpy_s(append, bShift ? "(" : "9");
 		break;
-	case DIK_0:
-		if (bShift) strcpy_s(append, ")");
-		else		strcpy_s(append, "0");
+	case DIK_RCONTROL:
+	case DIK_LCONTROL:
+		bCtrl = true;
 		break;
-	case DIK_A:	strcpy_s(append, "a");	break;
-	case DIK_B:	strcpy_s(append, "b");	break;
-	case DIK_C:	strcpy_s(append, "c");	break;
-	case DIK_D:	strcpy_s(append, "d");	break;
-	case DIK_E:	strcpy_s(append, "e");	break;
-	case DIK_F:	strcpy_s(append, "f");	break;
-	case DIK_G:	strcpy_s(append, "g");	break;
-	case DIK_H:	strcpy_s(append, "h");	break;
-	case DIK_I:	strcpy_s(append, "i");	break;
-	case DIK_J:	strcpy_s(append, "j");	break;
-	case DIK_K:	strcpy_s(append, "k");	break;
-	case DIK_L:	strcpy_s(append, "l");	break;
-	case DIK_M:	strcpy_s(append, "m");	break;
-	case DIK_N:	strcpy_s(append, "n");	break;
-	case DIK_O:	strcpy_s(append, "o");	break;
-	case DIK_P:	strcpy_s(append, "p");	break;
-	case DIK_Q:	strcpy_s(append, "q");	break;
-	case DIK_R:	strcpy_s(append, "r");	break;
-	case DIK_S:	strcpy_s(append, "s");	break;
-	case DIK_T:	strcpy_s(append, "t");	break;
-	case DIK_U:	strcpy_s(append, "u");	break;
-	case DIK_V:	strcpy_s(append, "v");	break;
-	case DIK_W:	strcpy_s(append, "w");	break;
-	case DIK_X:	strcpy_s(append, "x");	break;
-	case DIK_Y:	strcpy_s(append, "y");	break;
-	case DIK_Z:	strcpy_s(append, "z");	break;
 
 	case DIK_SPACE:	strcpy_s(append, " "); break;
 	case DIK_BACKSLASH:
 		if (bShift) strcpy_s(append, "|");
 		else		strcpy_s(append, "\\");
-		break;
-	case DIK_LBRACKET:
-		if (bShift) strcpy_s(append, "{");
-		else		strcpy_s(append, "[");
-		break;
-	case DIK_RBRACKET:
-		if (bShift) strcpy_s(append, "}");
-		else		strcpy_s(append, "]");
-		break;
-	case DIK_APOSTROPHE:
-		if (bShift) strcpy_s(append, "\"");
-		else		strcpy_s(append, "'");
-		break;
-	case DIK_COMMA:
-		if (bShift) strcpy_s(append, "<");
-		else		strcpy_s(append, ",");
-		break;
-	case DIK_PERIOD:
-		if (bShift) strcpy_s(append, ">");
-		else		strcpy_s(append, ".");
-		break;
+		break;	
 	case DIK_EQUALS:
 		if (bShift) strcpy_s(append, "+");
 		else		strcpy_s(append, "=");
@@ -414,14 +381,6 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 		if (bShift) strcpy_s(append, "_");
 		else		strcpy_s(append, "-");
 		break;
-	case 0x27:
-		if (bShift) strcpy_s(append, ":");
-		else		strcpy_s(append, ";");
-		break;
-	case 0x35:
-		if (bShift) strcpy_s(append, "?");
-		else		strcpy_s(append, "/");
-		break;
 	case DIK_RETURN:
 		ExecuteCommand();
 		break;
@@ -429,18 +388,13 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 		if (OpenClipboard(0))
 		{
 			HGLOBAL hmem = GetClipboardData(CF_TEXT);
-			if (hmem) {
+			if (hmem) 
+			{
 				LPCSTR	clipdata = (LPCSTR)GlobalLock(hmem);
 				strncpy_s(append, clipdata, MAX_LEN - 1);
-				//				std::locale loc ("English");
+
 				for (u32 i = 0; i < xr_strlen(append); i++)
-					if (isprint(append[i])) {
-						//						append[i]=char(tolower(append[i],loc));
-						//						append[i]=char(tolower(append[i]));
-					}
-					else {
-						append[i] = ' ';
-					}
+					if (!isprint(append[i])) append[i] = ' ';
 
 					GlobalUnlock(hmem);
 					CloseClipboard();
@@ -448,13 +402,23 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 		}
 		break;
 	default:
+		int num = 0;
+		bool found = false;
+		for (int i = 0; i < 33; i++) if (dik == DIKS[i]) { num = i; found = true; }
+
+		if (found)
+		{
+			std::string str;
+			if (bIsRussian)	str= bShift ? RusSymbolsBig[num] : RusSymbols[num];
+			else			str= bShift ? EngSymbolsBig[num] : EngSymbols[num];
+			strcpy_s(append, str.c_str());
+		}
 		break;
 	}
 
 	char ch = append[0];
 	if (ch)
 	{
-		if (bShift && ch >= 0x61 && ch <= 0x7A) append[0] -= 0x20; // UpperCase for single char
 		n_char = str_insert(editor, append, n_char);
 		editor[MAX_LEN - 1] = 0;
 	}
@@ -468,10 +432,7 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 	rep_time = 0;
 }
 
-void CConsole::IR_OnKeyboardPress(int dik)
-{
-	OnPressKey(dik);
-}
+void CConsole::IR_OnKeyboardPress(int dik) { OnPressKey(dik); }
 
 void CConsole::IR_OnKeyboardRelease(int dik)
 {
@@ -482,6 +443,10 @@ void CConsole::IR_OnKeyboardRelease(int dik)
 	case DIK_LSHIFT:
 	case DIK_RSHIFT:
 		bShift = false;
+		break;
+	case DIK_RCONTROL:
+	case DIK_LCONTROL:
+		bCtrl = false;
 		break;
 	}
 }
@@ -515,8 +480,6 @@ void CConsole::ExecuteCommand()
 			if (editor[i + 1] == ' ') continue;
 			if (i == len - 1) goto outloop;
 			break;
-			//.		case ';':
-			//.			goto outloop;
 		}
 		converted[j++] = editor[i];
 	}
@@ -530,9 +493,11 @@ outloop:
 	// split into cmd/params
 	editor[j++] = ' ';
 	editor[len = j] = 0;
-	for (i = 0; i<len; i++) {
+	for (i = 0; i<len; i++) 
+	{
 		if (editor[i] != ' ') first_word[i] = editor[i];
-		else {
+		else 
+		{
 			// last 'word' - exit
 			strcpy_s(last_word, editor + i + 1);
 			break;
@@ -543,20 +508,24 @@ outloop:
 
 	// search
 	vecCMD_IT I = Commands.find(first_word);
-	if (I != Commands.end()) {
+	if (I != Commands.end()) 
+	{
 		IConsole_Command &C = *(I->second);
 		if (C.bEnabled) {
 			if (C.bLowerCaseArgs) strlwr(last_word);
-			if (last_word[0] == 0) {
+			if (last_word[0] == 0)
+			{
 				if (C.bEmptyArgsHandled) C.Execute(last_word);
-				else {
+				else 
+				{
 					IConsole_Command::TStatus S; C.Status(S);
 					Msg("- %s %s", C.Name(), S);
 				}
 			}
 			else C.Execute(last_word);
 		}
-		else {
+		else 
+		{
 			Log("! Command disabled.");
 		}
 	}
@@ -594,24 +563,26 @@ void CConsole::SelectCommand()
 {
 	int		p, k;
 	BOOL	found = false;
-	for (p = LogFile->size() - 1, k = 0; p >= 0; p--) {
+	for (p = LogFile->size() - 1, k = 0; p >= 0; p--) 
+	{
 		if (0 == *(*LogFile)[p])		continue;
-		if ((*LogFile)[p][0] == '~') {
+		if ((*LogFile)[p][0] == '~') 
+		{
 			k--;
-			if (k == cmd_delta) {
+			if (k == cmd_delta) 
+			{
 				strcpy_s(editor, &(*(*LogFile)[p])[2]);
 				found = true;
 			}
 		}
 	}
-	if (!found) {
+	if (!found) 
+	{
 		if (cmd_delta>old_cmd_delta) editor[0] = 0;
 		cmd_delta = old_cmd_delta;
 
 	}
-	else {
-		old_cmd_delta = cmd_delta;
-	}
+	else old_cmd_delta = cmd_delta;	
 	n_char = xr_strlen(editor);
 }
 
@@ -622,6 +593,7 @@ void CConsole::Execute(LPCSTR cmd)
 	ExecuteCommand();
 	RecordCommands = true;
 }
+
 void CConsole::ExecuteScript(LPCSTR N)
 {
 	string128		cmd;
@@ -629,17 +601,17 @@ void CConsole::ExecuteScript(LPCSTR N)
 	Execute(cmd);
 }
 
-
 BOOL CConsole::GetBool(LPCSTR cmd, BOOL& val)
 {
 	vecCMD_IT I = Commands.find(cmd);
-	if (I != Commands.end()) {
+	if (I != Commands.end()) 
+	{
 		IConsole_Command* C = I->second;
 		CCC_Mask* cf = dynamic_cast<CCC_Mask*>(C);
-		if (cf) {
-			val = cf->GetValue();
-		}
-		else {
+
+		if (cf) val = cf->GetValue();
+		else 
+		{
 			CCC_Integer* cf = dynamic_cast<CCC_Integer*>(C);
 			val = !!cf->GetValue();
 		}
@@ -650,7 +622,8 @@ BOOL CConsole::GetBool(LPCSTR cmd, BOOL& val)
 float CConsole::GetFloat(LPCSTR cmd, float& val, float& min, float& max)
 {
 	vecCMD_IT I = Commands.find(cmd);
-	if (I != Commands.end()) {
+	if (I != Commands.end()) 
+	{
 		IConsole_Command* C = I->second;
 		CCC_Float* cf = dynamic_cast<CCC_Float*>(C);
 		val = cf->GetValue();
@@ -664,7 +637,8 @@ float CConsole::GetFloat(LPCSTR cmd, float& val, float& min, float& max)
 int CConsole::GetInteger(LPCSTR cmd, int& val, int& min, int& max)
 {
 	vecCMD_IT I = Commands.find(cmd);
-	if (I != Commands.end()) {
+	if (I != Commands.end()) 
+	{
 		IConsole_Command* C = I->second;
 		CCC_Integer* cf = dynamic_cast<CCC_Integer*>(C);
 		if (cf)
@@ -673,7 +647,8 @@ int CConsole::GetInteger(LPCSTR cmd, int& val, int& min, int& max)
 			min = cf->GetMin();
 			max = cf->GetMax();
 		}
-		else {
+		else 
+		{
 			CCC_Mask* cm = dynamic_cast<CCC_Mask*>(C);
 			R_ASSERT(cm);
 			val = (0 != cm->GetValue()) ? 1 : 0;
@@ -690,82 +665,24 @@ char * CConsole::GetString(LPCSTR cmd)
 {
 	static IConsole_Command::TStatus stat;
 	vecCMD_IT I = Commands.find(cmd);
-	if (I != Commands.end()) {
+	if (I != Commands.end()) 
+	{
 		IConsole_Command* C = I->second;
 		C->Status(stat);
 		return stat;
 	}
-
-	/*
-	ioc_command *cmd = (ioc_command *)bsearch(name, ioc_cmd_array,ioc_num_cmd,sizeof(ioc_command),ioc_compare_search_cmd);
-	if (cmd!=NULL && cmd->type==cmdVALUE) {
-	u32 *v = (u32 *) cmd->ptr; // pointer to value
-	xr_token *tok=cmd->tok;
-	while (tok->name) {
-	if (tok->id==(int)(*v)) {
-	return (char *)tok->name;
-	}
-	tok++;
-	}
-	}
-	*/
 	return NULL;
 }
-char * CConsole::GetToken(LPCSTR cmd)
-{
-	return GetString(cmd);
-}
+char * CConsole::GetToken(LPCSTR cmd) {	return GetString(cmd);}
 
 xr_token* CConsole::GetXRToken(LPCSTR cmd)
 {
 	vecCMD_IT I = Commands.find(cmd);
-	if (I != Commands.end()) {
+	if (I != Commands.end()) 
+	{
 		IConsole_Command* C = I->second;
 		CCC_Token* cf = dynamic_cast<CCC_Token*>(C);
 		return cf->GetToken();
 	}
 	return NULL;
 }
-
-/*
-char * CConsole::GetNextValue(LPCSTR cmd)
-{
-
-ioc_command *cmd = (ioc_command *)bsearch(name, ioc_cmd_array,ioc_num_cmd,sizeof(ioc_command),ioc_compare_search_cmd);
-if (cmd!=NULL && cmd->type==cmdVALUE) {
-u32 *v = (u32 *) cmd->ptr; // pointer to value
-xr_token *tok=cmd->tok;
-while (tok->name) {
-if (tok->id==(int)(*v)) {
-char *save = (char *)tok->name;
-tok++;
-if (tok->name!=0) return (char *)tok->name;
-else				 return save;
-}
-tok++;
-}
-}
-
-return GetValue(cmd);
-}
-
-char * CConsole::GetPrevValue(LPCSTR cmd)
-{
-
-ioc_command *cmd = (ioc_command *)bsearch(name, ioc_cmd_array,ioc_num_cmd,sizeof(ioc_command),ioc_compare_search_cmd);
-if (cmd!=NULL && cmd->type==cmdVALUE) {
-u32 *v = (u32 *) cmd->ptr; // pointer to value
-xr_token *tok=cmd->tok;
-while (tok->name) {
-if (tok->id==(int)(*v)) {
-if (tok!=cmd->tok) tok--;
-return (char *)tok->name;
-}
-tok++;
-}
-}
-
-return GetValue(cmd);
-}
-
-*/

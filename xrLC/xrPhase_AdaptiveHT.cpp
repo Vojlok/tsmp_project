@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "build.h"
 
-#include <stdio.h>
+float ThreadsProgress[17];
+bool ThCompl[17];
 
-#include <thread>
-#include <mutex>
+
+#include "xrThreadNew.h"
 std::mutex mtx;
 
 const	float	aht_max_edge	= c_SS_maxsize/2.5f;	// 2.0f;			// 2 m
@@ -38,84 +39,7 @@ int		callback_edge_longest	(Face* F)
 	}
 	return	max_id;
 }
-/*
-// Iterate on edges - select with maximum error
-int		callback_edge_error		(Face* F)
-{
-	float	max_err				= -1;
-	int		max_id				= -1;
-	for (u32 e=0; e<3; e++)
-	{
-		Vertex					*V1,*V2;
-		F->EdgeVerts			(e,&V1,&V2);
-		float len				= V1->P.distance_to	(V2->P);	// len
-		if (len<aht_min_edge)	continue;
-		if (len>max_err)
-		{
-			max_err = len;
-			max_id	= e;
-		}
-	}
-	if (max_id<0)				return max_id;
 
-	// There should be an edge larger than "min_edge"
-	base_color_c			c1; F->v[0]->C._get(c1);
-	base_color_c			c2; F->v[1]->C._get(c2);
-	base_color_c			c3; F->v[2]->C._get(c3);
-	bool	b1	= fsimilar	(c1.hemi,c2.hemi,aht_min_err);
-	bool	b2	= fsimilar	(c2.hemi,c3.hemi,aht_min_err);
-	bool	b3	= fsimilar	(c3.hemi,c1.hemi,aht_min_err);
-	if (b1 && b2 && b3)		return	-1;		// don't touch flat-shaded triangle
-	else					return	max_id;	// tesselate longest edge
-}
-void	callback_vertex_hemi	(Vertex* V)
-{
-	// calc vertex attributes
-	CDB::COLLIDER			DB;
-	DB.ray_options			(0);
-	base_color_c			vC;
-	LightPoint				(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb+LP_dont_sun,0);
-	V->C._set				(vC);
-}
-int		smfVertex				(Vertex* V)
-{
-	return 1 + (std::lower_bound(g_vertices.begin(),g_vertices.end(),V)-g_vertices.begin());
-}
-
-void GSaveAsSMF					(LPCSTR fname)
-{
-	IWriter* W			= FS.w_open	(fname);
-	string256 			tmp;
-
-	// vertices
-	std::sort			(g_vertices.begin(),g_vertices.end());
-	for (u32 v_idx=0; v_idx<g_vertices.size(); v_idx++){
-		Fvector v		= g_vertices[v_idx]->P;
-		sprintf			(tmp,"v %f %f %f",v.x,v.y,-v.z);
-		W->w_string		(tmp);
-	}
-
-	// transfer faces
-	for (u32 f_idx=0; f_idx<g_faces.size(); f_idx++){
-		Face*	t		= g_faces	[f_idx];
-		sprintf			(tmp,"f %d %d %d",
-			smfVertex(t->v[0]), smfVertex(t->v[2]), smfVertex(t->v[1]) 
-			);
-		W->w_string		(tmp);
-	}
-
-	// colors
-	W->w_string			("bind c vertex");
-	for (u32 v_idx=0; v_idx<g_vertices.size(); v_idx++){
-		base_color_c	c;	g_vertices[v_idx]->C._get(c);
-		float			h	= c.hemi/2.f;
-		sprintf			(tmp,"c %f %f %f",h,h,h);
-		W->w_string		(tmp);
-	}
-	
-	FS.w_close	(W);
-}
-*/
 void CBuild::xrPhase_AdaptiveHT	()
 {
 	CDB::COLLIDER	DB;
@@ -148,48 +72,111 @@ void CBuild::xrPhase_AdaptiveHT	()
 		Light_prepare				();
 
 		// calc approximate normals for vertices + base lighting
-		int VSize = g_vertices.size();
+		int VSize = g_vertices.size();	
 
-//		Progress(p_total += p_cost);
-//	}
-//	Progress(1.f);
-		float fProgr = 0;
-		float fStep = 1.f/VSize;
-		Progress(fProgr);
+		clMsg("iterations count %i", VSize);
 
-		int itr = 0;
-
-	//	Msg("iterations count %i", VSize);
-
-//		omp_set_num_threads(1);
-
-//#pragma omp parallel for
-
-		auto ThreadsManager = [](const int from ,const int to, const CDB::COLLIDER DB1)
+		for (int i = 0; i < 17; i++)
 		{
-			for (int it = from; it < to; it++)
+			ThreadsProgress[i] = 0.f;
+			ThCompl[i] = false;
+		}
+
+		auto BaseHemisphereThreadProgress = []()
+		{			
+			while (true)
 			{
-				base_color_c		vC;
-				Vertex*		V = g_vertices[it];
+				float	fProgress = 0;			
+			
+				for (int i = 1; i < 17; i++) fProgress += ThreadsProgress[i];
+				Progress(fProgress/16);
 
-				V->normalFromAdj();
+				if (ThCompl[1] && ThCompl[2] && ThCompl[3] && ThCompl[4] && ThCompl[5] 
+					&& ThCompl[6] && ThCompl[7] && ThCompl[8] && ThCompl[9] && ThCompl[10] 
+					&& ThCompl[11] && ThCompl[12] && ThCompl[13] && ThCompl[14] 
+					&& ThCompl[15] && ThCompl[16])
+					break;
 
-				CDB::COLLIDER DB = DB1;
-
-				LightPoint(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb + LP_dont_sun, 0);
-
-				vC.mul(0.5f);
-				V->C._set(vC);			
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));				
 			}
 		};
 
-		int ind = VSize / 2;
+		auto BaseHemisphereThread = [](const int ThNumber , const int from, const int to, const CDB::COLLIDER DB1)
+		{
+			std::unique_lock<std::mutex> cs(mtx, std::defer_lock);
+			cs.lock();
+			clMsg("* THREAD #%i: Started.", ThNumber);
+			cs.unlock();
 
-		std::thread thread_2_1(ThreadsManager,0,ind,DB);
-		std::thread thread_2_2(ThreadsManager, ind, VSize, DB);
-		thread_2_1.join();
-		thread_2_2.join();
+			int diff =(to - from);
+			float fStep=(float)1/(float)(diff);
+			ThreadsProgress[ThNumber] = 0;
+
+			for (int it = from; it < to; it++)
+			{
+				base_color_c		vC;
+				CDB::COLLIDER DB = DB1;
+				Vertex*		V = g_vertices[it];
+
+				V->normalFromAdj();
+				LightPoint(&DB, RCAST_Model, vC, V->P, V->N, pBuild->L_static, LP_dont_rgb + LP_dont_sun, 0);
+
+				vC.mul(0.5f);
+				V->C._set(vC);		
+
+				ThreadsProgress[ThNumber] += fStep;
+			}
+			ThCompl[ThNumber] = true;
+
+			cs.lock();
+			clMsg("* THREAD #%i: Task Completed.", ThNumber);
+			cs.unlock();
+		};
+
+		int Idx[15];
+		XrThreadNew TR;
+		TR.GenCycleValues(VSize);
+		TR.FillValues(Idx);
+		std::thread thread_progress(BaseHemisphereThreadProgress);
+
+		std::thread thread1	(BaseHemisphereThread,	1, 0,		Idx[0]	, DB);
+		std::thread thread2	(BaseHemisphereThread,	2, Idx[0],	Idx[1]	, DB);
+		std::thread thread3	(BaseHemisphereThread,	3, Idx[1],	Idx[2]	, DB);
+		std::thread thread4	(BaseHemisphereThread,	4, Idx[2],	Idx[3]	, DB);
+		std::thread thread5	(BaseHemisphereThread,	5, Idx[3],	Idx[4]	, DB);
+		std::thread thread6	(BaseHemisphereThread,	6, Idx[4],	Idx[5]	, DB);
+		std::thread thread7	(BaseHemisphereThread,	7, Idx[5],	Idx[6]	, DB);
+		std::thread thread8	(BaseHemisphereThread,	8, Idx[6],	Idx[7]	, DB);
+		std::thread thread9	(BaseHemisphereThread,	9, Idx[7],	Idx[8]	, DB);
+		std::thread thread10(BaseHemisphereThread, 10, Idx[8],	Idx[9]	, DB);
+		std::thread thread11(BaseHemisphereThread, 11, Idx[9],	Idx[10]	, DB);
+		std::thread thread12(BaseHemisphereThread, 12, Idx[10],	Idx[11]	, DB);
+		std::thread thread13(BaseHemisphereThread, 13, Idx[11],	Idx[12]	, DB);
+		std::thread thread14(BaseHemisphereThread, 14, Idx[12],	Idx[13]	, DB);
+		std::thread thread15(BaseHemisphereThread, 15, Idx[13],	Idx[14]	, DB);
+		std::thread thread16(BaseHemisphereThread, 16, Idx[14],	VSize	, DB);
+		thread1.join();
+		thread2.join();
+		thread3.join();
+		thread4.join();
+		thread5.join();
+		thread6.join();
+		thread7.join();
+		thread8.join();
+		thread9.join();
+		thread10.join();
+		thread11.join();
+		thread12.join();
+		thread13.join();
+		thread14.join();
+		thread15.join();
+		thread16.join();
+
+		thread_progress.join();
 	}
+
+
+
 
 	//////////////////////////////////////////////////////////////////////////
 	/*

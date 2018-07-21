@@ -3,14 +3,15 @@
 #include "UILines.h"
 #include "UIWindow.h"
 
-class CUICustomEdit : public CUIWindow, public CUILinesOwner {
+class CUICustomEdit : public CUIWindow, public CUILinesOwner 
+{
 	u32				m_max_symb_count;
 public:
 	CUICustomEdit();
 	virtual ~CUICustomEdit();
-	// CUILinesOwner
-	virtual void			SetFont(CGameFont* pFont)					{CUILinesOwner::SetFont(pFont);}
-	virtual CGameFont*		GetFont()									{return CUILinesOwner::GetFont();}
+
+	virtual void			SetFont(CGameFont* pFont)	{CUILinesOwner::SetFont(pFont);}
+	virtual CGameFont*		GetFont()					{return CUILinesOwner::GetFont();}
 	virtual void			SetTextColor(u32 color);
 	virtual void			SetTextColorD(u32 color);
 
@@ -38,27 +39,22 @@ public:
 			void	SetLightAnim			(LPCSTR lanim);
 
 protected:
-
-	bool KeyPressed(int dik);
-	bool KeyReleased(int dik);
-
 	void AddLetter(char c);
 	virtual void AddChar(char c);
 
 	bool m_bInputFocus;
 	bool m_bShift;
-
+	bool m_bCtrl;
+	bool KeyPressed(int dik);
+	bool KeyReleased(int dik);
 	bool m_bNumbersOnly;
 	bool m_bFloatNumbers;
 	bool m_bFocusByDbClick;
-
-	u32 m_textColor[2];
-
-	//DIK клавиши, кот. нажата и удерживается, 0 если такой нет
-	int m_iKeyPressAndHold;
 	bool m_bHoldWaitMode;
+	bool m_bIsRussian;
 
-//	u32	m_cursorColor;
+	u32 m_textColor[2];	
+	int m_iKeyPressAndHold; //DIK клавиши, кот. нажата и удерживается, 0 если такой нет
 
 	CLAItem*				m_lanim;
 };

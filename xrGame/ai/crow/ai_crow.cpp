@@ -328,6 +328,7 @@ void CAI_Crow::shedule_Update		(u32 DT)
 // Core events
 void CAI_Crow::net_Export	(NET_Packet& P)					// export to server
 {
+	Msg("crow export");
 	// export 
 	R_ASSERT			(Local());
 
@@ -354,6 +355,7 @@ void CAI_Crow::net_Export	(NET_Packet& P)					// export to server
 //---------------------------------------------------------------------
 void CAI_Crow::net_Import	(NET_Packet& P)
 {
+	Msg("crow import");
 	// import
 	R_ASSERT			(Remote());
 

@@ -104,6 +104,9 @@ public:
 	void	IsolateVertices			(BOOL bProgress);
 	void	xrPhase_ResolveMaterials();
 	void	xrPhase_UVmap			();
+	void	xrPhase_UVmapThread(const int from,const int to);
+
+
 	void	xrPhase_Subdivide		();
 	void	ImplicitLighting		();
 	void	Light_prepare			();

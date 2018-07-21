@@ -20,7 +20,7 @@ public:
 	CLMThread	(u32 ID) : CThread(ID)
 	{
 		// thMonitor= TRUE;
-		thMessages	= FALSE;
+		thMessages	= TRUE;
 	}
 
 	virtual void	Execute()
@@ -76,7 +76,7 @@ void CBuild::Light()
 		// Main process (4 threads)
 		Status			("Lighting...");
 		CThreadManager	threads;
-		const	u32	thNUM	= 6;
+		const	u32	thNUM	= 8;
 		CTimer	start_time;	start_time.Start();				
 		for				(int L=0; L<thNUM; L++)	threads.start(xr_new<CLMThread> (L));
 		threads.wait	(500);
@@ -187,7 +187,7 @@ class CVertexLightThread : public CThread
 public:
 	CVertexLightThread(u32 ID) : CThread(ID)
 	{
-		thMessages	= FALSE;
+		thMessages	= TRUE;
 	}
 	virtual void		Execute	()
 	{

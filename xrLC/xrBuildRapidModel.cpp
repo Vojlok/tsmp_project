@@ -39,11 +39,11 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	xr_delete(RCAST_Model);
 
 	Status("Converting faces...");
+
 	for (u32 fit = 0; fit<g_faces.size(); fit++)	g_faces[fit]->flags.bProcessed = false;
 
 	xr_vector<Face*>	adjacent;	adjacent.reserve(6 * 2 * 3);
 	CDB::CollectorPacked	CL(scene_bb, g_vertices.size(), g_faces.size());
-
 
 	for (vecFaceIt it = g_faces.begin(); it != g_faces.end(); it++)
 	{
@@ -67,19 +67,20 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		adjacent.erase(std::unique(adjacent.begin(), adjacent.end()), adjacent.end());
 
 		// Unique
-		BOOL			bAlready = FALSE;
+		BOOL			bAlready = FALSE;	
+
 		for (u32 ait = 0; ait<adjacent.size(); ait++)
 		{
 			Face*	Test = adjacent[ait];
 			if (Test == F)					continue;
 			if (!Test->flags.bProcessed)	continue;
-			if (FaceEqual(*F, *Test)) {
+			if (FaceEqual(*F, *Test)) 
+			{
 				bAlready = TRUE;
 				break;
 			}
 		}
-
-		//
+		
 		if (!bAlready)
 		{
 			F->flags.bProcessed = true;
@@ -91,15 +92,6 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		}
 	}
 
-
-
-
-	/*
-	clMsg					("Faces: original(%d), model(%d), ratio(%f)",
-	g_faces.size(),CL.getTS(),float(CL.getTS())/float(g_faces.size()));
-	*/
-
-
 	// Export references
 	if (bSaveForOtherCompilers)		Phase	("Building rcast-CFORM-mu model...");
 	Status					("Models...");
@@ -109,25 +101,12 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	float fStep = 1.f / MRS;
 	Progress(fProgr);
 
-
-
-
-
-
-		for (int ref = 0; ref < MRS; ref+=2)
+		for (int ref = 0; ref < MRS; ref++)
 		{
-			
-
-					mu_refs[ref]->export_cform_rcast(CL);
-
-
-
-
-			//	fProgr += fStep;
-			//	Progress(fProgr);
-		}
-
-	
+				mu_refs[ref]->export_cform_rcast(CL);
+				fProgr += fStep;
+				Progress(fProgr);
+		}	
 
 	// "Building tree..
 	Status					("Building search tree...");

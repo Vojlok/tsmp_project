@@ -185,10 +185,13 @@ void CBuild::IsolateVertices	(BOOL bProgress)
 	if (bProgress)		Status		("Isolating vertices...");
 	g_bUnregister		= false;
 	u32 verts_old		= g_vertices.size();
-	for (int it=0; it<int(g_vertices.size()); it++)	{
+
+	for (int it=0; it<int(g_vertices.size()); it++)
+	{
 		if (bProgress)	Progress	(float(it)/float(g_vertices.size()));
 		if (g_vertices[it] && g_vertices[it]->adjacent.empty())	VertexPool.destroy(g_vertices[it]);
 	}
+
 	vecVertexIt	_end	= std::remove	(g_vertices.begin(),g_vertices.end(),(Vertex*)0);
 	g_vertices.erase	(_end,g_vertices.end());
 	g_bUnregister		= true;

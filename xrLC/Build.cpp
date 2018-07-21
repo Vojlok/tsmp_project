@@ -21,7 +21,7 @@ float					f_lmap_quality = 4.f;
 // KD end
 CThreadManager			mu_base;
 CThreadManager			mu_secondary;
-#define		MU_THREADS	4
+#define		MU_THREADS	16
 BOOL					gl_linear	= FALSE;
 
 //////////////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ class CMULight	: public CThread
 	u32			low;
 	u32			high;
 public:
-	CMULight	(u32 ID, u32 _low, u32 _high) : CThread(ID)	{	thMessages	= FALSE; low=_low; high=_high;	}
+	CMULight	(u32 ID, u32 _low, u32 _high) : CThread(ID)	{	thMessages	=TRUE; low=_low; high=_high;	}
 
 	virtual void	Execute	()
 	{
@@ -64,7 +64,7 @@ class CMUThread : public CThread
 public:
 	CMUThread	(u32 ID) : CThread(ID)
 	{
-		thMessages	= FALSE;
+		thMessages	= TRUE;
 	}
 	virtual void	Execute()
 	{
@@ -188,10 +188,12 @@ void CBuild::Run	(LPCSTR P)
 
 	//****************************************** Starting MU
 	FPU::m64r					();
-	Phase						("LIGHT: Starting MU...");
+	Phase						("LIGHT: Lightning MU models...");
 	mem_Compact					();
 	Light_prepare				();
 	mu_base.start				(xr_new<CMUThread> (0));
+	mu_base.wait				(500);
+	mu_secondary.wait			(500);
 
 	//****************************************** Resolve materials
 	FPU::m64r					();
@@ -233,11 +235,11 @@ void CBuild::Run	(LPCSTR P)
 	Flex2OGF					();
 
 	//****************************************** Wait for MU
-	FPU::m64r					();
-	Phase						("LIGHT: Waiting for MU-thread...");
-	mem_Compact					();
-	mu_base.wait				(500);
-	mu_secondary.wait			(500);
+//	FPU::m64r					();
+//	Phase						("LIGHT: Waiting for MU-thread...");
+//	mem_Compact					();
+//	mu_base.wait				(500);
+//	mu_secondary.wait			(500);
 
 	//****************************************** Export MU-models
 	FPU::m64r					();

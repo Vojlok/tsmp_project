@@ -54,6 +54,7 @@ void	CBuild::xrPhase_UVmap()
 	float		p_cost	= 1.f / float(g_XSplit.size());
 	float		p_total	= 0.f;
 	vecFace		faces_affected;
+
 	for (int SP = 0; SP<int(g_XSplit.size()); SP++) 
 	{
 		Progress			(p_total+=p_cost);
@@ -67,21 +68,26 @@ void	CBuild::xrPhase_UVmap()
 		if (Fvl->hasImplicitLighting())			continue;	// do-not touch (skip)
 		
 		//   find first poly that doesn't has mapping and start recursion
-		while (TRUE) {
+		while (TRUE) 
+		{
 			// Select maximal sized poly
 			Face *	msF		= NULL;
 			float	msA		= 0;
 			for (vecFaceIt it = g_XSplit[SP]->begin(); it!=g_XSplit[SP]->end(); it++)
 			{
-				if ( (*it)->pDeflector == NULL ) {
+				if ((*it)->pDeflector == NULL) 
+				{
 					float a = (*it)->CalcArea();
-					if (a>msA) {
+					if (a>msA) 
+					{
 						msF = (*it);
 						msA = a;
 					}
 				}
 			}
-			if (msF) {
+
+			if (msF) 
+			{
 				g_deflectors.push_back	(xr_new<CDeflector>());
 				
 				// Start recursion from this face
@@ -94,9 +100,11 @@ void	CBuild::xrPhase_UVmap()
 				
 				// Detach affected faces
 				faces_affected.clear	();
-				for (int i=0; i<int(g_XSplit[SP]->size()); i++) {
+				for (int i=0; i<int(g_XSplit[SP]->size()); i++) 
+				{
 					Face *F = (*g_XSplit[SP])[i];
-					if ( F->pDeflector==Deflector ) {
+					if ( F->pDeflector==Deflector ) 
+					{
 						faces_affected.push_back(F);
 						g_XSplit[SP]->erase		(g_XSplit[SP]->begin()+i); 
 						i--;
@@ -106,7 +114,9 @@ void	CBuild::xrPhase_UVmap()
 				// detaching itself
 				Detach				(&faces_affected);
 				g_XSplit.push_back	(xr_new<vecFace> (faces_affected));
-			} else {
+			} 
+			else 
+			{
 				if (g_XSplit[SP]->empty()) 
 				{
 					xr_delete		(g_XSplit[SP]);
@@ -118,7 +128,6 @@ void	CBuild::xrPhase_UVmap()
 			}
 		}
 	}
-
 
 	clMsg("%d subdivisions...",g_XSplit.size());
 }
@@ -142,13 +151,4 @@ void CBuild::mem_CompactSubdivs()
 void CBuild::mem_Compact()
 {
 	Memory.mem_compact	();
-	/*
-	u32					bytes,blocks_used,blocks_free;
-	bytes				= Memory.mem_usage(&blocks_used,&blocks_free);
-	LPCSTR h_status		= 0;
-	if (HeapValidate	(GetProcessHeap(),0,0))	h_status = "OK";
-	else										h_status = "DAMAGED";
-	clMsg				("::MEMORY(%s):: %d MB, %d Bused, %d Bfree",
-		h_status,bytes/(1024*1024),blocks_used,blocks_free);
-	*/
 }

@@ -227,7 +227,7 @@ void	CResourceManager::LS_Load			()
 		} 
 		catch (...)
 		{
-			Msg("loading failed")
+			Msg("loading failed");
 			Log(lua_tostring(LSVM,-1));
 		}
 	}

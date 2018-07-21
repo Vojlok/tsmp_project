@@ -486,6 +486,9 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 				rp[i].TimeToUnfreeze = 0;
 			};
 		};
+
+		if (!rp.size()) Debug.fatal(DEBUG_INFO,"there are no rpoints");
+
 		rpoint = ::Random.randI((int)rp.size());
 	}
 	//-----------------------------------------------------------
