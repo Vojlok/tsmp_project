@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 
-#include "..\..\sysmsgs.h"
+#include "sysmsgs.h"
 
 
 #include "xrServer.h"
@@ -134,20 +134,63 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 	Msg(connecting.c_str());
 	std::string messages = "! nickname of connecting player "+Name_new+" is >70 symbols";
 	if (strlen(new_name) > 70) Msg(messages.c_str());
-	messages = "! connecting player - " + Name_new + " tried to use percent symbol in nick";
+	
+	//messages = "! connecting player - " + Name_new + " tried to use percent symbol in nick";
+	
 	while (Name_new.find('%') != std::string::npos)
-	{
-		
-		Name_new.replace(Name_new.find("%"), 1, " ");
-		Msg(messages.c_str());
+	{	
+		Name_new.replace(Name_new.find("%"), 1, "!");
+		//Msg(messages.c_str());
 	}
-	messages = "! connecting player - " + Name_new + " tried to use _ symbol in nick";
+	//messages = "! connecting player - " + Name_new + " tried to use _ symbol in nick";
+	
 	while (Name_new.find('_') != std::string::npos)
 	{
-
-		Name_new.replace(Name_new.find("_"), 1, " ");
-		Msg(messages.c_str());
+		Name_new.replace(Name_new.find("_"), 1, "!");
+		//Msg(messages.c_str());
 	}
+	// чтобы хоть что то было в нике
+	while (Name_new.find(' ') != std::string::npos)
+	{
+		Name_new.replace(Name_new.find(" "), 1, ".");
+	}
+	// кхе кхе :) для того, чтобы читался ник базой.
+	while (Name_new.find('-') != std::string::npos)
+	{
+		Name_new.replace(Name_new.find("-"), 1, "!");
+	}
+	// тестовый набор, чтобы была возможность выбросить через голосование спец ники
+	while (Name_new.find('a') != std::string::npos)
+	{
+		//                             ENG       RUS
+		Name_new.replace(Name_new.find("a"), 1, "а");
+	}
+	while (Name_new.find('o') != std::string::npos)
+	{
+		//                             ENG       RUS
+		Name_new.replace(Name_new.find("o"), 1, "о");
+	}
+	while (Name_new.find('y') != std::string::npos)
+	{
+		//                             ENG       RUS
+		Name_new.replace(Name_new.find("y"), 1, "у");
+	}
+	while (Name_new.find('e') != std::string::npos)
+	{
+		//                             ENG       RUS
+		Name_new.replace(Name_new.find("e"), 1, "е");
+	}
+	while (Name_new.find('с') != std::string::npos)
+	{
+		//                             ENG       RUS
+		Name_new.replace(Name_new.find("с"), 1, "c"); 
+	}
+	while (Name_new.find('k') != std::string::npos)
+	{
+		//                             ENG       RUS
+		Name_new.replace(Name_new.find("k"), 1, "к");
+	}
+
 	strcpy ( new_name, Name_new.c_str());
 
 	CL->name._set( new_name );

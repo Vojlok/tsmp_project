@@ -1547,31 +1547,72 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 			NET_Packet			PP;
 		GenerateGameMessage (PP);
 		PP.w_u32				(GAME_EVENT_SERVER_STRING_MESSAGE);
-		PP.w_stringZ			("Смена ника запрещена на данном сервере (nickname change is disabled on this server)");
+		PP.w_stringZ			("%c[50,255,255,0]Смена ника запрещена на данном сервере \nNickname change is disabled on this server");
 		m_server->SendTo( sender, PP );
 		}
 		else
 		{
 
-
 	string4096 NewName = "";
 	P.r_stringZ(NewName);
 	std::string NameNew = NewName;
 	NameNew.resize(70);
-
+	// changename 
 	while (NameNew.find('%') != std::string::npos)
 	{
-		NameNew.replace(NameNew.find("%"), 1, " ");
-		std::string Messs = "! bad symbol percent tried to write in nick player " + NameNew;
-		Msg(Messs.c_str());
-	}
+		NameNew.replace(NameNew.find("%"), 1, "!");
+		//std::string Messs = "! bad symbol percent tried to write in nick player " + NameNew;
+		//Msg(Messs.c_str());	}
 
 	while (NameNew.find('_') != std::string::npos)
 	{
-		NameNew.replace(NameNew.find("_"), 1, " ");
-		std::string Messs1 = "! bad symbol _ tried to write in nick player " + NameNew;
-		Msg(Messs1.c_str());
+		NameNew.replace(NameNew.find("_"), 1, "!");
+		//std::string Messs1 = "! bad symbol _ tried to write in nick player " + NameNew;
+		//Msg(Messs1.c_str());
 	}
+	// чтобы хоть что то было в нике
+	while (NameNew.find(' ') != std::string::npos)
+	{
+		NameNew.replace(NameNew.find(" "), 1, ".");
+	}
+	// кхе кхе :) для того, чтобы читался ник базой.
+	while (NameNew.find('-') != std::string::npos)
+	{
+		NameNew.replace(NameNew.find("-"), 1, "!");
+	}
+	// тестовый набор, чтобы была возможность выбросить через голосование спец ники, без поломки ника.
+	while (NameNew.find('a') != std::string::npos)
+	{
+		//                             ENG       RUS
+		NameNew.replace(NameNew.find("a"), 1, "а");
+	}
+	while (NameNew.find('o') != std::string::npos)
+	{
+		//                             ENG       RUS
+		NameNew.replace(NameNew.find("o"), 1, "о");
+	}
+	while (NameNew.find('y') != std::string::npos)
+	{
+		//                             ENG       RUS
+		NameNew.replace(NameNew.find("y"), 1, "у");
+	}
+	while (NameNew.find('e') != std::string::npos)
+	{
+		//                             ENG       RUS
+		NameNew.replace(NameNew.find("e"), 1, "е");
+	}
+	while (NameNew.find('с') != std::string::npos)
+	{
+		//                             ENG       RUS
+		NameNew.replace(NameNew.find("с"), 1, "c");
+	}
+	while (NameNew.find('k') != std::string::npos)
+	{
+		//                             ENG       RUS
+		NameNew.replace(NameNew.find("k"), 1, "к");
+	}
+
+
 	std::string MM = "! too many symbols in name tried to write player - " + NameNew;
 	if (strlen(NewName) > 70)
 		Msg(MM.c_str());
@@ -1640,7 +1681,7 @@ void		game_sv_mp::OnPlayerSpeechMessage(NET_Packet& P, ClientID sender)
 		NET_Packet			PP;
 		GenerateGameMessage(PP);
 		PP.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
-		PP.w_stringZ("Рация заблокирована на этом сервере (radio is disabled on this server)");		
+		PP.w_stringZ("Рация заблокирована на этом сервере (Radio is disabled on this server)");		
 		m_server->SendTo(sender, PP);
 		return;
 	}
@@ -1669,7 +1710,7 @@ void		game_sv_mp::OnPlayerSpeechMessage(NET_Packet& P, ClientID sender)
 				NET_Packet			PPP;
 				GenerateGameMessage(PPP);
 				PPP.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
-				PPP.w_stringZ("Рация заблокирована для вас за флуд \n (radio is disabled for you because of flood)");
+				PPP.w_stringZ("Рация заблокирована для вас за флуд (Radio is disabled for you because of flood)");
 				game_PlayerState* psC=pClient->ps;
 				Msg("! radio blocked for player %s", psC->getName());
 				m_server->SendTo(sender, PPP);

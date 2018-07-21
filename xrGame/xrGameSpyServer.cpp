@@ -84,9 +84,7 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str &session_name)
 
 	MapNameRus._set(MapName);
 
-
 	{
-	
 		string_path						cfg_name="level.name";
 
 		string_path cfg_full_name;
@@ -102,9 +100,8 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str &session_name)
 
 		if (F != NULL)
 		{
-				F->r_string(str, sizeof(str));
-				if (sizeof(str)!=NULL) MapNameRus._set(str);
-			
+			F->r_string(str, sizeof(str));
+		    if (sizeof(str)!=NULL) MapNameRus._set(str);		
 			FS.r_close(F);
 			Msg("[%s] successfully loaded.", cfg_full_name);
 		}
@@ -112,7 +109,6 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str &session_name)
 		{
 			Msg("! Cannot open script file [%s]", cfg_full_name);
 		}
-
 	}
 	
 
@@ -438,7 +434,7 @@ void xrGameSpyServer::GetServerInfo( CServerInfo* si )
 	si->AddItem( "Игроки", tmp, RGB(255,128,255) );
 
 	string256 res;
-	si->AddItem( "Версия сервера", "tsmp 1.3.9", RGB(0,158,255) );
+	si->AddItem( "Версия сервера", "tsmp 1.4.0", RGB(0,158,255) );
 	
 	/*
 
