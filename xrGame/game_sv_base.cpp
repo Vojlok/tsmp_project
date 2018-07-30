@@ -398,6 +398,7 @@ void game_sv_GameState::Create					(shared_str &options)
 		xr_delete					(l_tpIniFile);
 	}
 
+
 	//---------------------------------------------------------------------
 	ConsoleCommands_Create();
 	//---------------------------------------------------------------------

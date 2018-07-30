@@ -1753,6 +1753,7 @@ void	game_sv_Deathmatch::OnDelayedTeamEliminated()
 
 void	game_sv_Deathmatch::check_ForceRespawn		()
 {
+	int FRtime = 0;
 	if (!GetForceRespawn()) return;
 	u32		cnt		= get_players_count	();
 	for		(u32 it=0; it<cnt; ++it)	
@@ -1763,7 +1764,17 @@ void	game_sv_Deathmatch::check_ForceRespawn		()
 		if (!ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)) continue;
 		if (ps->testFlag(GAME_PLAYER_FLAG_SPECTATOR)) continue;
 		u32 CurTime = Device.dwTimeGlobal;
-		if (ps->DeathTime + GetForceRespawn()*1000 < CurTime)
+
+		if (0 != strstr(Core.Params, "-survival"))
+		{
+			FRtime = 100; // surv
+		}
+		else
+		{
+			FRtime = 1000; // original 
+		}
+
+		if (ps->DeathTime + GetForceRespawn()*FRtime < CurTime)   // *1000 ms   
 		{
 			SetPlayersDefItems(ps);
 			RespawnPlayer(l_pC->ID, true);

@@ -77,6 +77,7 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str &session_name)
 	if (0 != *(game->get_option_s		(*session_name,"psw",NULL)))
 		Password._set(game->get_option_s		(*session_name,"psw",NULL));
 
+
 	string4096	tMapName = "";
 	const char* SName = *session_name;
 	strncpy(tMapName, *session_name, strchr(SName, '/') - SName);
@@ -174,11 +175,21 @@ void			xrGameSpyServer::Update				()
 	}
 }
 
-int				xrGameSpyServer::GetPlayersCount()
+int	xrGameSpyServer::GetPlayersCount() 
 {
 	int NumPlayers = client_Count();
-	if (!g_dedicated_server || NumPlayers < 1) return NumPlayers;
-	return NumPlayers - 1;
+	if (!g_dedicated_server || NumPlayers < 1)
+	{
+	     return NumPlayers;		
+	}
+	if (0 != strstr(Core.Params, "-survival"))
+	{
+		return NumPlayers + 1;
+	}
+	else
+	{ 
+		return NumPlayers - 1; // players count
+	}
 };
 
 bool			xrGameSpyServer::NeedToCheckClient_GameSpy_CDKey	(IClient* CL)

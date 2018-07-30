@@ -33,7 +33,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	{
 		R_ASSERT(receiver->owner);
 		receiver->OnEvent						(P,type,timestamp,sender);
-
 	};
 
 	switch		(type)

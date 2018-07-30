@@ -72,13 +72,8 @@ BOOL CDestroyablePhysicsObject::net_Spawn(CSE_Abstract* DC)
 void	CDestroyablePhysicsObject::Hit					(SHit* pHDS)
 {
 	SHit	HDS = *pHDS;
-	callback(GameObject::eHit)(
-		lua_game_object(), 
-		HDS.power,
-		HDS.dir,
-		smart_cast<const CGameObject*>(HDS.who)->lua_game_object(),
-		HDS.bone()
-		);
+	callback(GameObject::eHit)(lua_game_object(), HDS.power,HDS.dir, smart_cast<const CGameObject*>(HDS.who)->lua_game_object(),HDS.bone());
+
 	HDS.power=CHitImmunity::AffectHit(HDS.power,HDS.hit_type);
 	float hit_scale=1.f,wound_scale=1.f;
 	CDamageManager::HitScale(HDS.bone(),hit_scale,wound_scale);
@@ -129,6 +124,7 @@ void CDestroyablePhysicsObject::InitServerObject(CSE_Abstract* D)
 {
 	CSE_PHSkeleton					*ps = smart_cast<CSE_PHSkeleton*>(D);
 	R_ASSERT						(ps);
+
 	if(ps->_flags.test(CSE_PHSkeleton::flSpawnCopy)) 
 									inherited::InitServerObject(D);
 	else					
@@ -148,8 +144,7 @@ bool CDestroyablePhysicsObject::CanRemoveObject()
 	return !CParticlesPlayer::IsPlaying()&& !m_destroy_sound._feedback();//&& sound!
 }
 DLL_Pure	*CDestroyablePhysicsObject::_construct()
-{
-	
+{	
 	CDamageManager::_construct();
 	return inherited::_construct();
 }

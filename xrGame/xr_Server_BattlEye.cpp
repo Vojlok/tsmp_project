@@ -175,7 +175,7 @@ void  BattlEyeServer::KickPlayer( int player, char* reason )
 				//*CStringTable().translate( ui_st_kicked_by_battleye ); //reason translate?
 				string512 reason2;
 				sprintf_s( reason2, sizeof(reason2),
-					"  Disconnecting : %s !  Server's Client kicked by BattlEye Server.  Reason: %s",
+					"- Disconnecting : %s !  Server's Client kicked by BattlEye Server.  Reason: %s",
 					l_pC->ps->getName(), reason );
 				Msg( reason2 );
 

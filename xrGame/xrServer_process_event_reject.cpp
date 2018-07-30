@@ -24,8 +24,7 @@ bool xrServer::Process_event_reject	(NET_Packet& P, const ClientID sender, const
 
 	if (0xffff == e_entity->ID_Parent) 
 	{
-		Msg	("~ ERROR: can't detach independant object. entity[%s:%d], parent[%s:%d], section[%s]",
-			e_entity->name_replace(),id_entity,e_parent->name_replace(),id_parent, *e_entity->s_name);
+		Msg	("~ ERROR: can't detach independant object. entity[%s:%d], parent[%s:%d], section[%s]", e_entity->name_replace(),id_entity,e_parent->name_replace(),id_parent, *e_entity->s_name);
 		return			(false);
 	}
 
@@ -52,7 +51,12 @@ bool xrServer::Process_event_reject	(NET_Packet& P, const ClientID sender, const
 	xr_vector<u16>& C		= e_parent->children;
 
 	xr_vector<u16>::iterator c	= std::find	(C.begin(),C.end(),id_entity);
-	R_ASSERT3				(C.end()!=c,e_entity->name_replace(),e_parent->name_replace());
+	if (!(C.end() != c, e_entity->name_replace(), e_parent->name_replace()))
+	{
+		Msg("! (C.end() != c, e_entity->name_replace(), e_parent->name_replace())");
+		return false;
+	}
+	//R_ASSERT3				(C.end()!=c,e_entity->name_replace(),e_parent->name_replace());
 	C.erase					(c);
 
 	// Signal to everyone (including sender)

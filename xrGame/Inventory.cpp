@@ -125,7 +125,11 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	}
 
 	R_ASSERT							(CanTakeItem(pIItem));
-	
+	if (!(CanTakeItem(pIItem)))
+	{
+		Msg("! CanTakeItem(pIItem), failed [inventory.cpp str=128]");
+	}
+
 	pIItem->m_pCurrentInventory			= this;
 	pIItem->SetDropManual				(FALSE);
 
@@ -199,8 +203,22 @@ bool CInventory::DropItem(CGameObject *pObj)
 		Msg("pIItem->m_pCurrentInventory = [%d]", pIItem->m_pCurrentInventory->GetOwner()->object_id());
 	}
 
-	R_ASSERT							(pIItem->m_pCurrentInventory);
-	R_ASSERT							(pIItem->m_pCurrentInventory==this);
+	//R_ASSERT							(pIItem->m_pCurrentInventory);
+
+	if (!(pIItem->m_pCurrentInventory))
+	{
+		Msg("! pIItem->m_pCurrentInventory, failed, [inventory.cpp str = 208]");
+		return false;
+	}
+
+	//R_ASSERT(pIItem->m_pCurrentInventory==this);
+	if (!(pIItem->m_pCurrentInventory == this))
+	{
+		Msg("! pIItem->m_pCurrentInventory == this, failed, [inventory.cpp str = 215]");
+		return false;
+	}
+
+
 	VERIFY								(pIItem->m_eItemPlace!=eItemPlaceUndefined);
 
 	pIItem->object().processing_activate(); 
@@ -208,16 +226,33 @@ bool CInventory::DropItem(CGameObject *pObj)
 	switch(pIItem->m_eItemPlace)
 	{
 	case eItemPlaceBelt:{
-			R_ASSERT(InBelt(pIItem));
+			//R_ASSERT(InBelt(pIItem));
+			if (!(InBelt(pIItem)))
+			{
+				Msg("! (InBelt(pIItem)), failed, [inventory.cpp str = 228]");
+				return false;
+			}
+
 			m_belt.erase(std::find(m_belt.begin(), m_belt.end(), pIItem));
 			pIItem->object().processing_deactivate();
 		}break;
 	case eItemPlaceRuck:{
-			R_ASSERT(InRuck(pIItem));
+			//R_ASSERT(InRuck(pIItem));
+		if (!(InRuck(pIItem)))
+		{
+			Msg("! (InRuck(pIItem)), failed, [inventory.cpp str = 241]");
+			return false;
+		}
 			m_ruck.erase(std::find(m_ruck.begin(), m_ruck.end(), pIItem));
 		}break;
 	case eItemPlaceSlot:{
-			R_ASSERT			(InSlot(pIItem));
+			//R_ASSERT			(InSlot(pIItem));
+		if (!(InSlot(pIItem)))
+		{
+			Msg("! InSlot(pIItem), failed, [inventory.cpp str = 250]");
+			return false;
+		}
+
 			if(m_iActiveSlot == pIItem->GetSlot()) 
 				Activate	(NO_ACTIVE_SLOT);
 
@@ -398,6 +433,10 @@ void  CInventory::ActivateNextItemInActiveSlot()
 
 	bool res = Ruck						(current_item);
 	R_ASSERT							(res);
+	if (!(res))
+	{	
+	    Msg("! res, failed, [inventory.cpp str = 436]");
+	}
 	NET_Packet							P;
 	current_item->object().u_EventGen	(P, GEG_PLAYER_ITEM2RUCK, current_item->object().H_Parent()->ID());
 	P.w_u16								(current_item->object().ID());
@@ -405,6 +444,10 @@ void  CInventory::ActivateNextItemInActiveSlot()
 
 	res = Slot							(new_item);
 	R_ASSERT							(res);
+	if (!(res))
+	{
+		Msg("! res, failed, [inventory.cpp str = 447]");
+	}
 	new_item->object().u_EventGen		(P, GEG_PLAYER_ITEM2SLOT, new_item->object().H_Parent()->ID());
 	P.w_u16								(new_item->object().ID());
 	new_item->object().u_EventSend		(P);
@@ -898,7 +941,6 @@ bool CInventory::Eat(PIItem pIItem)
 	if (!(pIItem->m_pCurrentInventory == this))	
 	{
 		Msg("! attempt to eat invalid item , ignoring");
-
 		return false;
 	}
 		
@@ -909,10 +951,20 @@ bool CInventory::Eat(PIItem pIItem)
 
 	//устанаовить съедобна ли вещь
 	CEatableItem* pItemToEat = smart_cast<CEatableItem*>(pIItem);
-	R_ASSERT				(pItemToEat);
+	//R_ASSERT				(pItemToEat);
+	if (!(pItemToEat))
+	{
+		Msg("! pItemToEat , failed, [inventory.cpp, str[931]");
+		return false;
+	}
 
 	CEntityAlive *entity_alive = smart_cast<CEntityAlive*>(m_pOwner);
-	R_ASSERT				(entity_alive);
+	//R_ASSERT				(entity_alive);
+	if (!(entity_alive))
+	{
+		Msg("! entity_alive , failed, [inventory.cpp, str[939]");
+		return false;
+	}
 	
 	pItemToEat->UseBy		(entity_alive);
 
@@ -1002,8 +1054,8 @@ CInventoryItem	*CInventory::tpfGetObjectByIndex(int iIndex)
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"invalid inventory index!");
 		return	(0);
 	}
-	R_ASSERT	(false);
-	return		(0);
+	R_ASSERT	(false); 
+	return		(0);  // 0 = at crash server !!
 }
 
 CInventoryItem	*CInventory::GetItemFromInventory(LPCSTR caItemName)
