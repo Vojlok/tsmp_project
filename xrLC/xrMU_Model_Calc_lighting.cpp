@@ -111,13 +111,13 @@ void xrMU_Model::calc_lighting	(xr_vector<base_color>& dest, Fmatrix& xform, CDB
 		mapVertIt	it2			= it;
 
 		// Decrement to the start and inc to end
-		while (it!=g_trans.begin() && ((it->first+eps2)>key)) it--;
-		while (it2!=g_trans.end() && ((it2->first-eps2)<key)) it2++;
-		if (it2!=g_trans.end())	it2++;
+		while (it!=g_trans.begin() && ((it->first+eps2)>key)) --it;
+		while (it2!=g_trans.end() && ((it2->first-eps2)<key)) ++it2;
+		if (it2!=g_trans.end())	++it2;
 
 		// Search
 		BOOL	found = FALSE;
-		for (; it!=it2; it++)
+		for (; it!=it2; ++it)
 		{
 			v_vertices&	VL		= it->second;
 			_vertex* Front		= VL.front();
@@ -144,7 +144,7 @@ void xrMU_Model::calc_lighting	(xr_vector<base_color>& dest, Fmatrix& xform, CDB
 	*/
 
 	// Process all groups
-	for (mapVertIt it=g_trans.begin(); it!=g_trans.end(); it++)
+	for (mapVertIt it=g_trans.begin(); it!=g_trans.end(); ++it)
 	{
 		// Unique
 		v_vertices&	VL		= it->second;
@@ -193,22 +193,22 @@ void xrMU_Model::calc_lighting	()
 	// BB
 	Fbox			BB; 
 	BB.invalidate	();
-	for (v_vertices_it vit=m_vertices.begin(); vit!=m_vertices.end(); vit++)
+	for (v_vertices_it vit=m_vertices.begin(); vit!=m_vertices.end(); ++vit)
 		BB.modify	((*vit)->P);
 
 	// Export CForm
 	CDB::CollectorPacked	CL	(BB,(u32)m_vertices.size(),(u32)m_faces.size());
 	export_cform_rcast		(CL,Fidentity);
 	CDB::MODEL*				M	= xr_new<CDB::MODEL>	();
-	clMsg	("...model '%s' - building collision",*m_name);
+//	clMsg	("...model '%s' - building collision",*m_name);
 	M->build				(CL.getV(),(u32)CL.getVS(),CL.getT(),(u32)CL.getTS());
 
-	clMsg	("...model '%s' - lighting",*m_name);
+//	clMsg	("...model '%s' - lighting",*m_name);
 	calc_lighting			(color,Fidentity,M,pBuild->L_static,LP_dont_rgb+LP_dont_sun);
 
 	xr_delete				(M);
 
-	clMsg					("model '%s' - REF_lighted.",*m_name);
+//	clMsg					("model '%s' - REF_lighted.",*m_name);
 }
 
 template <typename T, typename T2>

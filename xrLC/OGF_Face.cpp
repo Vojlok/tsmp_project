@@ -46,7 +46,7 @@ BOOL x_vertex::similar	(OGF* ogf, x_vertex& V)
 }
 u16 OGF::x_BuildVertex	(x_vertex& V1)
 {
-	for (itXV it=x_vertices.begin(); it!=x_vertices.end(); it++)
+	for (itXV it=x_vertices.begin(); it!=x_vertices.end(); ++it)
 		if (it->similar(this,V1)) return u16(it-x_vertices.begin());
 	x_vertices.push_back	(V1);
 	return (u32)			x_vertices.size()-1;
@@ -54,7 +54,7 @@ u16 OGF::x_BuildVertex	(x_vertex& V1)
 u16 OGF::_BuildVertex	(OGF_Vertex& V1)
 {
 	try {
-		for (itOGF_V it=vertices.begin(); it!=vertices.end(); it++)
+		for (itOGF_V it=vertices.begin(); it!=vertices.end(); ++it)
 		{
 			if (it->similar(this,V1)) return u16(it-vertices.begin());
 		}
@@ -86,7 +86,7 @@ void OGF::_BuildFace	(OGF_Vertex& V1, OGF_Vertex& V2, OGF_Vertex& V3, bool _tc_)
 	F.v[1]	= _BuildVertex(V2);
 	F.v[2]	= _BuildVertex(V3);
 	if (!F.Degenerate()) {
-		for (itOGF_F I=faces.begin(); I!=faces.end(); I++)		if (I->Equal(F)) return;
+		for (itOGF_F I=faces.begin(); I!=faces.end(); ++I)		if (I->Equal(F)) return;
 		faces.push_back	(F);
 		x_BuildFace		(V1,V2,V3,_tc_);
 	} else {
@@ -293,14 +293,15 @@ void OGF::CalculateTB()
 	output[6].Name_= "indices";	
 
 	// fill inputs (verts&indices)
-	for (itOGF_V vert_it=vertices.begin(); vert_it!=vertices.end(); vert_it++){
+	for (itOGF_V vert_it=vertices.begin(); vert_it!=vertices.end(); ++vert_it){
 		OGF_Vertex	&iV = *vert_it;
 		i_position.push_back(iV.P.x);		i_position.push_back(iV.P.y);		i_position.push_back(iV.P.z);
 		i_normal.push_back	(iV.N.x);  		i_normal.push_back	(iV.N.y);		i_normal.push_back	(iV.N.z);
 		i_color.push_back	(iV.Color._x);	i_color.push_back	(iV.Color._y);	i_color.push_back	(iV.Color._z);
 		i_tc.push_back		(iV.UV[0].x);	i_tc.push_back		(iV.UV[0].y);	i_tc.push_back		(0);
 	}
-	for (itOGF_F face_it=faces.begin(); face_it!=faces.end(); face_it++){
+	for (itOGF_F face_it=faces.begin(); face_it!=faces.end(); ++face_it)
+	{
 		OGF_Face	&iF = *face_it;
 		i_indices.push_back	(iF.v[0]);
 		i_indices.push_back	(iF.v[1]);
@@ -344,14 +345,16 @@ void OGF::CalculateTB()
 
 	// retriving data
 	u32 o_idx		= 0;
-	for (itOGF_F face_it=faces.begin(); face_it!=faces.end(); face_it++){
+	for (itOGF_F face_it=faces.begin(); face_it!=faces.end(); ++face_it)
+	{
 		OGF_Face	&iF = *face_it;
 		iF.v[0]		= o_indices[o_idx++];
 		iF.v[1]		= o_indices[o_idx++];
 		iF.v[2]		= o_indices[o_idx++];
 	}
 	vertices.clear	(); vertices.resize(v_cnt);
-	for (u32 v_idx=0; v_idx!=v_cnt; v_idx++){
+	for (u32 v_idx=0; v_idx!=v_cnt; v_idx++)
+	{
 		OGF_Vertex	&iV = vertices[v_idx];
 		iV.P.set	(o_position[v_idx*3+0],	o_position[v_idx*3+1],	o_position[v_idx*3+2]);
 		iV.N.set	(o_normal[v_idx*3+0],	o_normal[v_idx*3+1],	o_normal[v_idx*3+2]);
@@ -390,38 +393,49 @@ void OGF::MakeProgressive	(float metric_limit)
 	{
 		// prepare progressive geom
 		VIPM_Init				();
-		//clMsg("--- append v start .");
+
 		for (u32 v_idx=0;  v_idx<vertices.size(); v_idx++)	
-			VIPM_AppendVertex	(vertices[v_idx].P,	vertices[v_idx].UV[0]					);
-		//clMsg("--- append f start .");
+			VIPM_AppendVertex	(vertices[v_idx].P,	vertices[v_idx].UV[0]	
+
 		for (u32 f_idx=0;  f_idx<faces.size();    f_idx++)	
 			VIPM_AppendFace		(faces[f_idx].v[0],	faces[f_idx].v[1],	faces[f_idx].v[2]	);
-		//clMsg("--- append end.");
 
 		// Convert
 		VIPM_Result*	VR		= 0;
-		try						{
+
+		try						
+		{
 						VR		= VIPM_Convert			(u32(25),1.f,1);
-		} catch (...)			{
+		} 
+		catch (...)		
+		{
 			progressive_clear	()		;
 			clMsg				("* mesh simplification failed: access violation");
 		}
-		if (0==VR)				{
+
+		if (0==VR)				
+		{
 			progressive_clear	()		;
 			clMsg				("* mesh simplification failed");
 		}
-		while (VR && VR->swr_records.size()>0)	{
+		
+		while (VR && VR->swr_records.size()>0)	
+		{
 			// test metric
 			u32		_full	=	vertices.size	()		;
 			u32		_remove	=	VR->swr_records.size()	;
 			u32		_simple	=	_full - _remove			;
 			float	_metric	=	float(_remove)/float(_full);
-			if		(_metric<metric_limit)		{
+			
+			if		(_metric<metric_limit)		
+			{
 				progressive_clear				()		;
-				clMsg	("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-discarded",_full,_simple,VR->indices.size()/3,metric_limit);
+				//clMsg	("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-discarded",_full,_simple,VR->indices.size()/3,metric_limit);
 				break									;
-			} else {
-				clMsg	("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-accepted", _full,_simple,VR->indices.size()/3,metric_limit);
+			}
+			else 
+			{
+			//	clMsg	("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-accepted", _full,_simple,VR->indices.size()/3,metric_limit);
 			}
 
 			// OK
@@ -439,7 +453,9 @@ void OGF::MakeProgressive	(float metric_limit)
 			// Fill SWR
 			m_SWI.count				= VR->swr_records.size();
 			m_SWI.sw				= xr_alloc<FSlideWindow>(m_SWI.count);
-			for (u32 swr_idx=0; swr_idx!=m_SWI.count; swr_idx++){
+		
+			for (u32 swr_idx=0; swr_idx!=m_SWI.count; swr_idx++)
+			{
 				FSlideWindow& dst	= m_SWI.sw[swr_idx];
 				VIPM_SWR& src		= VR->swr_records[swr_idx];
 				dst.num_tris		= src.num_tris;
@@ -460,24 +476,33 @@ void OGF::MakeProgressive	(float metric_limit)
 		// prepare progressive geom
 		VIPM_Init				();
 		Fvector2				zero; zero.set		(0,0);
+		
 		for (u32 v_idx=0;  v_idx<x_vertices.size(); v_idx++)	VIPM_AppendVertex	(x_vertices[v_idx].P,	zero						);
 		for (u32 f_idx=0;  f_idx<x_faces.size();    f_idx++)	VIPM_AppendFace		(x_faces[f_idx].v[0],	x_faces[f_idx].v[1],	x_faces[f_idx].v[2]	);
 
 		VIPM_Result*	VR		= 0;
-		try						{
+		
+		try						
+		{
 			VR		= VIPM_Convert			(u32(25),1.f,1);
-		} catch (...)			{
+		} 
+		catch (...)			
+		{
 			faces				= _saved_faces		;
 			vertices			= _saved_vertices	;
 			progressive_clear	()		;
 			clMsg				("* X-mesh simplification failed: access violation");
 		}
-		if (0==VR)				{
+		
+		if (0==VR)				
+		{
 			faces				= _saved_faces		;
 			vertices			= _saved_vertices	;
 			progressive_clear	()		;
-			clMsg				("* X-mesh simplification failed");
-		} else {
+			//clMsg				("* X-mesh simplification failed");
+		} 
+		else 
+		{
 			// Convert
 			/*
 			VIPM_Result*	VR		= VIPM_Convert		(u32(25),1.f,1);
@@ -489,7 +514,7 @@ void OGF::MakeProgressive	(float metric_limit)
 			u32		_remove	=	VR->swr_records.size()	;
 			u32		_simple	=	_full - _remove			;
 			float	_metric	=	float(_remove)/float(_full);
-			clMsg	("X mesh simplified from [%4dv] to [%4dv], nf[%4d]",_full,_simple,VR ? VR->indices.size()/3 : 0);
+			//clMsg	("X mesh simplified from [%4dv] to [%4dv], nf[%4d]",_full,_simple,VR ? VR->indices.size()/3 : 0);
 
 			// OK
 			vec_XV					vertices_saved;
@@ -501,7 +526,9 @@ void OGF::MakeProgressive	(float metric_limit)
 
 			// Fill indices
 			x_faces.resize			(VR->indices.size()/3);
-			for (u32 f_idx=0; f_idx<x_faces.size(); f_idx++){
+			
+			for (u32 f_idx=0; f_idx<x_faces.size(); f_idx++)
+			{
 				x_faces[f_idx].v[0]	= VR->indices[f_idx*3+0];
 				x_faces[f_idx].v[1]	= VR->indices[f_idx*3+1];
 				x_faces[f_idx].v[2]	= VR->indices[f_idx*3+2];
@@ -510,7 +537,9 @@ void OGF::MakeProgressive	(float metric_limit)
 			// Fill SWR
 			x_SWI.count				= VR->swr_records.size();
 			x_SWI.sw				= xr_alloc<FSlideWindow>(x_SWI.count);
-			for (u32 swr_idx=0; swr_idx!=x_SWI.count; swr_idx++){
+			
+			for (u32 swr_idx=0; swr_idx!=x_SWI.count; swr_idx++)
+			{
 				FSlideWindow& dst	= x_SWI.sw[swr_idx];
 				VIPM_SWR& src		= VR->swr_records[swr_idx];
 				dst.num_tris		= src.num_tris;

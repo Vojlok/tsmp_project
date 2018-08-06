@@ -7,7 +7,7 @@ poolSS<xrMU_Model::_face,8*1024>	mu_faces;
 // vertex utilities
 void	xrMU_Model::_vertex::prep_add				(_face* F)
 {
-	for (v_faces_it I=adjacent.begin(); I!=adjacent.end(); I++)
+	for (v_faces_it I=adjacent.begin(); I!=adjacent.end(); ++I)
 		if (F==(*I)) return;
 	adjacent.push_back(F);
 }
@@ -19,7 +19,7 @@ void	xrMU_Model::_vertex::prep_remove			(_face* F)
 void	xrMU_Model::_vertex::calc_normal_adjacent	()
 {
 	N.set(0,0,0);
-	for (v_faces_it ad = adjacent.begin(); ad!=adjacent.end(); ad++)
+	for (v_faces_it ad = adjacent.begin(); ad!=adjacent.end(); ++ad)
 		N.add( (*ad)->N );
 	N.normalize_safe();
 }

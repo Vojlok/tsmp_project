@@ -45,7 +45,7 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	xr_vector<Face*>	adjacent;	adjacent.reserve(6 * 2 * 3);
 	CDB::CollectorPacked	CL(scene_bb, g_vertices.size(), g_faces.size());
 
-	for (vecFaceIt it = g_faces.begin(); it != g_faces.end(); it++)
+	for (vecFaceIt it = g_faces.begin(); it != g_faces.end(); ++it)
 	{
 		Face*	F = (*it);
 		Shader_xrLC&	SH = F->Shader();

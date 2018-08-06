@@ -2,32 +2,29 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+
 #include "stdafx.h"
 #include "common_compilers\xrThread.h"
 #include "xrSyncronize.h"
-
-//using namespace			std;
 
 xr_vector<OGF_Base *>	g_tree;
 BOOL					b_R2		= FALSE;
 BOOL					b_noise		= FALSE;
 BOOL					b_radiosity	= FALSE;
 BOOL					b_nosun		= FALSE;
+BOOL					b_highest_priority = FALSE;
 // KD start
 BOOL					b_norgb		= FALSE;
 BOOL					b_nolmaps	= FALSE;
 BOOL					b_skipinvalid	= FALSE;
 float					f_lmap_quality = 4.f;
 // KD end
-CThreadManager			mu_base;
-CThreadManager			mu_secondary;
-#define		MU_THREADS	16
 BOOL					gl_linear	= FALSE;
 
 //////////////////////////////////////////////////////////////////////
 
 CBuild::CBuild()
-{
+{	
 }
 
 CBuild::~CBuild()
@@ -37,61 +34,10 @@ CBuild::~CBuild()
 extern u16		RegisterShader		(LPCSTR T);
 
 // mu-light
-class CMULight	: public CThread
-{
-	u32			low;
-	u32			high;
-public:
-	CMULight	(u32 ID, u32 _low, u32 _high) : CThread(ID)	{	thMessages	=TRUE; low=_low; high=_high;	}
-
-	virtual void	Execute	()
-	{
-		// Priority
-		SetThreadPriority	(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
-		Sleep				(0);
-
-		// Light references
-		for (u32 m=low; m<high; m++)
-		{
-			pBuild->mu_refs[m]->calc_lighting	();
-			thProgress							= (float(m-low)/float(high-low));
-		}
-	}
-};
-
-class CMUThread : public CThread
-{
-public:
-	CMUThread	(u32 ID) : CThread(ID)
-	{
-		thMessages	= TRUE;
-	}
-	virtual void	Execute()
-	{
-		u32					m;
-
-		// Priority
-		SetThreadPriority	(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
-		Sleep				(0);
-
-		// Light models
-		for (m=0; m<pBuild->mu_models.size(); m++)
-		{
-			pBuild->mu_models[m]->calc_materials();
-			pBuild->mu_models[m]->calc_lighting	();
-		}
-
-		// Light references
-		u32	stride			= pBuild->mu_refs.size()/MU_THREADS;
-		u32	last			= pBuild->mu_refs.size()-stride*(MU_THREADS-1);
-		for (u32 thID=0; thID<MU_THREADS; thID++)
-			mu_secondary.start	(xr_new<CMULight> (thID,thID*stride,thID*stride+((thID==(MU_THREADS-1))?last:stride)));
-	}
-};
 
 void CBuild::Light_prepare()
 {
-	for (vecFaceIt I=g_faces.begin();	I!=g_faces.end(); I++) (*I)->CacheOpacity();
+	for (vecFaceIt I=g_faces.begin();	I!=g_faces.end(); ++I) (*I)->CacheOpacity();
 	for (u32 m=0; m<mu_models.size(); m++)	mu_models[m]->calc_faceopacity();
 }
 
@@ -100,6 +46,7 @@ void CBuild::Light_prepare()
 
 void CBuild::Run	(LPCSTR P)
 {
+
 	if (strstr(Core.Params,"-att"))	gl_linear	= TRUE;
 
 	//****************************************** Open Level
@@ -191,9 +138,7 @@ void CBuild::Run	(LPCSTR P)
 	Phase						("LIGHT: Lightning MU models...");
 	mem_Compact					();
 	Light_prepare				();
-	mu_base.start				(xr_new<CMUThread> (0));
-	mu_base.wait				(500);
-	mu_secondary.wait			(500);
+	xrPhase_MU_light();
 
 	//****************************************** Resolve materials
 	FPU::m64r					();
@@ -219,8 +164,7 @@ void CBuild::Run	(LPCSTR P)
 	IsolateVertices				(TRUE);
 
 	//****************************************** All lighting + lmaps building and saving
-	if (!b_nolmaps)
-		Light						();
+	if (!b_nolmaps) Light						();
 
 	//****************************************** Merge geometry
 	FPU::m64r					();
@@ -248,7 +192,9 @@ void CBuild::Run	(LPCSTR P)
 	{
 		u32 m;
 		Status			("MU : Models...");
-		for (m=0; m<mu_models.size(); m++)	{
+	
+		for (m=0; m<mu_models.size(); m++)	
+		{
 			mu_models[m]->calc_ogf			();
 			mu_models[m]->export_geometry	();
 		}

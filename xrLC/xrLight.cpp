@@ -27,6 +27,9 @@ public:
 	{
 		CDeflector* D	= 0;
 
+		if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+		Sleep(0);
+
 		for (;;) 
 		{
 			// Get task
@@ -43,12 +46,7 @@ public:
 			task_CS.Leave		();
 
 			// Perform operation
-			try {
-				D->Light	(&DB,&LightsSelected,H);
-			} catch (...)
-			{
-				clMsg("* ERROR: CLMThread::Execute - light");
-			}
+			D->Light(&DB, &LightsSelected, H);
 		}
 	}
 };
@@ -77,7 +75,8 @@ void CBuild::Light()
 		Status			("Lighting...");
 		CThreadManager	threads;
 		const	u32	thNUM	= 8;
-		CTimer	start_time;	start_time.Start();				
+		CTimer	start_time;	
+		start_time.Start();				
 		for				(int L=0; L<thNUM; L++)	threads.start(xr_new<CLMThread> (L));
 		threads.wait	(500);
 		clMsg			("%f seconds",start_time.GetElapsed_sec());
@@ -123,12 +122,12 @@ void	g_trans_register_internal		(Vertex* V)
 	mapVertIt	it2		= it;
 
 	// Decrement to the start and inc to end
-	while (it!=g_trans->begin() && ((it->first+eps2)>key)) it--;
-	while (it2!=g_trans->end() && ((it2->first-eps2)<key)) it2++;
-	if (it2!=g_trans->end())	it2++;
+	while (it!=g_trans->begin() && ((it->first+eps2)>key)) --it;
+	while (it2!=g_trans->end() && ((it2->first-eps2)<key)) ++it2;
+	if (it2!=g_trans->end())	++it2;
 	
 	// Search
-	for (; it!=it2; it++)
+	for (; it!=it2; ++it)
 	{
 		vecVertex&	VL		= it->second;
 		Vertex* Front		= VL.front();
@@ -248,7 +247,7 @@ void CBuild::LightVertex	()
 
 	// Process all groups
 	Status				("Transluenting...");
-	for (mapVertIt it=g_trans->begin(); it!=g_trans->end(); it++)
+	for (mapVertIt it=g_trans->begin(); it!=g_trans->end(); ++it)
 	{
 		// Unique
 		vecVertex&	VL	= it->second;

@@ -5,14 +5,21 @@
 #include "std_classes.h"
 #include "lightmap.h"
 
+#include <thread>
+#include <mutex>
+std::mutex mtx;
+
+float progr_time = 0;
+
 #define	TRY(a) try { a; } catch (...) { clMsg("* E: %s", #a); }
 
 void CBuild::validate_splits			()
 {
-	for (splitIt it=g_XSplit.begin(); it!=g_XSplit.end(); it++)
+	for (splitIt it=g_XSplit.begin(); it!=g_XSplit.end(); ++it)
 	{
 		u32 MODEL_ID		= u32(it-g_XSplit.begin())	;
-		if ((*it)->size() > c_SS_HighVertLimit*2)		{
+		if ((*it)->size() > c_SS_HighVertLimit*2)		
+		{
 			clMsg	("! ERROR: subdiv #%d has more than %d faces (%d)",MODEL_ID,2*c_SS_HighVertLimit,(*it)->size());
 		}
 	};
@@ -27,10 +34,13 @@ void CBuild::Flex2OGF()
 
 	g_tree.clear	();
 	g_tree.reserve	(4096);
-	for (splitIt it=g_XSplit.begin(); it!=g_XSplit.end(); it++)
+
+	CTimer	start_ogf;
+	start_ogf.Start();
+
+	for (splitIt it=g_XSplit.begin(); it!=g_XSplit.end(); ++it)
 	{
-		R_ASSERT			( ! (*it)->empty() );
-		
+		R_ASSERT			( ! (*it)->empty() );		
 		u32 MODEL_ID		= u32(it-g_XSplit.begin());
 		
 		OGF*		pOGF	= xr_new<OGF> ();
@@ -38,21 +48,21 @@ void CBuild::Flex2OGF()
 		b_material*	M		= &(materials[F->dwMaterial]);	// and it's material
 		R_ASSERT	(F && M);
 		
-		try {
+		try 
+		{
 			// Common data
 			pOGF->Sector		= M->sector;
 			pOGF->material		= F->dwMaterial;
 			
 			// Collect textures
 			OGF_Texture			T;
-			//pOGF->shader		= M->shader;
-			//pOGF->shader_xrlc	= &F->Shader();
 			
 			TRY(T.name		= textures[M->surfidx].name);
 			TRY(T.pSurface	= &(textures[M->surfidx]));
 			TRY(pOGF->textures.push_back(T));
 			
-			try {
+			try 
+			{
 				if (F->hasImplicitLighting())
 				{
 					// specific lmap
@@ -62,10 +72,13 @@ void CBuild::Flex2OGF()
 					T.pSurface		= T.pSurface;	// Leave surface intact
 					R_ASSERT		(pOGF);
 					pOGF->textures.push_back(T);
-				} else {
+				} 
+				else 
+				{
 					// If lightmaps persist
 					CLightmap*	LM	= F->lmap_layer;
-					if (LM)		{
+					if (LM)		
+					{
 						string_path	fn;
 						sprintf_s		(fn,"%s_1",LM->lm_texture.name); 
 						T.name		= fn;
@@ -83,8 +96,9 @@ void CBuild::Flex2OGF()
 			// Collect faces & vertices
 			F->CacheOpacity	();
 			bool	_tc_	= !(F->flags.bOpaque);
-			try {
-				for (vecFaceIt Fit=(*it)->begin(); Fit!=(*it)->end(); Fit++)
+			try 
+			{
+				for (vecFaceIt Fit=(*it)->begin(); Fit!=(*it)->end(); ++Fit)
 				{
 					OGF_Vertex	V[3];
 					
@@ -114,28 +128,44 @@ void CBuild::Flex2OGF()
 					TRY				(pOGF->_BuildFace(V[0],V[1],V[2],_tc_));
 					V[0].UV.clear();V[1].UV.clear();V[2].UV.clear();
 				}
-			} catch (...) {  clMsg("* ERROR: Flex2OGF, model# %d, *faces*",MODEL_ID); }
-		} catch (...)
+			} 
+			catch (...) 
+			{  
+				clMsg("* ERROR: Flex2OGF, model# %d, *faces*",MODEL_ID); 
+			}
+		}
+		catch (...)
 		{
 			clMsg("* ERROR: Flex2OGF, 1st part, model# %d",MODEL_ID);
 		}
 		
-		try {
-			clMsg		("%3d: opt : v(%d)-f(%d)",	MODEL_ID,pOGF->vertices.size(),pOGF->faces.size());
+		try 
+		{
 			pOGF->Optimize						();
-			clMsg		("%3d: cb  : v(%d)-f(%d)",	MODEL_ID,pOGF->vertices.size(),pOGF->faces.size());
 			pOGF->CalcBounds					();
-			clMsg		("%3d: prog: v(%d)-f(%d)",	MODEL_ID,pOGF->vertices.size(),pOGF->faces.size());
+
+
+			CTimer	start_pr;
+			start_pr.Start();
+
 			if (!b_noise) pOGF->MakeProgressive	(c_PM_MetricLimit_static);
-			clMsg		("%3d: strp: v(%d)-f(%d)",	MODEL_ID,pOGF->vertices.size(),pOGF->faces.size());
+
+			progr_time += start_pr.GetElapsed_sec();
+
 			pOGF->Stripify						();
-		} catch (...)	{
+		} 
+		catch (...)
+		{
 			clMsg("* ERROR: Flex2OGF, 2nd part, model# %d",MODEL_ID);
 		}
 		
 		g_tree.push_back	(pOGF);
-		xr_delete			(*it);
-		Progress			(p_total+=p_cost);
+//		xr_delete			(*it);
+//		Progress			(p_total+=p_cost);
 	}
+
+	clMsg("%f seconds", start_ogf.GetElapsed_sec());
+	clMsg("%f seconds (progressive)", progr_time);
+
 	g_XSplit.clear	();
 }

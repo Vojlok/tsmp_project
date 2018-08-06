@@ -11,7 +11,7 @@ void xrMU_Model::calc_normals()
 //.	float	sm_cos	= _cos(deg2rad(g_params.m_sm_angle));
 	float	sm_cos	= _cos(deg2rad(89.f));
 
-	for (v_faces_it it = m_faces.begin(); it!=m_faces.end(); it++)
+	for (v_faces_it it = m_faces.begin(); it!=m_faces.end(); ++it)
 	{
 		(*it)->flags.bSplitted	= FALSE;
 		(*it)->CalcNormal		();
@@ -24,7 +24,7 @@ void xrMU_Model::calc_normals()
 	{
 		_vertex* V	= m_vertices[I];
 
-		for (v_faces_it AFit = V->adjacent.begin(); AFit != V->adjacent.end(); AFit++)
+		for (v_faces_it AFit = V->adjacent.begin(); AFit != V->adjacent.end(); ++AFit)
 		{
 			_face*	F			= *AFit;
 			F->flags.bSplitted	= FALSE;
@@ -80,7 +80,7 @@ void xrMU_Model::calc_normals()
 	}
 
 	// Clear temporary flag
-	for (v_faces_it it = m_faces.begin(); it!=m_faces.end(); it++)
+	for (v_faces_it it = m_faces.begin(); it!=m_faces.end(); ++it)
 		(*it)->flags.bSplitted = FALSE;
 
 	clMsg("%5s %d vertices duplicated","-",m_vertices.size()-Vcount);

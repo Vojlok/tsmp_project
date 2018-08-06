@@ -12,11 +12,11 @@ public:
 
 	struct	_subdiv
 	{
+		OGF*	ogf;
+
 		u32		material;
 		u32		start;
 		u32		count;
-
-		OGF*	ogf;
 
 		u32		vb_id;
 		u32		vb_start;

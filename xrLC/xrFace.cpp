@@ -110,7 +110,7 @@ Vertex*	Vertex::CreateCopy_NOADJ()
 void	Vertex::normalFromAdj()
 {
 	N.set(0,0,0);
-	for (vecFaceIt ad = adjacent.begin(); ad!=adjacent.end(); ad++)
+	for (vecFaceIt ad = adjacent.begin(); ad!=adjacent.end(); ++ad)
 		N.add( (*ad)->N );
 	exact_normalize	(N);
 }

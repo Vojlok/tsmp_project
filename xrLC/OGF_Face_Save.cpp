@@ -251,11 +251,11 @@ void	OGF::PreSave		(u32 tree_id)
 	// X-vertices/faces
 	if (x_vertices.size() && x_faces.size())
 	{
-		clMsg			("%4d: v(%3d)/f(%3d)",tree_id,x_vertices.size(),x_faces.size());
+	//	clMsg			("%4d: v(%3d)/f(%3d)",tree_id,x_vertices.size(),x_faces.size());
 		VDeclarator		x_D;
 		x_D.set			(x_decl_vert);
 		x_VB.Begin		(x_D);
-		for (itXV V=x_vertices.begin(); V!=x_vertices.end(); V++)
+		for (itXV V=x_vertices.begin(); V!=x_vertices.end(); ++V)
 		{
 			x_vert		v	(V->P);
 			x_VB.Add		(&v,sizeof(v));
@@ -270,7 +270,7 @@ void	OGF::PreSave		(u32 tree_id)
 		// vertex-colored
 		D.set			(r1_decl_vert);
 		g_VB.Begin		(D);
-		for (itOGF_V V=vertices.begin(); V!=vertices.end(); V++)
+		for (itOGF_V V=vertices.begin(); V!=vertices.end(); ++V)
 		{
 			r1v_vert	v	(V->P,V->N,V->T,V->B,V->Color,V->UV[0]);
 			g_VB.Add		(&v,sizeof(v));
@@ -280,7 +280,7 @@ void	OGF::PreSave		(u32 tree_id)
 		// lmap-colored
 		D.set			(r1_decl_lmap);
 		g_VB.Begin		(D);
-		for (itOGF_V V=vertices.begin(); V!=vertices.end(); V++)
+		for (itOGF_V V=vertices.begin(); V!=vertices.end(); ++V)
 		{
 			r1v_lmap	v	(V->P,V->N,V->T,V->B,V->Color,V->UV[0],V->UV[1]);
 			g_VB.Add		(&v,sizeof(v));

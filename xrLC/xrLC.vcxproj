@@ -1386,7 +1386,6 @@
     <ClInclude Include="vbm.h" />
     <ClInclude Include="xrFace.h" />
     <ClInclude Include="xrIsect.h" />
-    <ClInclude Include="xrThreadNew.h" />
     <ClInclude Include="xrUVpoint.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="fitter.h" />
@@ -1446,7 +1445,6 @@
     <ClCompile Include="xrSaveLights.cpp" />
     <ClCompile Include="xrSaveOGF.cpp" />
     <ClCompile Include="xrSectors.cpp" />
-    <ClCompile Include="xrThreadNew.cpp" />
     <ClCompile Include="xrT_Junction.cpp" />
     <ClCompile Include="Lightmap.cpp" />
     <ClCompile Include="xrDeflectoL_Direct.cpp" />
@@ -1472,6 +1470,7 @@
     <ClCompile Include="xrMU_Model_export_geometry.cpp" />
     <ClCompile Include="xrMU_Model_export_OGF.cpp" />
     <ClCompile Include="xrMU_Model_Load.cpp" />
+    <ClCompile Include="xr_mu_light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ETools\ETools.vcxproj">

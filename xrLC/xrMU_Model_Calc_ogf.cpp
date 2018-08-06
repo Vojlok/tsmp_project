@@ -6,7 +6,7 @@
 void xrMU_Model::calc_ogf()
 {
 	// Build OGFs
-	for (xrMU_Model::v_subdivs_it it=m_subdivs.begin(); it!=m_subdivs.end(); it++)
+	for (xrMU_Model::v_subdivs_it it=m_subdivs.begin(); it!=m_subdivs.end(); ++it)
 	{
 		OGF*		pOGF	= xr_new<OGF> ();
 		b_material*	M		= &(pBuild->materials[it->material]);	// and it's material
@@ -27,7 +27,7 @@ void xrMU_Model::calc_ogf()
 			try {
 				xrMU_Model::v_faces_it	_beg	= m_faces.begin() + it->start;
 				xrMU_Model::v_faces_it	_end	= _beg + it->count;
-				for (xrMU_Model::v_faces_it Fit =_beg; Fit!=_end; Fit++)
+				for (xrMU_Model::v_faces_it Fit =_beg; Fit!=_end; ++Fit)
 				{
 					OGF_Vertex			V[3];
 					xrMU_Model::_face*	FF		= *Fit;

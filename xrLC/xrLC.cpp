@@ -109,20 +109,24 @@ void Startup(LPSTR     lpCmdLine)
 	char cmd[512],name[256];
 
 	BOOL bModifyOptions = FALSE;
+	bool bIsSilent = false;
+
 
 	strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
-	if (strstr(cmd,"-?") || strstr(cmd,"-h"))			{ Help(); return; }
-	if (strstr(cmd,"-f")==0)							{ Help(); return; }
-	if (strstr(cmd,"-o"))								bModifyOptions	= TRUE;
-	if (strstr(cmd,"-gi"))								b_radiosity		= TRUE;
-	if (strstr(cmd,"-noise"))							b_noise			= TRUE;
-	if (strstr(cmd,"-nosun"))							b_nosun			= TRUE;
+	if (strstr(cmd,"-?") || strstr(cmd,"-h"))	{ Help(); return; }
+	if (strstr(cmd,"-f")==0)					{ Help(); return; }
+	if (strstr(cmd,"-o"))						bModifyOptions		= TRUE;
+	if (strstr(cmd,"-gi"))						b_radiosity			= TRUE;
+	if (strstr(cmd,"-noise"))					b_noise				= TRUE;
+	if (strstr(cmd,"-nosun"))					b_nosun				= TRUE;
+	if (strstr(cmd, "-priority_highest"))		b_highest_priority	= TRUE;
+	if (strstr(cmd, "-silent"))					bIsSilent			= true;
 
 // KD: new options
-	if (strstr(cmd,"-norgb"))							b_norgb			= TRUE;
-	if (strstr(cmd,"-nolmaps"))							b_nolmaps		= TRUE;
-	if (strstr(cmd,"-skipinvalid"))						b_skipinvalid	= TRUE;
+	if (strstr(cmd,"-norgb"))					b_norgb				= TRUE;
+	if (strstr(cmd,"-nolmaps"))					b_nolmaps			= TRUE;
+	if (strstr(cmd,"-skipinvalid"))				b_skipinvalid		= TRUE;
 	get_console_float(lpCmdLine, "-lmap_quality ", &f_lmap_quality);
 	
 	// Give a LOG-thread a chance to startup
@@ -181,6 +185,8 @@ void Startup(LPSTR     lpCmdLine)
 		}
 	}
 	
+	SetThreadPriority(GetCurrentThread(),THREAD_PRIORITY_HIGHEST);
+
 	// Conversion
 	Phase					("Converting data structures...");
 	pBuild					= xr_new<CBuild>();
@@ -199,7 +205,8 @@ void Startup(LPSTR     lpCmdLine)
 	u32	dwEndTime			= dwStartupTime.GetElapsed_ms();
 	sprintf					(inf,"Time elapsed: %s",make_time(dwEndTime/1000).c_str());
 	clMsg					("Build succesful!\n%s",inf);
-	MessageBox				(logWindow,inf,"Congratulation!",MB_OK|MB_ICONINFORMATION);
+
+	if(!bIsSilent) MessageBox (logWindow,inf,"Congratulation!",MB_OK|MB_ICONINFORMATION);
 
 	// Close log
 	bClose					= TRUE;

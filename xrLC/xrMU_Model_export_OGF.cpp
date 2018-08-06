@@ -8,7 +8,7 @@ void xrMU_Reference::export_ogf()
 
 	// Export nodes
 	{
-		for (xrMU_Model::v_subdivs_it it=model->m_subdivs.begin(); it!=model->m_subdivs.end(); it++)
+		for (xrMU_Model::v_subdivs_it it=model->m_subdivs.begin(); it!=model->m_subdivs.end(); ++it)
 		{
 			OGF_Reference*	pOGF	= xr_new<OGF_Reference> ();
 			b_material*		M		= &(pBuild->materials[it->material]);	// and it's material

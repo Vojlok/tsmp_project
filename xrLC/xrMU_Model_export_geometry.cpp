@@ -29,7 +29,7 @@ void	xrMU_Model::export_geometry		()
 	// RT-check, BOX, low-point, frac-size
 	Fbox			BB; 
 	BB.invalidate	();
-	for (v_vertices_it vit=m_vertices.begin(); vit!=m_vertices.end(); vit++)
+	for (v_vertices_it vit=m_vertices.begin(); vit!=m_vertices.end(); ++vit)
 		BB.modify	((*vit)->P);
 
 	Fvector			frac_low;
@@ -38,7 +38,7 @@ void	xrMU_Model::export_geometry		()
 	frac_Ysize		= BB.max.y - BB.min.y;
 
 	// Begin building
-	for (v_subdivs_it it=m_subdivs.begin(); it!=m_subdivs.end(); it++)
+	for (v_subdivs_it it=m_subdivs.begin(); it!=m_subdivs.end(); ++it)
 	{
 		// Vertices
 		{

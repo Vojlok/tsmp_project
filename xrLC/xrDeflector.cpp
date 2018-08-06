@@ -10,7 +10,7 @@ void lm_layer::Pack		(xr_vector<u32>& dest)
 	xr_vector<base_color>::iterator I=surface.begin();
 	xr_vector<base_color>::iterator E=surface.end();
 	xr_vector<u32>::iterator		W=dest.begin();
-	for (; I!=E; I++)
+	for (; I!=E; ++I)
 	{
 		base_color_c	C; I->_get(C);
 		u8	_r	= u8_clr(C.rgb.x);
@@ -26,7 +26,7 @@ void lm_layer::Pack_hemi	(xr_vector<u32>& dest)	//.
 	xr_vector<base_color>::iterator I=surface.begin	();
 	xr_vector<base_color>::iterator E=surface.end	();
 	xr_vector<u32>::iterator		W=dest.begin	();
-	for (; I!=E; I++)
+	for (; I!=E; ++I)
 	{
 		base_color_c	C;	I->_get(C);
 		u8	_d	= u8_clr	(C.sun);
@@ -166,7 +166,7 @@ void CDeflector::OA_Export()
 	tN.set			(0,0,0);
 	float density	= 0;
 	float fcount	= 0;
-	for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); it++)
+	for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); ++it)
 	{
 		Face	*F = it->owner;
 		Fvector	SN;
@@ -193,7 +193,7 @@ void CDeflector::OA_Export()
 	mView.build_camera(from,at,up);
 
 	Fbox bb; bb.invalidate();
-	for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); it++)
+	for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); ++it)
 	{
 		UVtri	*T = &*it;
 		Face	*F = T->owner;
@@ -250,7 +250,7 @@ void CDeflector::GetRect	(Fvector2 &min, Fvector2 &max)
 	// Calculate bounds
 	xr_vector<UVtri>::iterator it=UVpolys.begin();
 	min = max = it->uv[0];
-	for (;it != UVpolys.end(); it++)
+	for (;it != UVpolys.end(); ++it)
 	{
 		for (int i=0; i<3; i++) {
 			min.min(it->uv[i]);
@@ -283,7 +283,7 @@ void CDeflector::RemapUV	(xr_vector<UVtri>& dest, u32 base_u, u32 base_v, u32 si
 	Fvector2		tc;
 	UVtri		tnew;
 	if (bRotate)	{
-		for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); it++)
+		for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); ++it)
 		{
 			UVtri&	T	= *it;
 			tnew.owner	= T.owner;
@@ -296,7 +296,7 @@ void CDeflector::RemapUV	(xr_vector<UVtri>& dest, u32 base_u, u32 base_v, u32 si
 			dest.push_back	(tnew);
 		}
 	} else {
-		for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); it++)
+		for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); ++it)
 		{
 			UVtri&	T	= *it;
 			tnew.owner	= T.owner;

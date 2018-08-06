@@ -45,7 +45,7 @@ void CBuild::CalcNormals()
 	Status			("Processing...");
 	float sm_cos	= _cos(deg2rad(g_params.m_sm_angle));
 
-	for (vecFaceIt it = g_faces.begin(); it!=g_faces.end(); it++)
+	for (vecFaceIt it = g_faces.begin(); it!=g_faces.end(); ++it)
 	{
 		(*it)->flags.bSplitted	= true;
 		(*it)->CalcNormal		();
@@ -58,7 +58,7 @@ void CBuild::CalcNormals()
 	{
 		Vertex* V = g_vertices[I];
 
-		for (vecFaceIt AFit = V->adjacent.begin(); AFit != V->adjacent.end(); AFit++)
+		for (vecFaceIt AFit = V->adjacent.begin(); AFit != V->adjacent.end(); ++AFit)
 		{
 			Face*	F			= *AFit;
 			F->flags.bSplitted	= false;
@@ -121,13 +121,13 @@ void CBuild::CalcNormals()
 	IsolateVertices	(FALSE);
 
 	// Recalculate normals
-	for (vecVertexIt it=g_vertices.begin(); it!=g_vertices.end(); it++)
+	for (vecVertexIt it=g_vertices.begin(); it!=g_vertices.end(); ++it)
 		(*it)->normalFromAdj	();
 
 	clMsg	("%d vertices was duplicated 'cause of SM groups",g_vertices.size()-Vcount);
 
 	// Clear temporary flag
-	for (vecFaceIt it = g_faces.begin(); it!=g_faces.end(); it++)
+	for (vecFaceIt it = g_faces.begin(); it!=g_faces.end(); ++it)
 		(*it)->flags.bSplitted = false;
 
 	// Models

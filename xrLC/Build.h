@@ -100,6 +100,7 @@ public:
 	void	ConvertFaces();
 
 	void	xrPhase_Radiosity		();
+	void	xrPhase_MU_light();
 		
 	void	IsolateVertices			(BOOL bProgress);
 	void	xrPhase_ResolveMaterials();

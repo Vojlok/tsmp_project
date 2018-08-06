@@ -21,7 +21,7 @@ int getTriByEdge(Vertex *V1, Vertex *V2, Face* parent, vecFace &ids)
 	Face*	found	= 0;
 	int		f_count = 0;
 
-	for (vecFaceIt I=V1->adjacent.begin(); I!=V1->adjacent.end(); I++)
+	for (vecFaceIt I=V1->adjacent.begin(); I!=V1->adjacent.end(); ++I)
 	{
 		Face* test = *I;
 		if (test == parent) continue;
@@ -49,7 +49,7 @@ void TestEdge			(Vertex *V1, Vertex *V2, Face* parent)
 	Face*	found	= 0;
 	int		f_count = 0;
 
-	for (vecFaceIt I=V1->adjacent.begin(); I!=V1->adjacent.end(); I++)	{
+	for (vecFaceIt I=V1->adjacent.begin(); I!=V1->adjacent.end(); ++I)	{
 		Face* test = *I;
 		if (test == parent) continue;
 		if (test->VContains(V2)) {
@@ -79,7 +79,7 @@ void CBuild::BuildCForm	()
 
 		Status("Collecting faces...");
 		cfFaces->reserve	(g_faces.size());
-		for (vecFaceIt I=g_faces.begin(); I!=g_faces.end(); I++)
+		for (vecFaceIt I=g_faces.begin(); I!=g_faces.end(); ++I)
 		{
 			Face* F = *I;
 			if (F->Shader().flags.bCollision) 
@@ -102,7 +102,7 @@ void CBuild::BuildCForm	()
 	float	p_cost  = 1.f/(cfVertices->size());
 	
 	Fbox BB; BB.invalidate();
-	for (vecVertexIt it = cfVertices->begin(); it!=cfVertices->end(); it++)
+	for (vecVertexIt it = cfVertices->begin(); it!=cfVertices->end(); ++it)
 		BB.modify((*it)->P );
 
 	// CForm
@@ -113,7 +113,7 @@ void CBuild::BuildCForm	()
 
 	// Collect faces
 	CDB::CollectorPacked CL	(BB,cfVertices->size(),cfFaces->size());
-	for (vecFaceIt F = cfFaces->begin(); F!=cfFaces->end(); F++)
+	for (vecFaceIt F = cfFaces->begin(); F!=cfFaces->end(); ++F)
 	{
 		Face*	T = *F;
 
@@ -187,7 +187,7 @@ void CBuild::BuildCForm	()
 #endif
 
 	// Clear pDeflector (it is stored in the same memory space with dwMaterialGame)
-	for (vecFaceIt I=g_faces.begin(); I!=g_faces.end(); I++)
+	for (vecFaceIt I=g_faces.begin(); I!=g_faces.end(); ++I)
 	{
 		Face* F			= *I;
 		F->pDeflector	= NULL;

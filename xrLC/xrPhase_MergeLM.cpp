@@ -117,7 +117,7 @@ void CBuild::xrPhase_MergeLM()
 		// Process 
 		for (u32 it=0; it<merge_count; it++) 
 		{
-			if (0==(it%1024))	Status	("Process [%d/%d]...",it,merge_count);
+		//	if (0==(it%1024))	Status	("Process [%d/%d]...",it,merge_count);
 			lm_layer&	L		= Layer[it]->layer;
 			L_rect		rT,rS; 
 			rS.a.set	(0,0);

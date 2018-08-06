@@ -4,6 +4,9 @@
 #include "common_compilers\xrThread.h"
 #include "hash2D.h"
 
+xrCriticalSection	implicit_CS;
+xr_vector<int>		implicit_task_pool;
+
 class ImplicitDeflector
 {
 public:
@@ -66,19 +69,20 @@ class ImplicitThread : public CThread
 {
 public:
 	ImplicitDeflector*	DATA;			// Data for this thread
-	u32					y_start,y_end;
+	u32					total_implicit;
 
-	ImplicitThread		(u32 ID, ImplicitDeflector* _DATA, u32 _y_start, u32 _y_end) : CThread (ID)
+	ImplicitThread		(u32 ID, ImplicitDeflector* _DATA, u32 TOTALI ) : CThread (ID)
 	{
 		DATA			= _DATA;
-		y_start			= _y_start;
-		y_end			= _y_end;
+		total_implicit	= TOTALI;
 	}
 	virtual void		Execute	()
 	{
 		// Priority
 		SetThreadPriority		(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+		if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 		Sleep					(0);
+
 		R_ASSERT				(DATA);
 		ImplicitDeflector&		defl	= *DATA;
 		CDB::COLLIDER			DB;
@@ -97,64 +101,70 @@ public:
 		
 		// Lighting itself
 		DB.ray_options	(0);
-		for (u32 V=y_start; V<y_end; V++)
+		for (;;)
 		{
+			u32 iter;
+			// Get task
+			implicit_CS.Enter();
+			thProgress = 1.f - float(implicit_task_pool.size()) / float(total_implicit);
+			if (implicit_task_pool.empty())
+			{
+				implicit_CS.Leave();
+				return;
+			}
+
+			iter = implicit_task_pool.back();
+			implicit_task_pool.pop_back();
+			implicit_CS.Leave();
+
 			for (u32 U=0; U<defl.Width(); U++)
 			{
 				base_color_c	C;
 				u32				Fcount	= 0;
-				
-				try {
-					for (u32 J=0; J<Jcount; J++) 
-					{
-						// LUMEL space
-						Fvector2				P;
-						P.x						= float(U)/dim.x + half.x + Jitter[J].x * JS.x;
-						P.y						= float(V)/dim.y + half.y + Jitter[J].y * JS.y;
-						xr_vector<Face*>& space	= ImplicitHash->query(P.x,P.y);
-						
-						// World space
-						Fvector wP,wN,B;
-						for (vecFaceIt it=space.begin(); it!=space.end(); it++)
-						{
-							Face	*F	= *it;
-							_TCF&	tc	= F->tc[0];
-							if (tc.isInside(P,B)) 
-							{
-								// We found triangle and have barycentric coords
-								Vertex	*V1 = F->v[0];
-								Vertex	*V2 = F->v[1];
-								Vertex	*V3 = F->v[2];
-								wP.from_bary(V1->P,V2->P,V3->P,B);
-								wN.from_bary(V1->N,V2->N,V3->N,B);
-								wN.normalize();
-								LightPoint	(&DB, RCAST_Model, C, wP, wN, pBuild->L_static, (b_norgb?LP_dont_rgb:0)|(b_nosun?LP_dont_sun:0), F);
-								Fcount		++;
-							}
-						}
-					} 
-				} catch (...)
+
+				for (u32 J = 0; J<Jcount; J++)
 				{
-					clMsg("* THREAD #%d: Access violation. Possibly recovered.",thID);
+					// LUMEL space
+					Fvector2				P;
+					P.x = float(U) / dim.x + half.x + Jitter[J].x * JS.x;
+					P.y = float(iter) / dim.y + half.y + Jitter[J].y * JS.y;
+					xr_vector<Face*>& space = ImplicitHash->query(P.x, P.y);
+
+					// World space
+					Fvector wP, wN, B;
+					for (vecFaceIt it = space.begin(); it != space.end(); ++it)
+					{
+						Face	*F = *it;
+						_TCF&	tc = F->tc[0];
+						if (tc.isInside(P, B))
+						{
+							// We found triangle and have barycentric coords
+							Vertex	*V1 = F->v[0];
+							Vertex	*V2 = F->v[1];
+							Vertex	*V3 = F->v[2];
+							wP.from_bary(V1->P, V2->P, V3->P, B);
+							wN.from_bary(V1->N, V2->N, V3->N, B);
+							wN.normalize();
+							LightPoint(&DB, RCAST_Model, C, wP, wN, pBuild->L_static, (b_norgb ? LP_dont_rgb : 0) | (b_nosun ? LP_dont_sun : 0), F);
+							Fcount++;
+						}
+					}
 				}
-				if (Fcount) {
+
+				if (Fcount) 
+				{
 					// Calculate lighting amount
 					C.scale				(Fcount);
 					C.mul				(.5f);
-					defl.Lumel(U,V)._set(C);
-					defl.Marker(U,V)	= 255;
-				} else {
-					defl.Marker(U,V)	= 0;
-				}
+					defl.Lumel(U,iter)._set(C);
+					defl.Marker(U,iter)	= 255;
+				} 
+				else defl.Marker(U,iter)	= 0;				
 			}
-			thProgress	= float(V - y_start) / float(y_end-y_start);
 		}
 	}
 };
 
-//#pragma optimize( "g", off )
-
-#define	NUM_THREADS	8
 void CBuild::ImplicitLighting()
 {
 	if (g_params.m_quality==ebqDraft) return;
@@ -164,7 +174,7 @@ void CBuild::ImplicitLighting()
 	
 	// Sorting
 	Status("Sorting faces...");
-	for (vecFaceIt I=g_faces.begin(); I!=g_faces.end(); I++)
+	for (vecFaceIt I=g_faces.begin(); I!=g_faces.end(); ++I)
 	{
 		Face* F = *I;
 		if (F->pDeflector)				continue;
@@ -182,14 +192,16 @@ void CBuild::ImplicitLighting()
 			ImpD.texture		= T;
 			ImpD.faces.push_back(F);
 			calculator.insert	(mk_pair(Tid,ImpD));
-		} else {
+		} 
+		else 
+		{
 			ImplicitDeflector&	ImpD = it->second;
 			ImpD.faces.push_back(F);
 		}
 	}
 	
 	// Lighing
-	for (Implicit_it imp=calculator.begin(); imp!=calculator.end(); imp++)
+	for (Implicit_it imp=calculator.begin(); imp!=calculator.end(); ++imp)
 	{
 		ImplicitDeflector& defl = imp->second;
 		Status			("Lighting implicit map '%s'...",defl.texture->name);
@@ -210,11 +222,20 @@ void CBuild::ImplicitLighting()
 		}
 
 		// Start threads
+		CTimer	implicit_time;
+		implicit_time.Start();
+
+		u32 threads_count = 8;
+		u32 count = defl.Height();
+
+		for (u32 itr = 0; itr<count; itr++)	implicit_task_pool.push_back(itr);
+
 		CThreadManager			tmanager;
-		u32	stride				= defl.Height()/NUM_THREADS;
-		for (u32 thID=0; thID<NUM_THREADS; thID++)
-			tmanager.start		(xr_new<ImplicitThread> (thID,&defl,thID*stride,thID*stride+stride));
-		tmanager.wait			();
+		for (u32 thID=0; thID<threads_count; thID++)
+			tmanager.start		(xr_new<ImplicitThread>(thID, &defl,count));
+		tmanager.wait			(500);
+
+		clMsg("%f seconds", implicit_time.GetElapsed_sec());
 
 		// Expand
 		Status	("Processing lightmap...");

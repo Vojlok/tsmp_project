@@ -47,7 +47,7 @@ void CBuild::xrPhase_Subdivide()
 		Fvector size;
 		
 		bb.invalidate();
-		for (vecFaceIt F=g_XSplit[X]->begin(); F!=g_XSplit[X]->end(); F++) 
+		for (vecFaceIt F=g_XSplit[X]->begin(); F!=g_XSplit[X]->end(); ++F) 
 		{
 			Face *XF = *F;
 			bb.modify(XF->v[0]->P);
@@ -93,7 +93,7 @@ resplit:
 		s2.clear	();
 		s1.clear	();
 		iteration_per_edge		++	;
-		for (vecFaceIt F=g_XSplit[X]->begin(); F!=g_XSplit[X]->end(); F++) 
+		for (vecFaceIt F=g_XSplit[X]->begin(); F!=g_XSplit[X]->end(); ++F) 
 		{
 			Face *XF = *F;
 			Fvector C;
@@ -105,7 +105,8 @@ resplit:
 		if ((int(s1.size())<c_SS_LowVertLimit) || (int(s2.size())<c_SS_LowVertLimit))
 		{
 			// splitting failed
-			clMsg	("! ERROR: model #%d - split fail, faces: %d, s1/s2:%d/%d",X,g_XSplit[X]->size(),s1.size(),s2.size());
+			//clMsg	("! ERROR: model #%d - split fail, faces: %d, s1/s2:%d/%d",X,g_XSplit[X]->size(),s1.size(),s2.size());
+		
 			if (iteration_per_edge<10)	{
 				if		(g_XSplit[X]->size() > c_SS_LowVertLimit*4)		
 				{

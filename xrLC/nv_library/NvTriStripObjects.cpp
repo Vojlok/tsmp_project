@@ -1377,7 +1377,7 @@ int NvStripifier::CountRemainingTris(	xr_list<NvStripInfo*>::iterator		iter,
 	int count = 0;
 	while (iter != end){
 		count += (*iter)->m_faces.size();
-		iter++;
+		++iter;
 	}
 	return count;
 }

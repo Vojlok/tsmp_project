@@ -72,6 +72,9 @@ public:
 
 	virtual void	Execute	()
 	{
+		if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+		Sleep(0);
+
 		CDB::COLLIDER		xrc;
 		xrc.ray_options		(CDB::OPT_CULL|CDB::OPT_ONLYNEAREST);
 		CDB::MODEL*	model	= RCAST_Model;

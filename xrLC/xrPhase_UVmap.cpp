@@ -9,7 +9,7 @@ void Face::OA_Unwarp()
 	
 	// now iterate on all our neigbours
 	for (int i=0; i<3; i++) 
-		for (vecFaceIt it=v[i]->adjacent.begin(); it!=v[i]->adjacent.end(); it++) 
+		for (vecFaceIt it=v[i]->adjacent.begin(); it!=v[i]->adjacent.end(); ++it) 
 		{
 			affected		+= 1;
 			(*it)->OA_Unwarp();
@@ -21,7 +21,7 @@ void Detach			(vecFace* S)
 	verts.clear		();
 	
 	// Collect vertices
-	for (vecFaceIt F=S->begin(); F!=S->end(); F++)
+	for (vecFaceIt F=S->begin(); F!=S->end(); ++F)
 	{
 		for (int i=0; i<3; i++) {
 			Vertex*		V=(*F)->v[i];
@@ -58,7 +58,7 @@ void	CBuild::xrPhase_UVmap()
 	for (int SP = 0; SP<int(g_XSplit.size()); SP++) 
 	{
 		Progress			(p_total+=p_cost);
-		IsolateVertices		(FALSE);
+	//	IsolateVertices		(FALSE);
 		
 		// Detect vertex-lighting and avoid this subdivision
 		R_ASSERT	(!g_XSplit[SP]->empty());
@@ -73,7 +73,7 @@ void	CBuild::xrPhase_UVmap()
 			// Select maximal sized poly
 			Face *	msF		= NULL;
 			float	msA		= 0;
-			for (vecFaceIt it = g_XSplit[SP]->begin(); it!=g_XSplit[SP]->end(); it++)
+			for (vecFaceIt it = g_XSplit[SP]->begin(); it!=g_XSplit[SP]->end(); ++it)
 			{
 				if ((*it)->pDeflector == NULL) 
 				{
