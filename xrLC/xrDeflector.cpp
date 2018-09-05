@@ -221,8 +221,15 @@ void CDeflector::OA_Export()
 BOOL CDeflector::OA_Place	(Face *owner)
 {
 	// It is not correct to rely solely on normal-split-angle for lmaps - imagine smooth sphere
-	float cosa = normal.dotproduct(owner->N);
-	if (cosa<_cos(deg2rad(g_params.m_sm_angle+1))) return FALSE;
+volatile	float cosa = normal.dotproduct(owner->N);
+
+volatile	float angle2 = g_params.m_sm_angle + 1;
+volatile	float angleRad = deg2rad(angle2);
+volatile	float secondF = _cos(angleRad);
+
+	if (cosa < secondF) return FALSE;
+
+//	if (cosa<_cos(deg2rad(g_params.m_sm_angle+1))) return FALSE;
 
 	UVtri				T;
 	T.owner				= owner;

@@ -62,12 +62,14 @@ private:
 	u64							m_auth_code		;
 
 	void						Register		(LPCSTR name, u32 vfs, u32 crc, u32 ptr, u32 size_real, u32 size_compressed, u32 modif);
-	void						ProcessArchive	(LPCSTR path, LPCSTR base_path=NULL);
+
 	void						ProcessOne		(LPCSTR path, void* F);
 	bool						Recurse			(LPCSTR path);	
 //	bool						CheckExistance	(LPCSTR path);
 
 	files_it					file_find_it	(LPCSTR n);
+public:
+	void						ProcessArchive(LPCSTR path, LPCSTR base_path = NULL);
 public:
 	enum{
 		flNeedRescan			= (1<<0),
@@ -159,7 +161,7 @@ public:
 //.    void						update_path			(xr_string& dest, LPCSTR initial, LPCSTR src);
 
 	// 
-	void						register_archieve	(LPCSTR path);
+	//void						register_archieve	(LPCSTR path); // tsmp:не вызывается вообще нигде
 	void						auth_generate		(xr_vector<xr_string>&	ignore, xr_vector<xr_string>&	important);
 	u64							auth_get			();
 	void						auth_runtime		(void*);

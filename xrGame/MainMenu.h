@@ -145,7 +145,10 @@ public:
 	void xr_stdcall OnConnectToMasterServerOkClicked(CUIWindow*, void*);
 	void			OnSessionTerminate				(LPCSTR reason);
 	void			OnLoadError						(LPCSTR module);
+	void			OnMainMenuMessageBox			(LPCSTR message);
 	void			OnDownloadPatchError			();
+	void			OnDownloadMapStart				(shared_str FileName);
+	void			OnDownloadMapEnd				();
 	void			OnDownloadPatchSuccess			();
 	void			OnDownloadPatchProgress			(u64 bytesReceived, u64 totalSize);
 	void xr_stdcall OnRunDownloadedPatch			(CUIWindow*, void*);

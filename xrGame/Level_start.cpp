@@ -11,7 +11,103 @@
 #include "../xr_ioconsole.h"
 #include "MainMenu.h"
 
-//#include "ui\UIOptConCom.h"
+#define CURL_STATICLIB
+#include "..\components\libcurl\include\curl\curl.h"
+#pragma comment(lib,"libcurl.lib")
+
+#pragma comment(lib,"ws2_32.lib")  // Зависимость от WinSocks2
+#pragma comment(lib,"wldap32.lib")
+
+#include <fstream>
+#include <thread>
+volatile int TotalProgress = 0;
+
+#define TSMP_MAPLIST_URL "http://dark-stalker.clan.su/tsmp/tsmp_maplist.txt"
+
+CMainMenu *Men;
+std::string LastConnectParams=" ";
+CURL *curl=NULL;
+
+class CURL_Downloader
+{
+private:
+	double *PR;
+private:
+	std::string CorrectFilename(std::string ssss)
+	{
+		std::string DPath = ssss;
+		
+		for (int i = 0; ; i++)
+		{	
+			if (DPath[i] == '/') DPath[i] = '\\'; 
+			if (DPath[i] == '\\')
+			{
+				DPath += " ";
+
+				for (int j = DPath.size() - 1; j > i; j--)
+				{
+					DPath[j] = DPath[j - 1];
+				}
+
+				DPath[i + 1] = '\\';
+				i++;				
+			}
+
+			if (i==(DPath.size()-1)) break;
+
+		}
+		Msg("was %s become %s",ssss.c_str(),DPath.c_str());
+		
+		return DPath;
+	}
+
+	static int CURL_ProgressUpdate(CURL_Downloader *D,
+		double dltotal, double dlnow,
+		double ultotal, double ulnow)
+	{
+		TotalProgress = (dlnow / dltotal) * 100;
+		return 0;
+	}
+public:
+	//CURL_Downloader() {};
+
+	//~CURL_Downloader() { Msg("Downloader destroyed"); };
+
+	void DownloadFile(std::string Url, std::string OutFile_)
+	{
+		Msg("ThD: DownloadFile Called");
+
+		TotalProgress = 0;
+
+		Msg("ThD: CorrectFile Called");
+		std::string OutFile= CorrectFilename(OutFile_);
+		Msg("ThD: CorrectFile Finished");
+		
+		FILE *fp;
+		CURLcode res;
+
+		if (curl)
+		{
+			Msg("ThD: Curl initialization ok");
+
+			fp = fopen(OutFile.c_str(), "wb");
+			curl_easy_setopt(curl, CURLOPT_URL, Url.c_str());
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+
+			curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
+			curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, CURL_ProgressUpdate);
+			curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &PR);
+
+			curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+			res = curl_easy_perform(curl);
+			fclose(fp);
+
+			printf("task completed!!! \n");
+		}
+	}
+};
+
+
 #include "RegistryFuncs.h"
 
 BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
@@ -90,6 +186,8 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 			Demo_PrepareToStore();
 		}
 	}
+	
+	LastConnectParams = m_caClientOptions.c_str();
 	//---------------------------------------------------------------------------
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start1));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start2));
@@ -253,17 +351,174 @@ bool xr_stdcall net_start_finalizer()
 		if (g_connect_server_err==xrServer::ErrBELoad)
 		{
 			MainMenu()->OnLoadError("BattlEye/BEServer.dll");
-		}else
+		}
+		else
 		if(g_connect_server_err==xrServer::ErrConnect && !psNET_direct_connect && !g_dedicated_server) 
 		{
 			MainMenu()->SwitchToMultiplayerMenu();
 		}else
-		if(g_connect_server_err==xrServer::ErrNoLevel)
-		{
-			Msg("cant find level %s",ln);
-			MainMenu()->SwitchToMultiplayerMenu();
-			MainMenu()->OnLoadError(ln.c_str());
-		}
+			if (g_connect_server_err == xrServer::ErrNoLevel)
+			{
+				MainMenu()->SwitchToMultiplayerMenu();
+
+				Msg("cant find level %s", ln.c_str());
+				bool IsInList = false;
+				std::string DownloadFrom;
+				std::string Arch;
+
+				string_path	cfg_name = "tsmp_maplist.txt";
+				string_path cfg_full_name;
+
+				string_path map_full_name;
+
+				FS.update_path(cfg_full_name, "$app_data_root$", cfg_name);
+				FS.update_path(map_full_name, "$mod_dir$", ln.c_str());
+
+				Arch = map_full_name;
+				Arch += ".xdb0";
+
+
+			 if(GetFileAttributes(cfg_full_name) != DWORD(-1))	
+			 {
+				 Msg("file exists");
+				 if (remove(cfg_full_name)) Msg("file removed");			 
+			 }
+
+
+			curl= curl_easy_init();
+			 CURL_Downloader *CURL_loader_maplist;
+			 CURL_loader_maplist->DownloadFile(TSMP_MAPLIST_URL, cfg_full_name);
+			 CURL_loader_maplist->~CURL_Downloader();
+
+				Msg("%s", cfg_full_name);
+
+
+				std::vector<std::string> StrVec;
+
+				std::string s, s1;
+				std::ifstream file(cfg_full_name);
+
+				while (true)
+				{
+					std::getline(file, s);
+					if (s == s1) break;
+					StrVec.push_back(s);
+					s1 = s;
+				}
+
+				file.close();
+
+				for (int IT = 0; IT < StrVec.size(); IT++)
+				{
+					std::string First, Second;
+
+					char *s = new char[StrVec[IT].size() + 1];
+
+					strcpy(s, StrVec[IT].c_str());
+
+					char *p = strtok(s, "=");
+					int iii = 0;
+					while (p != NULL)
+					{
+						if (iii == 0) First = p;
+						else Second = p;
+						p = strtok(NULL, "=");
+						iii++;
+					}
+
+					delete[] s;
+					
+					Msg("%s \n", First.c_str());
+					Msg("%s \n", Second.c_str());
+
+					if (strncmp(First.c_str(), ln.c_str(), First.size() - 2)==0)
+					{
+						IsInList = true;
+						DownloadFrom = Second;
+						Msg("Found in list map %s url %s", First.c_str(), Second.c_str());
+					}
+				}
+
+				if (IsInList)
+				{
+					Msg("map is in list, so downloadnig it, outname: %s , url: %s",Arch.c_str(),DownloadFrom.c_str());
+
+					MainMenu()->OnDownloadMapStart(ln);
+
+					Msg("ondownloadmpastart");
+
+					Men = MainMenu();
+
+					auto ThTh = []()
+					{
+						Msg("ThTh started");
+
+						std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+						while (true)
+						{
+							std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+							Men->OnDownloadPatchProgress(TotalProgress, 100);
+							Msg("downloaded %i %%", TotalProgress);
+
+							if (TotalProgress == 100) break;
+						}
+						Msg("ThTh end");					
+					};
+
+					std::thread thread_1(ThTh);
+
+					auto ThD = [](std::string url, std::string Arch_)
+					{
+				//	std::string url, Arch_;
+				//	Arch_ = Arch;
+				//	url = DownloadFrom;
+
+						Msg("ThD started");
+
+						CURL_Downloader *CDW;
+						Msg("ThD: Downloader defined");
+						CDW->DownloadFile(url, Arch_);
+						CDW->~CURL_Downloader();
+
+						Msg("ThD downloaded");
+
+						Men->OnDownloadMapEnd();
+						Msg("Загрузка карты завершена (Map is downloaded) 100 %%");
+
+						curl_easy_cleanup(curl);
+						string_path sp;
+						FS.update_path(sp, "$fs_root$", "\gamedata");
+
+						FS.ProcessArchive(Arch_.c_str(), sp);
+						pApp->Level_Scan();
+
+						std::string Reconnect;
+						Reconnect = "start client("+LastConnectParams+")";
+						Console->Execute(Reconnect.c_str());
+
+						Msg("ThD finished");					
+					};
+
+					std::thread thread_D(ThD,DownloadFrom,Arch);
+
+					thread_D.detach();
+					thread_1.detach();
+				
+					MainMenu()->OnMainMenuMessageBox("После загрузки карты вы сможете играть на данном сервере. You can play on this server after downloading map.");
+					Msg("onloaderror");
+				}
+				else
+				{
+					Msg("cant find level in maplist");
+					MainMenu()->OnLoadError(ln.c_str());
+				}
+
+			}
+
+
+
 	}
 	return true;
 }
@@ -319,4 +574,3 @@ void CLevel::InitializeClientGame	(NET_Packet& P)
 	game->Init();
 	m_bGameConfigStarted	= TRUE;
 }
-

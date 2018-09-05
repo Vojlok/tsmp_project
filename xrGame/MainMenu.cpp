@@ -589,6 +589,25 @@ void	CMainMenu::OnLoadError(LPCSTR module)
 	SetErrorDialog(CMainMenu::LoadingError);
 }
 
+void	CMainMenu::OnMainMenuMessageBox(LPCSTR message)
+{
+	m_pMB_ErrDlgs[LoadingError]->SetText(message);
+	SetErrorDialog(CMainMenu::LoadingError);
+}
+
+void CMainMenu::OnDownloadMapStart(shared_str FileName)
+{
+	m_sPDProgress.IsInProgress = true;
+	m_sPDProgress.Progress = 0;
+	m_sPDProgress.FileName =FileName;
+	m_sPDProgress.Status = "";
+}
+
+void CMainMenu::OnDownloadMapEnd()
+{
+	m_sPDProgress.IsInProgress = false;
+}
+
 void	CMainMenu::OnDownloadPatchProgress			(u64 bytesReceived, u64 totalSize)
 {
 	m_sPDProgress.Progress = (float(bytesReceived)/float(totalSize))*100.0f;

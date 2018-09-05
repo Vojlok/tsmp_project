@@ -4,10 +4,9 @@
 
 #include "SoundRender_Core.h"            
 
-#include <al.h>
-#include <alc.h>
-//.#include <alut.h>
-#include <eax.h>
+#include "..\xrOpenAL\include\AL\al.h"
+#include "..\xrOpenAL\include\AL\alc.h"
+#include "..\components\eax\Include\eax.h"
 
 #include "OpenALDeviceList.h"
 

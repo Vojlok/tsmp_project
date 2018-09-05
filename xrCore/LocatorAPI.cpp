@@ -37,13 +37,7 @@ CLocatorAPI*		xr_FS = NULL;
 #ifdef _EDITOR
 #	define FSLTX	"fs.ltx"
 #else
-
-#ifdef TSMP_CLIENT
-#	define FSLTX	"fsgame_.ltx"
-#else
-#	define FSLTX	"fsgame.ltx"
-#endif
-
+#define FSLTX	"fsgame_.ltx"
 #endif
 
 struct _open_file
@@ -320,6 +314,7 @@ IReader* open_chunk(void* ptr, u32 ID)
 
 void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 {
+	Msg("%s %s",_path,base_path);
 	// find existing archive
 	shared_str path				= _path;
 
@@ -358,7 +353,9 @@ void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 	strcat				(base,"\\");
 
 	// Read headers
-	IReader* hdr		= open_chunk(A.hSrcFile,1); R_ASSERT(hdr);
+	IReader* hdr		= open_chunk(A.hSrcFile,1); 
+	R_ASSERT(hdr);
+	
 	RStringVec	fv;
 	while (!hdr->eof())
 	{
@@ -1483,10 +1480,10 @@ void CLocatorAPI::check_pathes()
     }
 }
 
-void CLocatorAPI::register_archieve(LPCSTR path)
-{
-	ProcessArchive(path);
-}
+//void CLocatorAPI::register_archieve(LPCSTR path) // tsmp:не вызывается вообще нигде
+//{
+//	ProcessArchive(path);
+//}
 
 BOOL CLocatorAPI::can_write_to_folder(LPCSTR path)
 {

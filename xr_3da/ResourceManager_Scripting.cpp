@@ -222,7 +222,7 @@ void	CResourceManager::LS_Load			()
 		FS.update_path					(fn,"$game_shaders$",fn);
 		try 
 		{
-			Msg("trying to load %s %s",fn,namesp);
+			//Msg("trying to load %s %s",fn,namesp);
 			Script::bfLoadFileIntoNamespace	(LSVM,fn,namesp,true);
 		} 
 		catch (...)
