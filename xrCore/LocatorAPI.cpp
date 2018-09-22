@@ -15,6 +15,8 @@
 #include "stream_reader.h"
 #include "file_stream_reader.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 
 #define PROTECTED_BUILD
@@ -35,9 +37,13 @@ XRCORE_API DUMMY_STUFF	*g_temporary_stuff = 0;
 CLocatorAPI*		xr_FS = NULL;
 
 #ifdef _EDITOR
-#	define FSLTX	"fs.ltx"
+	#define FSLTX "fs.ltx"
 #else
-#define FSLTX	"fsgame_.ltx"
+	#ifdef TSMP_CLIENT
+		#define FSLTX	"fsgame_.ltx"
+	#else
+		#define FSLTX	"fsgame.ltx"
+	#endif
 #endif
 
 struct _open_file
@@ -311,10 +317,8 @@ IReader* open_chunk(void* ptr, u32 ID)
 	return 0;
 };
 
-
 void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 {
-	Msg("%s %s",_path,base_path);
 	// find existing archive
 	shared_str path				= _path;
 
@@ -322,15 +326,18 @@ void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 		if (it->path==path)	return;
 
 	DUMMY_STUFF	*g_temporary_stuff_subst = NULL;
+	
 	if( strstr(_path,".xdb") )
 	{
 		g_temporary_stuff_subst		= g_temporary_stuff;
 		g_temporary_stuff			= NULL;
 	}
+	
 	// open archive
 	archives.push_back		(archive());
 	archive& A				= archives.back();
 	A.path					= path;
+	
 	// Open the file
 	A.hSrcFile		= CreateFile		(*path, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
 	R_ASSERT							(A.hSrcFile!=INVALID_HANDLE_VALUE);
@@ -341,15 +348,14 @@ void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 
 	// Create base path
 	string_path			base;
+	
 	if(!base_path)
 	{
 		strcpy_s			(base,sizeof(base),*path);
 		if (strext(base))	*strext(base)	= 0;
 	}
-	else
-	{
-		strcpy_s			(base,sizeof(base),base_path);
-	}
+	else strcpy_s			(base,sizeof(base),base_path);
+
 	strcat				(base,"\\");
 
 	// Read headers
@@ -357,6 +363,7 @@ void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 	R_ASSERT(hdr);
 	
 	RStringVec	fv;
+	
 	while (!hdr->eof())
 	{
 		string_path		name,full;
@@ -413,7 +420,8 @@ void CLocatorAPI::ProcessOne	(const char* path, void* _F)
 	
 	if (F.attrib&_A_HIDDEN)			return;
 
-	if (F.attrib&_A_SUBDIR) {
+	if (F.attrib&_A_SUBDIR) 
+	{
 		if (bNoRecurse)				return;
 		if (0==xr_strcmp(F.name,"."))	return;
 		if (0==xr_strcmp(F.name,"..")) return;
@@ -432,7 +440,6 @@ IC bool pred_str_ff(const _finddata_t& x, const _finddata_t& y)
 {	
 	return xr_strcmp(x.name,y.name)<0;	
 }
-
 
 bool ignore_name(const char* _name)
 {

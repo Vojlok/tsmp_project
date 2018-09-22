@@ -102,7 +102,7 @@ public:
 			res = curl_easy_perform(curl);
 			fclose(fp);
 
-			printf("task completed!!! \n");
+			Msg("task completed!");
 		}
 	}
 };
@@ -372,11 +372,26 @@ bool xr_stdcall net_start_finalizer()
 				string_path map_full_name;
 
 				FS.update_path(cfg_full_name, "$app_data_root$", cfg_name);
-				FS.update_path(map_full_name, "$mod_dir$", ln.c_str());
+				FS.update_path(map_full_name, "$app_data_root$", ln.c_str());
 
 				Arch = map_full_name;
 				Arch += ".xdb0";
 
+				if (GetFileAttributes(Arch.c_str()) != DWORD(-1))
+				{
+					Msg("map exists, loading");
+
+					string_path sp;
+					FS.update_path(sp, "$fs_root$", "\gamedata");
+
+					FS.ProcessArchive(Arch.c_str(), sp);
+					pApp->Level_Scan();
+
+					std::string Reconnect;
+					Reconnect = "start client(" + LastConnectParams + ")";
+					Console->Execute(Reconnect.c_str());
+					return true;
+				}
 
 			 if(GetFileAttributes(cfg_full_name) != DWORD(-1))	
 			 {
@@ -471,10 +486,6 @@ bool xr_stdcall net_start_finalizer()
 
 					auto ThD = [](std::string url, std::string Arch_)
 					{
-				//	std::string url, Arch_;
-				//	Arch_ = Arch;
-				//	url = DownloadFrom;
-
 						Msg("ThD started");
 
 						CURL_Downloader *CDW;

@@ -17,6 +17,8 @@
 
 #include "xrcore.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 XRCORE_API		xrCore	Core;
 XRCORE_API		u32		build_id;
 XRCORE_API		LPCSTR	build_date;
@@ -650,16 +652,14 @@ public:
 	virtual void	Execute(LPCSTR args)
 	{
 		Msg("'%s' build %d, %s\n", "xrCore", build_id, build_date);
-		Msg("tsmp version 1.3.9");
-
+		Msg(TSMP_VERSION);
 	};
 
 	virtual void	Info(TInfo& I) { strcpy(I, "List Players"); }
 };
 
-
-
-class CCC_ListPlayers_Banned : public IConsole_Command {
+class CCC_ListPlayers_Banned : public IConsole_Command 
+{
 public:
 					CCC_ListPlayers_Banned	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void	Execute					(LPCSTR args) 
@@ -672,7 +672,9 @@ public:
 
 	virtual void	Info	(TInfo& I){strcpy(I,"List of Banned Players"); }
 };
-class CCC_ChangeLevelGameType : public IConsole_Command {
+
+class CCC_ChangeLevelGameType : public IConsole_Command 
+{
 public:
 					CCC_ChangeLevelGameType	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
 	virtual void	Execute					(LPCSTR args) 
@@ -713,6 +715,7 @@ public:
 		const SGameTypeMaps& M		= gMapListHelper.GetMapListFor((EGameTypes)GameTypeID);
 		u32 cnt						= M.m_map_names.size();
 		bool bMapFound				= false;
+		
 		for(u32 i=0; i<cnt; ++i)
 		{
 			const shared_str& _map_name = M.m_map_names[i];
@@ -740,7 +743,8 @@ public:
 	virtual void	Info	(TInfo& I)	{strcpy(I,"Changing level and game type"); }
 };
 
-class CCC_ChangeGameType : public CCC_ChangeLevelGameType {
+class CCC_ChangeGameType : public CCC_ChangeLevelGameType 
+{
 public:
 					CCC_ChangeGameType	(LPCSTR N) : CCC_ChangeLevelGameType(N)  { bEmptyArgsHandled = false; };
 	virtual void	Execute				(LPCSTR args) 

@@ -495,7 +495,8 @@ void CScriptGameObject::set_range				(float new_range)
 u32	CScriptGameObject::vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distance) const
 {
 	CCustomMonster	*monster = smart_cast<CCustomMonster*>(&object());
-	if (!monster) {
+	if (!monster) 
+	{
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CCustomMonster : cannot access class member vertex_in_direction!");
 		return		(u32(-1));
 	}

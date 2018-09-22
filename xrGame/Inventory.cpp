@@ -759,7 +759,7 @@ void CInventory::UpdateDropItem(PIItem pIItem)
 	}// dropManual
 }
 
-//ищем на поясе гранату такоже типа
+//ищем на поясе гранату такого же типа
 PIItem CInventory::Same(const PIItem pIItem, bool bSearchRuck) const
 {
 	const TIItemContainer &list = bSearchRuck ? m_ruck : m_belt;
@@ -801,8 +801,9 @@ PIItem CInventory::Get(const char *name, bool bSearchRuck) const
 	for(TIItemContainer::const_iterator it = list.begin(); list.end() != it; ++it) 
 	{
 		PIItem pIItem = *it;
-		if(pIItem && !xr_strcmp(pIItem->object().cNameSect(), name) && 
-								pIItem->Useful()) 
+		if(pIItem 
+			&& !xr_strcmp(pIItem->object().cNameSect(), name) 
+			&& pIItem->Useful()) 
 				return pIItem;
 	}
 	return NULL;

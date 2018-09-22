@@ -11,6 +11,7 @@
 #include "GameSpy/GameSpy_Base_Defs.h"
 #include "GameSpy/GameSpy_Available.h"
 
+#include "..\TSMP_BuildConfig.h"
 //#define DEMO_BUILD
 
 xrGameSpyServer::xrGameSpyServer()
@@ -445,7 +446,7 @@ void xrGameSpyServer::GetServerInfo( CServerInfo* si )
 	si->AddItem( "Игроки", tmp, RGB(255,128,255) );
 
 	string256 res;
-	si->AddItem( "Версия сервера", "tsmp 1.4.0", RGB(0,158,255) );
+	si->AddItem( "Версия сервера", TSMP_VERSION, RGB(0,158,255) );
 	
 	/*
 
