@@ -220,7 +220,9 @@ void CUIMpTradeWnd::Init(const shared_str& sectionName, const shared_str& sectio
 
 	m_item_mngr							= xr_new<CItemMgr>();
 	m_item_mngr->Load					(sectionPrice);
-	m_item_mngr->Dump					();
+	
+	//m_item_mngr->Dump					(); // tsmp:не надо тут дампиться
+	
 	SetRank								(0);
 	UpdateShop							();
 	SetCurrentItem						(NULL);

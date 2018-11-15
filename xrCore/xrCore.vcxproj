@@ -511,7 +511,7 @@
       <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
       <BrowseInformation>
       </BrowseInformation>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>

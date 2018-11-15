@@ -175,16 +175,20 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		{
 			if (0 != strstr(Core.Params, "-debug")) Msg("event:GE_DIE");
 			// Parse message
-			u16					id_dest		=	destination, id_src;
+			u16					id_dest = destination;
+			u16 id_src;
+
 			P.r_u16				(id_src);
 
 
 			xrClientData *l_pC	= ID_to_client(sender);
 			VERIFY				(game && l_pC);
-			if ((game->Type() != GAME_SINGLE) && l_pC && l_pC->owner)
-			{
-				Msg					("* [%2d] killed by [%2d] - sended by [%s:%2d]", id_dest, id_src, l_pC->name.c_str(), l_pC->owner->ID);
-			}
+			
+			if ((game->Type() != GAME_SINGLE) && 
+				l_pC && 
+				l_pC->owner)			
+					Msg	("* [%2d] killed by [%2d] - sended by [%s:%2d]", id_dest, id_src, l_pC->name.c_str(), l_pC->owner->ID);
+			
 
 			CSE_Abstract*		e_dest		= receiver;	// кто умер
 			// this is possible when hit event is sent before destroy event
@@ -195,20 +199,26 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 				Msg				("* [%2d] is [%s:%s]", id_dest, *e_dest->s_name, e_dest->name_replace());
 
 			CSE_Abstract*		e_src		= game->get_entity_from_eid	(id_src	);	// кто убил
-			if (!e_src) {
+		
+			if (!e_src) 
+			{
 				xrClientData*	C = (xrClientData*)	game->get_client(id_src);
 				if (C) e_src = C->owner;
 			};
+			
 			VERIFY				(e_src);
-//			R_ASSERT2			(e_dest && e_src, "Killer or/and being killed are offline or not exist at all :(");
-			if (game->Type() != GAME_SINGLE)
+
+		if (game->Type() != GAME_SINGLE)
 				Msg				("* [%2d] is [%s:%s]", id_src, *e_src->s_name, e_src->name_replace());
 
 			game->on_death		(e_dest,e_src);
 
 			xrClientData*		c_src		= e_src->owner;				// клиент, чей юнит убил
 
-			if (c_src->owner->ID == id_src) {
+			if (!(c_src->owner)) Msg("! error, lost ptr to owner on die");
+			
+			if (c_src->owner->ID == id_src) 
+			{
 				// Main unit
 				P.w_begin			(M_EVENT);
 				P.w_u32				(timestamp);
@@ -222,7 +232,8 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
 			//////////////////////////////////////////////////////////////////////////
 			// 
-			if (game->Type() == GAME_SINGLE) {
+			if (game->Type() == GAME_SINGLE) 
+			{
 				P.w_begin			(M_EVENT);
 				P.w_u32				(timestamp);
 				P.w_u16				(GE_KILL_SOMEONE);

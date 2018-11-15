@@ -59,12 +59,12 @@ void CRestrictions::InitGroups()
 		AddGroup			(name, line);
 	}
 
-
 	// try to find restrictions in every rank
 
 	AddRestriction4rank			(_RANK_COUNT, pSettings->r_string("rank_base", "amount_restriction"));
 
 	string32				rank;
+	
 	for (u32 i = 0; i<_RANK_COUNT; ++i)
 	{
 		sprintf_s				(rank,"rank_%d", i);
@@ -73,7 +73,7 @@ void CRestrictions::InitGroups()
 		m_names[i]			= CStringTable().translate( pSettings->r_string(rank, "rank_name"));
 	}
 
-	Dump();
+	//Dump();
 
 #ifdef DEBUG
 	CMD4(CCC_Integer, "rank_for_buymenu", (int*)&m_rank, 0, 4);
@@ -81,7 +81,8 @@ void CRestrictions::InitGroups()
 }
 
 void CRestrictions::AddRestriction4rank(u32 rank, const shared_str& lst)
-{// private
+{
+	// private
 	VERIFY					(m_bInited);
 
 	rank_rest_vec& rest		= m_restrictions[rank];
@@ -229,6 +230,7 @@ void CRestrictions::Dump() const
 	Msg("------------item groups ---count=[%d]-------------------",m_goups.size());
 	Groups::const_iterator it = m_goups.begin();
 	Groups::const_iterator it_e = m_goups.end();
+	
 	for(; it!=it_e; ++it)
 	{
 		Msg("group [%s]",it->first.c_str());
@@ -237,7 +239,9 @@ void CRestrictions::Dump() const
 		for(;it2!=it2_e;++it2)
 			Msg("	[%s]",(*it2).c_str());
 	}
+	
 	Msg("------------rank restrictions------------");
+	
 	for(u32 i=0; i<_RANK_COUNT+1; ++i)
 	{
 		const rank_rest_vec& v = m_restrictions[i];

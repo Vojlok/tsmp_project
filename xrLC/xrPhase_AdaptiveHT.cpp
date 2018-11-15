@@ -4,13 +4,13 @@
 
 xrCriticalSection	hemi_CS;
 xr_vector<int>		hemi_task_pool;
+u32					hemi_count;
 
 class CPrecalcHemisphereThr : public CThread
 {
-	u32 total_hemi;
 	CDB::COLLIDER DB;
 public:
-	CPrecalcHemisphereThr(u32 ID, u32 hemi_size) : CThread(ID) { thMessages = TRUE; total_hemi = hemi_size; }
+	CPrecalcHemisphereThr(u32 ID) : CThread(ID) { thMessages = TRUE; }
 
 	virtual void	Execute()
 	{
@@ -27,7 +27,8 @@ public:
 			u32 it;
 			// Get task
 			hemi_CS.Enter();
-			thProgress = 1.f - float(hemi_task_pool.size()) / float(total_hemi);
+			thProgress = 1.f - float(hemi_task_pool.size()) / float(hemi_count);
+
 			if (hemi_task_pool.empty())
 			{
 				hemi_CS.Leave();
@@ -123,10 +124,12 @@ void CBuild::xrPhase_AdaptiveHT()
 		start_time.Start();
 		Progress(0.f);
 
+		hemi_count = count;
+
 		for (u32 it = 0; it<count; it++)	hemi_task_pool.push_back(it);
 
 		for (u32 thID = 0; thID < threads_count; thID++)
-			TMPrecalcilatingBaseHemisphere.start(xr_new<CPrecalcHemisphereThr>(thID, count));
+			TMPrecalcilatingBaseHemisphere.start(xr_new<CPrecalcHemisphereThr>(thID));
 
 		TMPrecalcilatingBaseHemisphere.wait(500);
 		clMsg("%f seconds", start_time.GetElapsed_sec());

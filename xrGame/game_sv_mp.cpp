@@ -47,6 +47,8 @@ int			g_sv_mp_Timer1Enabled			= 1;
 int			g_sv_mp_Timer2Enabled			= 0;
 int			g_sv_mp_ModLoaderEnabled		= 1;
 int			g_sv_mp_DisablerEnabled			= 0;
+int			g_sv_mp_LogHitsEnabled			= 0;
+
 int			g_sv_mp_nickname_change_mode	= 3;
 std::string		g_sv_mp_loader_ip =  "0.0.0.0" ;
 std::string		g_sv_mp_loader_port = "4554" ;
@@ -1346,24 +1348,6 @@ void game_sv_mp::OnPlayerHitted(NET_Packet P)
 	game_PlayerState* PSHitter		=	get_eid			(id_hitter);
 	if (!PSHitter) return;
 	game_PlayerState* PSHitted		=	get_eid			(id_hitted);
-
-		if (0 != strstr(Core.Params, "-debug")) 
-		{
-			Msg("id_hitted");
-			string1024 hitted;
-			sprintf (hitted, "%u", id_hitted);	
-			Msg(hitted);
-
-					Msg("id_hitter");
-			string1024 hitter;
-			sprintf (hitter, "%u", id_hitter);	
-			Msg(hitter);
-
-					Msg("health");
-			string1024 hea;
-			sprintf (hea, "%u", dHealth);	
-			Msg(hea);
-		}
 
 	if (!PSHitted) return;
 	if (PSHitted == PSHitter) return;

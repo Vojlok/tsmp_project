@@ -2,6 +2,7 @@
 #pragma hdrstop
 
 #include "xrdebug.h"
+#include "..\TSMP_BuildConfig.h"
 
 //#include "dxerr.h"
 
@@ -37,7 +38,13 @@ extern bool shared_str_initialized;
 #	endif
 #endif*/
 
+
+#pragma warning(push)
+#pragma warning( disable : 4091) 
+
 #include <dbghelp.h>						// MiniDump flags
+
+#pragma warning(pop)
 
 #ifdef USE_BUG_TRAP
 #ifdef _WIN64
@@ -145,18 +152,24 @@ void gather_info		(const char *expression, const char *description, const char *
 	LPCSTR				endline = "\n";
 	LPCSTR				prefix = "[error]";
 	bool				extended_description = (description && !argument0 && strchr(description,'\n'));
-	for (int i=0; i<2; ++i) {
+	
+	for (int i=0; i<2; ++i) 
+	{
 		if (!i)
 			buffer		+= sprintf(buffer,"%sFATAL ERROR%s%s",endline,endline,endline);
+	
 		buffer			+= sprintf(buffer,"%sExpression    : %s%s",prefix,expression,endline);
 		buffer			+= sprintf(buffer,"%sFunction      : %s%s",prefix,function,endline);
 		buffer			+= sprintf(buffer,"%sFile          : %s%s",prefix,file,endline);
 		buffer			+= sprintf(buffer,"%sLine          : %d%s",prefix,line,endline);
-		
-		if (extended_description) {
+		if (extended_description) 
+		{
 			buffer		+= sprintf(buffer,"%s%s%s",endline,description,endline);
-			if (argument0) {
-				if (argument1) {
+			
+			if (argument0) 
+			{
+				if (argument1) 
+				{
 					buffer	+= sprintf(buffer,"%s%s",argument0,endline);
 					buffer	+= sprintf(buffer,"%s%s",argument1,endline);
 				}
@@ -164,10 +177,14 @@ void gather_info		(const char *expression, const char *description, const char *
 					buffer	+= sprintf(buffer,"%s%s",argument0,endline);
 			}
 		}
-		else {
+		else 
+		{
 			buffer		+= sprintf(buffer,"%sDescription   : %s%s",prefix,description,endline);
-			if (argument0) {
-				if (argument1) {
+		
+			if (argument0) 
+			{
+				if (argument1) 
+				{
 					buffer	+= sprintf(buffer,"%sArgument 0    : %s%s",prefix,argument0,endline);
 					buffer	+= sprintf(buffer,"%sArgument 1    : %s%s",prefix,argument1,endline);
 				}
@@ -177,11 +194,15 @@ void gather_info		(const char *expression, const char *description, const char *
 		}
 
 		buffer			+= sprintf(buffer,"%s",endline);
-		if (!i) {
-			if (shared_str_initialized) {
+		
+		if (!i) 
+		{
+			if (shared_str_initialized) 
+			{
 				Msg		("%s",assertion_info);
 				FlushLog();
 			}
+			
 			buffer		= assertion_info;
 			endline		= "\r\n";
 			prefix		= "";
@@ -193,9 +214,10 @@ void gather_info		(const char *expression, const char *description, const char *
 	memory_monitor::flush_each_time	(false);
 #endif // USE_MEMORY_MONITOR
 
-	if (!IsDebuggerPresent() && !strstr(GetCommandLine(),"-no_call_stack_assert")) {
+	if (!IsDebuggerPresent() && !strstr(GetCommandLine(),"-no_call_stack_assert")) 
+	{
 		if (shared_str_initialized)
-			Msg			("stack trace:\n");
+			Msg			("%s stack trace:\n", TSMP_VERSION);
 
 #ifdef USE_OWN_ERROR_MESSAGE_WINDOW
 		buffer			+= sprintf(buffer,"See log file and minidump for detailed information\r\n");
@@ -204,7 +226,8 @@ void gather_info		(const char *expression, const char *description, const char *
 
 		BuildStackTrace	();		
 
-		for (int i=2; i<g_stackTraceCount; ++i) {
+		for (int i=2; i<g_stackTraceCount; ++i) 
+		{
 			if (shared_str_initialized)
 				Msg		("%s",g_stackTrace[i]);
 
@@ -610,7 +633,7 @@ void format_message	(LPSTR buffer, const u32 &buffer_size)
 		NULL
 	);
 
-	sprintf		(buffer,"[error][%8d]    : %s",error_code,message);
+	sprintf		(buffer,"[error][%8d]    : %s",error_code, (LPSTR)&message);
     LocalFree	(message);
 }
 
@@ -619,13 +642,14 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 	string256				error_message;
 	format_message			(error_message,sizeof(error_message));
 
-	if (!error_after_dialog && !strstr(GetCommandLine(),"-no_call_stack_assert")) {
+	if (!error_after_dialog && !strstr(GetCommandLine(),"-no_call_stack_assert")) 
+	{
 		CONTEXT				save = *pExceptionInfo->ContextRecord;
 		BuildStackTrace		(pExceptionInfo);
 		*pExceptionInfo->ContextRecord = save;
 
 		if (shared_str_initialized)
-			Msg				("stack trace:\n");
+			Msg				("%s stack trace:\n" , TSMP_VERSION);
 		copy_to_clipboard	("stack trace:\r\n\r\n");
 
 

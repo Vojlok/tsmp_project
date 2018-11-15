@@ -122,7 +122,7 @@ public:
 			xr_vector			()									: inherited	()					{}
 			xr_vector			(size_t _count, const T& _value)	: inherited	(_count,_value)		{}
 	explicit xr_vector			(size_t _count)						: inherited (_count)			{}
-	u32		size				() const							{ return inherited::size();} 
+	u32		size				() const							{ return (u32)inherited::size();} 
 
 	void	clear_and_free		()									{ inherited::clear();			}
 	void	clear_not_free		()									{ erase(begin(),end());	}

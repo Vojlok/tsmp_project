@@ -35,6 +35,8 @@ BOOL	g_sv_dm_bPDAHunt				= TRUE;
 u32		g_sv_dm_dwWarmUp_MaxTime		= 0;
 BOOL	g_sv_dm_bDMIgnore_Money_OnBuy	= FALSE;
 
+extern	int		g_sv_mp_LogHitsEnabled;
+
 //-----------------------------------------------------------------
 BOOL				game_sv_Deathmatch::IsDamageBlockIndEnabled	() {return g_sv_dm_bDamageBlockIndicators; };
 s32					game_sv_Deathmatch::GetTimeLimit			() {return g_sv_dm_dwTimeLimit; };
@@ -1065,6 +1067,9 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 	HitS.Read_Packet(P);
 
 	HitS.whoID	= ps_hitter->GameID;
+
+	if (g_sv_mp_LogHitsEnabled == 1)
+	HitS.DumpLikeController(ps_hitter->getName());
 
 	OnPlayerHitPlayer_Case(ps_hitter, ps_hitted, &HitS);
 

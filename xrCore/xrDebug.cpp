@@ -5,7 +5,15 @@
 
 #include "xrdebug.h"
 #include "resource.h"
-#include "dbghelp.h"
+
+
+#pragma warning(push)
+#pragma warning( disable : 4091) 
+
+
+	#include "dbghelp.h"
+
+#pragma warning(pop)
  
 #include "dxerr9.h"
 

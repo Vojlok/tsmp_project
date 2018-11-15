@@ -378,7 +378,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>

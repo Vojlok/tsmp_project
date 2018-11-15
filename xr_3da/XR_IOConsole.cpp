@@ -29,10 +29,10 @@ static char RusSymbols[] = { 'ô','è','ñ','â','ó','à','ï','ð','ø','î','ë','ä','ü'
 static char RusSymbolsBig[] = { 'Ô','È','Ñ','Â','Ó','À','Ï','Ð','Ø','Î','Ë','Ä','Ü','Ò','Ù','Ç',
 'É','Ê','Û','Å','Ã','Ì','Ö','×','Í','ß','Õ','Ú','Æ', 'Ý','Á','Þ',',' };
 
-static char EngSymbols[] = { 'a','b','c','d','e','f','g','h','i','g','k','l','m','n','o','p',
+static char EngSymbols[] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
 'q','r','s','t','u','v','w','x','y','z' ,'[',']' ,';', '\'',',','.','/' };
 
-static char EngSymbolsBig[] = { 'A','B','C','D','E','F','G','H','I','G','K','L','M','N','O','P',
+static char EngSymbolsBig[] = { 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P',
 'Q','R','S','T','U','V','W','X','Y','Z' ,'{','}' ,':', '"','<','>','?' };
 
 static u32 DIKS[] = { DIK_A, DIK_B, DIK_C, DIK_D, DIK_E, DIK_F, DIK_G, DIK_H, DIK_I,

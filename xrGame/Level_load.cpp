@@ -140,8 +140,11 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 	u16									index = 0, static_mtl_count = 1;
 	int max_ID							= 0;
 	int max_static_ID					= 0;
-	for (GameMtlIt I=GMLib.FirstMaterial(); GMLib.LastMaterial()!=I; ++I, ++index) {
-		if (!(*I)->Flags.test(SGameMtl::flDynamic)) {
+	
+	for (GameMtlIt I=GMLib.FirstMaterial(); GMLib.LastMaterial()!=I; ++I, ++index) 
+	{
+		if (!(*I)->Flags.test(SGameMtl::flDynamic)) 
+		{
 			++static_mtl_count;
 			translator.push_back		(translation_pair((*I)->GetID(),index));
 			if ((*I)->GetID()>max_static_ID)	max_static_ID	= (*I)->GetID(); 
@@ -151,12 +154,17 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 	// Msg("* Material remapping ID: [Max:%d, StaticMax:%d]",max_ID,max_static_ID);
 	VERIFY(max_static_ID<0xFFFF);
 	
-	if (static_mtl_count < 128) {
+	if (static_mtl_count < 128) 
+	{
 		CDB::TRI						*I = tris;
 		CDB::TRI						*E = tris + count;
-		for ( ; I != E; ++I) {
+		
+		for ( ; I != E; ++I) 
+		{
 			ID_INDEX_PAIRS::iterator	i = std::find(translator.begin(),translator.end(),(u16)(*I).material);
-			if (i != translator.end()) {
+		
+			if (i != translator.end()) 
+			{
 				(*I).material			= (*i).m_index;
 				SGameMtl* mtl			= GMLib.GetMaterialByIdx	((*i).m_index);
 				(*I).suppress_shadows	= mtl->Flags.is(SGameMtl::flSuppressShadows);
@@ -173,9 +181,13 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 	{
 		CDB::TRI						*I = tris;
 		CDB::TRI						*E = tris + count;
-		for ( ; I != E; ++I) {
+	
+		for ( ; I != E; ++I) 
+		{
 			ID_INDEX_PAIRS::iterator	i = std::lower_bound(translator.begin(),translator.end(),(u16)(*I).material);
-			if ((i != translator.end()) && ((*i).m_id == (*I).material)) {
+		
+			if ((i != translator.end()) && ((*i).m_id == (*I).material)) 
+			{
 				(*I).material			= (*i).m_index;
 				SGameMtl* mtl			= GMLib.GetMaterialByIdx	((*i).m_index);
 				(*I).suppress_shadows	= mtl->Flags.is(SGameMtl::flSuppressShadows);

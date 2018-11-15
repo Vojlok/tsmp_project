@@ -29,7 +29,7 @@
 #undef max
 #endif
 
-IC u32 xr_strlen(const char* S) { return strlen(S); }
+IC u32 xr_strlen(const char* S) { return (u32)strlen(S); }
 //#define strlen(a) xr_strlen(a)
 
 #ifdef  _EDITOR

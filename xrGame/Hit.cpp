@@ -7,6 +7,8 @@
 #include "xrMessages.h"
 #include "Level.h"
 
+#include "inventory_item.h"
+
 SHit::SHit(float aPower,Fvector &adir,CObject *awho, u16 aelement, Fvector ap_in_bone_space, float aimpulse,  ALife::EHitType ahit_type, float aAP, bool AimBullet)
 {
 		power					=aPower									;
@@ -136,7 +138,7 @@ void SHit::Write_Packet			(NET_Packet	&Packet)
 	Write_Packet_Cont (Packet);	
 };
 
-#ifdef DEBUG
+
 void SHit::_dump()
 {
 	Msg("SHit::_dump()---begin");
@@ -151,4 +153,25 @@ void SHit::_dump()
 	Log("ap=",ap);
 	Msg("SHit::_dump()---end");
 }
-#endif
+
+void SHit::DumpLikeController(LPCSTR PlayerName)
+{
+	int imp, iap, pow;
+	imp = (int)(impulse * (float)100);
+	iap = (int)(ap * (float)100);
+	pow = (int)(power * (float)10);
+
+	CObject* pWeapon = Level().Objects.net_Find(weaponID);
+
+	try
+	{
+		Msg("# %s [%s] HT %i HP 1+%i.%i - | BT %i | HIM %i.%i | K_AP %i.%i0",
+			PlayerName, pWeapon->cName().c_str(), (int)hit_type, pow / 100, pow % 100, boneID, imp / 100, imp % 100, iap / 100, iap % 10);
+	}
+	catch (...)
+	{
+		Msg("! error in SHit::DumpLikeController");
+	}
+
+}
+

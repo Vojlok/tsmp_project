@@ -96,12 +96,18 @@ void CStoreHierarchy::InitItemsInGroup(const shared_str& sect, item* _itm)
 			_itm->m_items_in_group.push_back	(buff);
 			VERIFY3(g_mp_restrictions.GetItemGroup(buff).size(),"item has no group in restrictions", buff);
 		}
+
+		/*
 		Msg("group[%s]", _itm->m_name.c_str());
 		Msg("items[%s]", v.c_str());
 		Msg("");
-	}else
-		for(u32 i=0; i<cnt;++i)
-			InitItemsInGroup					(sect,_itm->m_childs[i]);
+		*/
+	}
+	else
+	{
+		for (u32 i = 0; i < cnt; ++i)
+			InitItemsInGroup(sect, _itm->m_childs[i]);
+	}
 }
 
 bool CStoreHierarchy::item::HasItem(const shared_str& name_sect) const

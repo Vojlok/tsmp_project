@@ -818,23 +818,8 @@ void game_sv_ArtefactHunt::Assign_Artefact_RPoint(CSE_Abstract* E)
 {
 	R_ASSERT					(E);
 	const xr_vector<RPoint>&	rp	= Artefact_rpoints;
-//.	xr_vector<u8>&	rpID		= ArtefactsRPoints_ID;
 	RPoint						r;
-/*
-	if (rpID.empty())
-	{
-		for (u8 i=0; i<rp.size(); i++)
-		{
-			if (m_LastRespawnPointID == i) continue;
-			rpID.push_back(i);
-		}
-	};
 
-	u8 ID = u8(::Random.randI((int)rpID.size()));
-	m_LastRespawnPointID = rpID[ID];
-	r	= rp[m_LastRespawnPointID];
-	rpID.erase(rpID.begin()+ID);
-*/	
 	u32 ID				= ArtefactChooserRandom.randI((int)rp.size());
 //.	Msg					("---select artefact RPoint [%d]", ID);
 

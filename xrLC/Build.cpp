@@ -23,6 +23,21 @@ BOOL					gl_linear	= FALSE;
 
 //////////////////////////////////////////////////////////////////////
 
+class CMULightHiddenThread : public CThread
+{
+public:
+	CMULightHiddenThread(u32 ID) : CThread(ID) { thMessages = TRUE; }
+
+	virtual void	Execute()
+	{
+		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+		if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+		Sleep(0);
+
+		pBuild->xrPhase_MU_light();
+	}
+};
+
 CBuild::CBuild()
 {	
 }
@@ -135,10 +150,12 @@ void CBuild::Run	(LPCSTR P)
 
 	//****************************************** Starting MU
 	FPU::m64r					();
-	Phase						("LIGHT: Lightning MU models...");
+//	Phase						("LIGHT: Lightning MU models...");
 	mem_Compact					();
 	Light_prepare				();
-	xrPhase_MU_light();
+//	xrPhase_MU_light();
+	CThreadManager mu_light_thread;
+	mu_light_thread.start(xr_new<CMULightHiddenThread>(0));
 
 	//****************************************** Resolve materials
 	FPU::m64r					();
@@ -184,6 +201,10 @@ void CBuild::Run	(LPCSTR P)
 //	mem_Compact					();
 //	mu_base.wait				(500);
 //	mu_secondary.wait			(500);
+	mu_light_thread.wait(500);
+	FPU::m64r					();
+	Phase						("LIGHT: Waiting for MU-thread...");
+	mem_Compact					();
 
 	//****************************************** Export MU-models
 	FPU::m64r					();

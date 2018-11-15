@@ -32,7 +32,7 @@ int GetGameDistribution	()
 		REGISTRY_PATH, 0, KEY_READ, &KeyCDKey);
 
 //	char	KeyValue[1024] = "";
-	int		KeyValue;
+	int		KeyValue=0;
 	DWORD KeyValueSize = 1024;
 	DWORD KeyValueType = REG_DWORD;
 	if (res == ERROR_SUCCESS && KeyCDKey != 0)

@@ -115,12 +115,15 @@ EFC_Visible	CFrustum::testSAABB			(Fvector& c, float r, const float* mM, u32& te
 	{
 		if (test_mask&bit) {
 			float cls = planes[i].classify(c);
+			
 			if (cls>r) { test_mask=0; return fcvNone;}	// none  - return
+			
 			if (_abs(cls)>=r) test_mask&=~bit;			// fully - no need to test this plane
-			else {
-				EFC_Visible	r	= AABB_OverlapPlane(planes[i],mM);
-				if (fcvFully==r)	test_mask&=~bit;					// fully - no need to test this plane
-				else if (fcvNone==r){ test_mask=0; return fcvNone;	}	// none - return
+			else 
+			{
+				EFC_Visible	rr	= AABB_OverlapPlane(planes[i],mM);
+				if (fcvFully==rr)	test_mask&=~bit;					// fully - no need to test this plane
+				else if (fcvNone==rr){ test_mask=0; return fcvNone;	}	// none - return
 			}
 		}
 	}
@@ -303,7 +306,10 @@ sPoly*	CFrustum::ClipPoly(sPoly& S, sPoly& D) const
 		// clip everything to this plane
 		cls[src->size()] = cls[0];
 		src->push_back((*src)[0]);
-		Fvector D; float denum,t;
+		
+		Fvector DD; 
+		float denum,t;
+		
 		for (j=0; j<src->size()-1; j++)
 		{
 			if ((*src)[j].similar((*src)[j+1],EPS_S)) continue;
@@ -314,11 +320,11 @@ sPoly*	CFrustum::ClipPoly(sPoly& S, sPoly& D) const
 				if (positive(cls[j+1]))
 				{
 					// segment intersects plane
-					D.sub((*src)[j+1],(*src)[j]);
-					denum = P.n.dotproduct(D);
+					DD.sub((*src)[j+1],(*src)[j]);
+					denum = P.n.dotproduct(DD);
 					if (denum!=0) {
 						t = -cls[j]/denum; //VERIFY(t<=1.f && t>=0);
-						dest->last().mad((*src)[j],D,t);
+						dest->last().mad((*src)[j],DD,t);
 						dest->inc();
 					}
 				}
@@ -328,11 +334,11 @@ sPoly*	CFrustum::ClipPoly(sPoly& S, sPoly& D) const
 				{
 					// J+1  - inside
 					// segment intersects plane
-					D.sub((*src)[j+1],(*src)[j]);
-					denum = P.n.dotproduct(D);
+					DD.sub((*src)[j+1],(*src)[j]);
+					denum = P.n.dotproduct(DD);
 					if (denum!=0) {
 						t = -cls[j]/denum; //VERIFY(t<=1.f && t>=0);
-						dest->last().mad((*src)[j],D,t);
+						dest->last().mad((*src)[j],DD,t);
 						dest->inc();
 					}
 				}

@@ -66,6 +66,7 @@ extern	std::string	g_sv_mp_loader_ip			;
 extern	std::string	g_sv_mp_loader_port			;
 extern	int		g_sv_mp_ModLoaderEnabled		;
 extern	int		g_sv_mp_DisablerEnabled			;
+extern	int		g_sv_mp_LogHitsEnabled			;
 extern	int		g_sv_mp_nickname_change_mode	;
 
 
@@ -563,7 +564,8 @@ public:
 };
 
 
-class CCC_ListPlayers : public IConsole_Command {
+class CCC_ListPlayers : public IConsole_Command 
+{
 public:
 					CCC_ListPlayers	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void	Execute			(LPCSTR args) 
@@ -581,9 +583,8 @@ public:
 			DWORD dwPort		= 0;
 
 			Level().Server->GetClientAddress(l_pC->ID, Address, &dwPort);
-			Msg("%d : %s - %s port[%u] ping[%u]", it+1, l_pC->ps->getName(),
-				Address.to_string().c_str(),
-				dwPort,
+			Msg("%d (name: %s), (session_id: %i), (hash: @), (ip: %s), (ping: %u);", it + 1, l_pC->ps->getName(), (int)l_pC->ps->GameID, 
+				Address.to_string().c_str(),				
 				l_pC->ps->ping);
 		};
 		Msg("------------------------");
@@ -592,59 +593,35 @@ public:
 	virtual void	Info	(TInfo& I){strcpy(I,"List Players"); }
 };
 
-
-class CCC_Brutforce : public IConsole_Command {
+class CCC_ListPlayersOriginal : public IConsole_Command
+{
 public:
-	CCC_Brutforce(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+	CCC_ListPlayersOriginal(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
 	virtual void	Execute(LPCSTR args)
 	{
-		string1024 user,pass;
-		
-		int leng1, leng2;
-		int i;
-		
-		std::string login, passw,temp;
-		passw = "";
+		if (!OnServer())	return;
 
-		int Count1[10] = { 0,0,0,0,0,0,0,0,0,0 };
-		int Count2[10] = { 0,0,0,0,0,0,0,0,0,0 };
+		u32	cnt = Level().Server->game->get_players_count();
+		Msg("------------------------");
+		Msg("- Total Players : %d", cnt);
+		for (u32 it = 0; it<cnt; it++)
+		{
+			xrClientData *l_pC = (xrClientData*)Level().Server->client_Get(it);
+			if (!l_pC)			continue;
+			ip_address			Address;
+			DWORD dwPort = 0;
 
-		char Chars[47] = { NULL,'1','2','3','4','5','6','7','8','9','0','-','=','q','w','e','r','t','y','u','i','o','p','[',']','\\','a','s','d','f','g','h','j','k','l',';',' ','z','x','c','v','b','n','m',',','.','/'};
-
-		login = Chars[2];
-		int index = 0;
-
-	
-			for (index=0; index<11 ;index++)
-			{
-				for (int ii = 0; ii < 47; ii++)
-				{
-					Count2[index] = ii;
-
-
-					passw = Chars[Count2[0]] + Chars[Count2[1]] + Chars[Count2[2]] + Chars[Count2[3]] + Chars[Count2[4]] + Chars[Count2[5]] + Chars[Count2[6]] + Chars[Count2[7]] + Chars[Count2[8]] + Chars[Count2[9]];
-
-
-					NET_Packet		P;
-					P.w_begin(M_REMOTE_CONTROL_AUTH);
-					P.w_stringZ(login.c_str());
-					P.w_stringZ(passw.c_str());
-
-					Level().Send(P, net_flags(TRUE, TRUE));
-
-					Msg("login %s password %s", login.c_str(), passw.c_str());
-					temp = std::to_string(i);
-					Msg("i= %s", temp);
-					i++;
-				}
-
-		}
-		
+			Level().Server->GetClientAddress(l_pC->ID, Address, &dwPort);
+			Msg("%d : %s - %s port[%u] ping[%u]", it + 1, l_pC->ps->getName(),
+				Address.to_string().c_str(),
+				dwPort,
+				l_pC->ps->ping);
+		};
+		Msg("------------------------");
 	};
 
-	virtual void	Info(TInfo& I) { strcpy(I, "List Players"); }
+	virtual void	Info(TInfo& I) { strcpy(I, "List Players Original"); }
 };
-
 
 class CCC_GetVersion : public IConsole_Command {
 public:
@@ -1519,8 +1496,8 @@ void register_mp_console_commands()
 
 	CMD1(CCC_UnBanPlayerByIP,	"sv_unbanplayer_ip"			);
 
-	CMD1(CCC_ListPlayers,			"sv_listplayers"			);		
-	CMD1(CCC_Brutforce, "start_brutforce");
+	CMD1(CCC_ListPlayers,			"sv_listplayers"			);	
+	CMD1(CCC_ListPlayersOriginal,	"sv_listplayers_original"	);
 
 	CMD1(CCC_GetVersion, "get_server_version");
 
@@ -1628,6 +1605,8 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_timer1_enabled"		,	(int*)&g_sv_mp_Timer1Enabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_timer2_enabled"		,	(int*)&g_sv_mp_Timer2Enabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_disabler_enabled", (int*)&g_sv_mp_DisablerEnabled, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_weapon_log_hits"		,	(int*)&g_sv_mp_LogHitsEnabled, 0, 1);
+
 	CMD4(CCC_SV_Integer,	"tsmp_nickname_change_mode"	,	(int*)&g_sv_mp_nickname_change_mode, 1, 3);
 	CMD4(CCC_SV_Integer,	"tsmp_vote_time"			,	(int*)&g_sv_mp_fVoteTime, 15, 180);
 	CMD1(CCC_WeaponDisable, "tsmp_weapon_disable");
