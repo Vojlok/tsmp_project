@@ -13,15 +13,17 @@ static xrCriticalSection	csLog
 #endif // PROFILE_CRITICAL_SECTIONS
 ;
 
-volatile BOOL				bClose				= FALSE;
+volatile bool				bClose				= false;
 
 static char					status	[1024	]	="";
 static char					phase	[1024	]	="";
 static float				progress			= 0.0f;
 static u32					phase_start_time	= 0;
-static BOOL					bStatusChange		= FALSE;
-static BOOL					bPhaseChange		= FALSE;
+static u32					stage_start_time	= 0;
+static bool					bStatusChange		= false;
 static u32					phase_total_time	= 0;
+
+static u32					uProgressItemsCCount = 0;
 
 static HWND hwLog		= 0;
 static HWND hwProgress	= 0;
@@ -43,10 +45,7 @@ static INT_PTR CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 			break;
 		case WM_COMMAND:
 			if( LOWORD(wp)==IDCANCEL )
-			{
-				ExitProcess	(0);
-//				bClose = TRUE;
-			}
+				ExitProcess	(0);			
 			break;
 		default:
 			return FALSE;
@@ -57,6 +56,7 @@ static INT_PTR CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 static void _process_messages(void)
 {
 	MSG msg;
+
 	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
 	{
 		TranslateMessage(&msg);
@@ -69,24 +69,35 @@ std::string make_time	(u32 sec)
 	char		buf[64];
 	sprintf		(buf,"%2.0d:%2.0d:%2.0d",sec/3600,(sec%3600)/60,sec%60);
 	int len		= int(xr_strlen(buf));
+	
 	for (int i=0; i<len; i++) if (buf[i]==' ') buf[i]='0';
 	return std::string(buf);
 }
 
-void __cdecl Status	(const char *format, ...)
+void __cdecl Status	(const u32 uItemsCount, const char *format, ...)
 {
 	csLog.Enter			();
+	uProgressItemsCCount = uItemsCount;
+
 	va_list				mark;
 	va_start			( mark, format );
 	vsprintf			( status, format, mark );
-	bStatusChange		= TRUE;
+	bStatusChange		= true;
 	Msg					("    | %s",status);
+
+	stage_start_time = timeGetTime();
+
 	csLog.Leave			();
 }
 
-void Progress		(const float F)
+void Progress		(const u32 uProgress)
 {
-	progress		= F;
+	progress		= (float)uProgress/(float)uProgressItemsCCount;
+}
+
+void Progress(const float F)
+{
+	progress = F;
 }
 
 void Phase			(const char *phase_name)
@@ -94,9 +105,9 @@ void Phase			(const char *phase_name)
 	while (!(hwPhaseTime && hwStage)) Sleep(1);
 
 	csLog.Enter			();
+	
 	// Replace phase name with TIME:Name 
 	char	tbuf		[512];
-	bPhaseChange		= TRUE;
 	phase_total_time	= timeGetTime()-phase_start_time;
 	sprintf				( tbuf,"%s : %s",make_time(phase_total_time/1000).c_str(),	phase);
 	SendMessage			( hwPhaseTime, LB_DELETESTRING, SendMessage(hwPhaseTime,LB_GETCOUNT,0,0)-1,0);
@@ -117,10 +128,13 @@ void Phase			(const char *phase_name)
 }
 
 HWND logWindow=0;
+
 void logThread(void *dummy)
 {
 	SetProcessPriorityBoost	(GetCurrentProcess(),TRUE);
 
+	if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+	
 	logWindow = CreateDialog(HINSTANCE(GetModuleHandle(0)),	MAKEINTRESOURCE(IDD_LOG),0, logDlgProc );
 
 	if (!logWindow) R_CHK			(GetLastError());
@@ -142,20 +156,17 @@ void logThread(void *dummy)
 		Msg("Startup time: %s",_strtime(tmpbuf));
 	}
 
-	BOOL		bHighPriority	= FALSE;
 	string256	u_name;
 	unsigned long		u_size	= sizeof(u_name)-1;
 	GetUserName	(u_name,&u_size);
 	_strlwr		(u_name);
-	if ((0==xr_strcmp(u_name,"oles"))||(0==xr_strcmp(u_name,"alexmx")))	bHighPriority	= TRUE;
 
 	// Main cycle
 	u32		LogSize = 0;
 	float	PrSave	= 0;
-	while (TRUE)
+	
+	while (true)
 	{
-		//SetPriorityClass	(GetCurrentProcess(),IDLE_PRIORITY_CLASS);
-
 		// transfer data
 		while (!csLog.TryEnter())	
 		{
@@ -166,32 +177,39 @@ void logThread(void *dummy)
 		if (progress>1.f)		progress = 1.f;
 		else if (progress<0)	progress = 0;
 
-		BOOL bWasChanges = FALSE;
+		bool bHasChanges = false;
 		char tbuf		[256];
 		csLog.Enter		();
+		
 		if (LogSize!=LogFile->size())
 		{
-			bWasChanges		= TRUE;
+			bHasChanges		= true;
+		
 			for (; LogSize<LogFile->size(); LogSize++)
 			{
 				const char *S = *(*LogFile)[LogSize];
+			
 				if (0==S)	S = "";
 				SendMessage	( hwLog, LB_ADDSTRING, 0, (LPARAM) S);
 			}
+			
 			SendMessage		( hwLog, LB_SETTOPINDEX, LogSize-1, 0);
 			FlushLog();
 		}
+
 		csLog.Leave		();
+		
 		if (_abs(PrSave-progress)>EPS_L) 
 		{
-			bWasChanges = TRUE;
+			bHasChanges = true;
 			PrSave = progress;
 			SendMessage		( hwProgress, PBM_SETPOS, u32(progress*1000.f), 0);
 
 			// timing
-			if (progress>0.005f) {
+			if (progress>0.005f) 
+			{
 				u32 dwCurrentTime = timeGetTime();
-				u32 dwTimeDiff	= dwCurrentTime-phase_start_time;
+				u32 dwTimeDiff	= dwCurrentTime-stage_start_time;
 				u32 secElapsed	= dwTimeDiff/1000;
 				u32 secRemain		= u32(float(secElapsed)/progress)-secElapsed;
 				sprintf(tbuf,
@@ -200,30 +218,29 @@ void logThread(void *dummy)
 					make_time(secElapsed).c_str(),
 					make_time(secRemain).c_str()
 					);
-				SetWindowText	( hwTime, tbuf );
+				SetWindowText(hwTime, tbuf);
 			} 
 			else 
-			{
-				SetWindowText	( hwTime, "" );
-			}
-
+				SetWindowText(hwTime, "");
+			
 			// percentage text
 			sprintf(tbuf,"%3.2f%%",progress*100.f);
-			SetWindowText	( hwPText, tbuf );
+			SetWindowText(hwPText, tbuf);
 		}
 
 		if (bStatusChange) 
 		{
-			bWasChanges		= TRUE;
-			bStatusChange	= FALSE;
-			SetWindowText	( hwInfo,	status);
+			bHasChanges		= true;
+			bStatusChange	= true;
+			SetWindowText(hwInfo, status);
 		}
 
-		if (bWasChanges) 
+		if (bHasChanges) 
 		{
-			UpdateWindow	( logWindow);
-			bWasChanges		= FALSE;
+			UpdateWindow	(logWindow);
+			bHasChanges		= false;
 		}
+
 		csLog.Leave			();
 
 		_process_messages	();
@@ -246,5 +263,6 @@ void __cdecl clMsg( const char *format, ...)
 	string1024		_out_;
 	strconcat		(sizeof(_out_), _out_,"    |    | ", buf );   
 	Log				(_out_);
+
 	csLog.Leave		();
 }

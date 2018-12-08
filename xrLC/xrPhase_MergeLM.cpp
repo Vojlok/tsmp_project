@@ -138,9 +138,9 @@ void CBuild::xrPhase_MergeLM()
 				lmap->Capture		(Layer[it],rT.a.x,rT.a.y,rT.SizeX(),rT.SizeY(),bRotated);
 				Layer[it]->bMerged	= TRUE;
 			}
-			Progress(_sqrt(float(it)/float(merge_count)));
+			Progress(float(it)/float(merge_count));
 		}
-		Progress	(1.f);
+		Progress(1.f);
 
 		// Remove merged lightmaps
 		Status			("Cleanup...");
@@ -154,7 +154,7 @@ void CBuild::xrPhase_MergeLM()
 	clMsg		("%d lightmaps builded",g_lightmaps.size());
 
 	// Cleanup deflectors
-	Progress	(1.f);
+	Progress(1.f);
 	Status		("Destroying deflectors...");
 	for (u32 it=0; it<g_deflectors.size(); it++)
 		xr_delete(g_deflectors[it]);

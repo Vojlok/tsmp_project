@@ -38,8 +38,6 @@ static bool is_tga_missing = false;
 void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 {
 	IReader&	fs	= const_cast<IReader&>(_in_FS);
-	// HANDLE		hLargeHeap	= HeapCreate(0,64*1024*1024,0);
-	// clMsg		("* <LargeHeap> handle: %X",hLargeHeap);
 
 	u32				i			= 0;
 
@@ -47,19 +45,18 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 	float			p_cost		= 1.f/3.f;
 	
 	IReader*		F			= 0;
-
-	// 
+ 
 	string_path				sh_name;
 	FS.update_path			(sh_name,"$game_data$","shaders_xrlc.xr");
 	shaders.Load			(sh_name);
 
-	//*******
 	Status					("Vertices...");
 	{
 		F = fs.open_chunk		(EB_Vertices);
 		u32 v_count			=	F->length()/sizeof(b_vertex);
 		g_vertices.reserve		(3*v_count/2);
 		scene_bb.invalidate		();
+		
 		for (i=0; i<v_count; i++)
 		{
 			Vertex*	pV			= VertexPool.create();
@@ -67,18 +64,19 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 			pV->N.set			(0,0,0);
 			scene_bb.modify		(pV->P);
 		}
-		Progress			(p_total+=p_cost);
+
+		Progress(p_total += p_cost);
 		clMsg				("* %16s: %d","vertices",g_vertices.size());
 		F->close			();
 	}
 
-	//*******
 	Status					("Faces...");
 	{
 		F = fs.open_chunk		(EB_Faces);
 		R_ASSERT				(F);
 		u32 f_count			=	F->length()/sizeof(b_face);
 		g_faces.reserve			(f_count);
+		
 		for (i=0; i<f_count; i++)
 		{
 			try 
@@ -105,29 +103,28 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 				uv2.set				(B.t[1].x,B.t[1].y);
 				uv3.set				(B.t[2].x,B.t[2].y);
 				_F->AddChannel		( uv1, uv2, uv3 );
-			} catch (...)
+			} 
+			catch (...)
 			{
 				err_save	();
 				Debug.fatal	(DEBUG_INFO,"* ERROR: Can't process face #%d",i);
 			}
 		}
-		Progress			(p_total+=p_cost);
+
+		Progress(p_total += p_cost);
 		clMsg				("* %16s: %d","faces",g_faces.size());
 		F->close			();
 
 		if (dwInvalidFaces)	
 		{
 			err_save		();
-			if (!b_skipinvalid)
-				Debug.fatal		(DEBUG_INFO,"* FATAL: %d invalid faces. Compilation aborted",dwInvalidFaces);
-			else
-				clMsg		("* Total %d invalid faces. Do something.",dwInvalidFaces);
+			clMsg		("* Total %d invalid faces. Do something.",dwInvalidFaces);
 		}
 	}
 
-	//*******
 	Status	("Models and References");
 	F = fs.open_chunk		(EB_MU_models);
+
 	if (F)
 	{
 		while (!F->eof())
@@ -137,7 +134,9 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 		}
 		F->close				();
 	}
+	
 	F = fs.open_chunk		(EB_MU_refs);
+	
 	if (F)
 	{
 		while (!F->eof())
@@ -148,7 +147,6 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 		F->close				();
 	}
 
-	//*******
 	Status	("Other transfer...");
 	transfer("materials",	materials,			fs,		EB_Materials);
 	transfer("shaders",		shader_render,		fs,		EB_Shaders_Render);
@@ -182,11 +180,13 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 
 			F->close		();
 		}
+		
 		// Static
 		{
 			F = fs.open_chunk	(EB_Light_static);
 			b_light_static		temp;
 			u32 cnt				= F->length()/sizeof(temp);
+		
 			for	(i=0; i<cnt; i++)
 			{
 				R_Light		RL;
@@ -194,16 +194,24 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 				Flight	L	= temp.data;
 
 				// type
-				if			(L.type == D3DLIGHT_DIRECTIONAL)	RL.type	= LT_DIRECT;
+				if			(L.type == D3DLIGHT_DIRECTIONAL)	
+					RL.type	= LT_DIRECT;
 				else											
 					RL.type = LT_POINT;
+				
 				RL.level	= 0;
 
 				// split energy/color
 				float			_e		=	(L.diffuse.r+L.diffuse.g+L.diffuse.b)/3.f;
 				Fvector			_c		=	{L.diffuse.r,L.diffuse.g,L.diffuse.b};
-				if (_abs(_e)>EPS_S)		_c.div	(_e);
-				else					{ _c.set(0,0,0); _e=0; }
+				
+				if (_abs(_e)>EPS_S)		
+					_c.div	(_e);
+				else					
+				{ 
+					_c.set(0,0,0); 				
+					_e=0; 
+				}
 
 				// generic properties
 				RL.diffuse.set				(_c);
@@ -227,16 +235,19 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 		for (u32 LH=0; LH<L_layers.size(); LH++)
 		{
 			R_Layer&	TEST	= L_layers[LH];
+			
 			if (0==stricmp(TEST.control.name,LCONTROL_HEMI))
 			{
 				// Hemi found
 				L_static.hemi			= TEST.lights;
 			}
+			
 			if (0==stricmp(TEST.control.name,LCONTROL_SUN))
 			{
 				// Sun found
 				L_static.sun			= TEST.lights;
 			}
+
 			if (0==stricmp(TEST.control.name,LCONTROL_STATIC))
 			{
 				// Static found
@@ -266,7 +277,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 #endif
 		for (u32 t=0; t<tex_count; t++)
 		{
-			Progress		(float(t)/float(tex_count));
+			Progress(float(t) / float(tex_count));
 
 #ifdef _WIN64
 			// workaround for ptr size mismatching
@@ -288,19 +299,19 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 			LPSTR N			= BT.name;
 			if (strchr(N,'.')) *(strchr(N,'.')) = 0;
 			strlwr			(N);
-			if (0==xr_strcmp(N,"level_lods"))	{
+			
+			if (0==xr_strcmp(N,"level_lods"))	
+			{
 				// HACK for merged lod textures
 				BT.dwWidth	= 1024;
 				BT.dwHeight	= 1024;
 				BT.bHasAlpha= TRUE;
 				BT.pSurface	= 0;
-			} else {
+			} 
+			else 
+			{
 				string_path			th_name;
-#ifdef PRIQUEL
-				FS.update_path	(th_name,"$game_textures$",strconcat(sizeof(th_name),th_name,N,".thm"));
-#else // PRIQUEL
 				FS.update_path	(th_name,"$textures$",strconcat(sizeof(th_name),th_name,N,".thm"));
-#endif // PRIQUEL
 //				clMsg			("processing: %s",th_name);			// commented by KD
 				IReader* THM	= FS.r_open(th_name);
 
@@ -312,9 +323,10 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 					clMsg			("cannot find thm: %s",th_name);
 					is_thm_missing = true;
 					continue;
-				} else
+				} 
+				else
 				{
-					clMsg			("processing: %s",th_name);
+					//clMsg			("processing: %s",th_name);
 				}
 	// KD: first part of textures fix - end
 
@@ -334,20 +346,23 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 				BT.THM.width			= THM->r_u32();
 				BT.THM.height           = THM->r_u32();
 				BOOL			bLOD=FALSE;
+				
 				if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') bLOD = TRUE;
 
 				// load surface if it has an alpha channel or has "implicit lighting" flag
 				BT.dwWidth	= BT.THM.width;
 				BT.dwHeight	= BT.THM.height;
 				BT.bHasAlpha= BT.THM.HasAlphaChannel();
+				
 				if (!bLOD) 
 				{
 					if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted) || b_radiosity)
 					{
-						clMsg		("- loading: %s",N);
+						//clMsg		("- loading: %s",N);
 						u32			w=0, h=0;
 						BT.pSurface = Surface_Load(N,w,h);
 	//					R_ASSERT2	(BT.pSurface,"Can't load surface");
+						
 						if (!BT.pSurface)
 						{
 							clMsg			("cannot find tga texture: %s",th_name);
@@ -357,12 +372,15 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 						// KD: in case of thm doesn't correspond to texture let's reset thm params to actual texture ones
 						if ((w != BT.dwWidth) || (h != BT.dwHeight))
 						{
-							Msg		("! THM doesn't correspond to the texture: %dx%d -> %dx%d, reseting", BT.dwWidth, BT.dwHeight, w, h);
+							Msg("! [%s]", th_name);
+							Msg		("! THM doesn't correspond to the texture : %dx%d -> %dx%d, reseting", BT.dwWidth, BT.dwHeight, w, h);
 							BT.dwWidth = w;
 							BT.dwHeight = h;
 						}
 						BT.Vflip	();
-					} else {
+					} 
+					else 
+					{
 						// Free surface memory
 					}
 				}
@@ -384,18 +402,24 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 
 	// post-process materials
 	Status	("Post-process materials...");
+	
 	for (u32 m=0; m<materials.size(); m++)
 	{
 		b_material &M	= materials[m];
 
-		if (65535==M.shader_xrlc)	{
+		if (65535==M.shader_xrlc)	
+		{
 			// No compiler shader
 			M.reserved	= u16(-1);
 			// clMsg	(" *  %20s",shader_render[M.shader].name);
-		} else {
+		} 
+		else 
+		{
 			// clMsg	(" *  %20s / %-20s",shader_render[M.shader].name, shader_compile[M.shader_xrlc].name);
 			int id = shaders.GetID(shader_compile[M.shader_xrlc].name);
-			if (id<0) {
+			
+			if (id<0) 
+			{
 				clMsg	("ERROR: Shader '%s' not found in library",shader_compile[M.shader].name);
 				R_ASSERT(id>=0);
 			}

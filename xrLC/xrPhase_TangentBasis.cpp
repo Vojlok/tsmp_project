@@ -3,39 +3,7 @@
 
 void CBuild::xrPhase_TangentBasis()
 {
-	// ************************************* Correct single-degenerates
-	/*
-	float	teps			= .5f / 4096.f;		// half pixel from 4096 texture (0.0001220703125)
-	for (u32 f=0; f<g_faces.size(); f++)
-	{
-		Progress	(float(f)/float(g_faces.size()));
-		Face*		F		= g_faces[f];
-		Fvector2&	tc0		= F->tc.front().uv[0];
-		Fvector2&	tc1		= F->tc.front().uv[1];
-		Fvector2&	tc2		= F->tc.front().uv[2];
-		float		e01		= tc0.distance_to(tc1);	
-		float		e12		= tc1.distance_to(tc2);
-		float		e20		= tc2.distance_to(tc0);
-		if (e01<teps)
-		{
-			Fvector2	d0,d1,d,r;
-			d0.sub		(tc0,tc2);	d0.norm	();
-			d1.sub		(tc1,tc2);	d1.norm	();
-			d.averageA	(d0,d1);	d.norm	();
-			r.cross		(d);		r.mul	(teps);	// right
-			tc1.add		(r);		tc0.sub	(r);	// correction
-		} else if (e12<teps) {
-			Fvector2	d1,d2,d,r;
-			d0.sub		(tc0,tc2);	d0.norm	();
-			d1.sub		(tc1,tc2);	d1.norm	();
-			d.averageA	(d0,d1);	d.norm	();
-			r.cross		(d);		r.mul	(teps);	// right
-			tc1.add		(r);		tc0.sub	(r);	// correction
-		}
-	}
-	*/
-
-	// ************************************* Declare inputs
+	// Declare inputs
 	Status						("Declarator...");
 	u32 v_count_reserve			= iFloor(float(g_vertices.size())*1.33f);
 	u32 i_count_reserve			= 3*g_faces.size();
@@ -63,14 +31,14 @@ void CBuild::xrPhase_TangentBasis()
 	output[3].Name_= "indices";	
 	output[4].Name_= "position";
 
-	// ************************************* Build vectors + expand TC if nessesary
+	// Build vectors + expand TC if nessesary
 	Status						("Building inputs...");
 	std::sort					(g_vertices.begin(),g_vertices.end());
 	xr_vector<xr_vector<u32> >	remap;
 	remap.resize				(g_vertices.size());
 	for (u32 f=0; f<g_faces.size(); f++)
 	{
-		Progress	(float(f)/float(g_faces.size()));
+		Progress(float(f) / float(g_faces.size()));
 		Face*		F	= g_faces[f];
 
 		for (u32 v=0; v<3; v++)

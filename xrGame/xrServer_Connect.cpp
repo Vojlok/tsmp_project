@@ -136,12 +136,12 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 	
 	while (Name_new.find('%') != std::string::npos)
 	{	
-		Name_new.replace(Name_new.find("%"), 1, "!");
+		Name_new.replace(Name_new.find("%"), 1, " ");
 	}
 	
 	while (Name_new.find('_') != std::string::npos)
 	{
-		Name_new.replace(Name_new.find("_"), 1, "!");
+		Name_new.replace(Name_new.find("_"), 1, " ");
 	}
 	// чтобы хоть что то было в нике
 	while (Name_new.find(' ') != std::string::npos)
@@ -149,11 +149,11 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 		Name_new.replace(Name_new.find(" "), 1, ".");
 	}
 	// кхе кхе :) для того, чтобы читался ник базой.
-	while (Name_new.find('-') != std::string::npos)
-	{
-		Name_new.replace(Name_new.find("-"), 1, "!");
-	}
-	// тестовый набор, чтобы была возможность выбросить через голосование спец ники
+//	while (Name_new.find('-') != std::string::npos)
+//	{
+//		Name_new.replace(Name_new.find("-"), 1, "!");
+//	}
+/*	// тестовый набор, чтобы была возможность выбросить через голосование спец ники
 	while (Name_new.find('a') != std::string::npos)
 	{
 		//                             ENG       RUS
@@ -184,7 +184,7 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 		//                             ENG       RUS
 		Name_new.replace(Name_new.find("k"), 1, "к");
 	}
-
+	*/
 	strcpy ( new_name, Name_new.c_str());
 
 	CL->name._set( new_name );

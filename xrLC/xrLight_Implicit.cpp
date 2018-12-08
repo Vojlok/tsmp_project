@@ -106,7 +106,9 @@ public:
 			u32 iter;
 			// Get task
 			implicit_CS.Enter();
+			
 			thProgress = 1.f - float(implicit_task_pool.size()) / float(total_implicit);
+
 			if (implicit_task_pool.empty())
 			{
 				implicit_CS.Leave();
@@ -180,7 +182,8 @@ void CBuild::ImplicitLighting()
 		if (F->pDeflector)				continue;
 		if (!F->hasImplicitLighting())	continue;
 		
-		Progress		(float(I-g_faces.begin())/float(g_faces.size()));
+		Progress(float(I - g_faces.begin()) / float(g_faces.size()));
+
 		b_material&		M	= materials		[F->dwMaterial];
 		u32				Tid = M.surfidx;
 		b_BuildTexture*	T	= &(textures[Tid]);
@@ -205,11 +208,13 @@ void CBuild::ImplicitLighting()
 	{
 		ImplicitDeflector& defl = imp->second;
 		Status			("Lighting implicit map '%s'...",defl.texture->name);
-		Progress		(0);
+		
+		Progress(0);
+
 		defl.Allocate	();
 		
 		// Setup cache
-		Progress					(0);
+		Progress(0);
 		Fbox2 bounds;
 		defl.Bounds_Summary			(bounds);
 		ImplicitHash->initialize	(bounds,defl.faces.size());

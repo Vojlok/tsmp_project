@@ -34,7 +34,8 @@ public:
 		{
 			// Get task
 			task_CS.Enter		();
-			thProgress			= 1.f - float(task_pool.size())/float(g_deflectors.size());
+			thProgress = 1.f - float(task_pool.size()) / float(g_deflectors.size());
+
 			if (task_pool.empty())	
 			{
 				task_CS.Leave		();
@@ -226,7 +227,7 @@ public:
 				g_trans_register	(V);
 			}
 
-			thProgress			= float(counter) / float(g_vertices.size());
+			thProgress = float(counter) / float(g_vertices.size());
 		}
 	}
 };

@@ -578,6 +578,9 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
                      char *    lpCmdLine,
                      int       nCmdShow)
 {
+	if (0 != strstr(Core.Params, "-priority")) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+
+
 //	foo();
 #ifndef DEDICATED_SERVER
 

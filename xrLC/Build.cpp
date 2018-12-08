@@ -64,7 +64,7 @@ void CBuild::Run	(LPCSTR P)
 
 	if (strstr(Core.Params,"-att"))	gl_linear	= TRUE;
 
-	//****************************************** Open Level
+	//Open Level
 	strconcat					(sizeof(path),path,P,"\\")	;
 	string_path					lfn				;
 	IWriter* fs					= FS.w_open		(strconcat(sizeof(lfn),lfn,path,"level."));
@@ -75,10 +75,10 @@ void CBuild::Run	(LPCSTR P)
 	fs->w						(&H,sizeof(H));
 	fs->close_chunk				();
 
-	//****************************************** Dumb entry in shader-registration
+	//Dumb entry in shader-registration
 	RegisterShader				("");
 
-	//****************************************** Saving lights
+	//Saving lights
 	{
 		string256			fn;
 		IWriter*		fs	= FS.w_open	(strconcat(sizeof(fn),fn,pBuild->path,"build.lights"));
@@ -88,14 +88,14 @@ void CBuild::Run	(LPCSTR P)
 		FS.w_close			(fs);
 	}
 
-	//****************************************** Optimizing + checking for T-junctions
+	//Optimizing + checking for T-junctions
 	FPU::m64r					();
 	Phase						("Optimizing...");
 	mem_Compact					();
 	PreOptimize					();
 	CorrectTJunctions			();
 
-	//****************************************** HEMI-Tesselate
+	//HEMI-Tesselate
 	FPU::m64r					();
 	Phase						("Adaptive HT...");
 	mem_Compact					();
@@ -103,14 +103,14 @@ void CBuild::Run	(LPCSTR P)
 	xrPhase_AdaptiveHT			();
 #endif
 
-	//****************************************** Building normals
+	//Building normals
 	FPU::m64r					();
 	Phase						("Building normals...");
 	mem_Compact					();
 	CalcNormals					();
 	//SmoothVertColors			(5);
 
-	//****************************************** Collision DB
+	//Collision DB
 	//should be after normals, so that double-sided faces gets separated
 	FPU::m64r					();
 	Phase						("Building collision database...");
@@ -123,7 +123,7 @@ void CBuild::Run	(LPCSTR P)
 
 	BuildPortals				(*fs);
 
-	//****************************************** T-Basis
+	//T-Basis
 	{
 		FPU::m64r					();
 		Phase						("Building tangent-basis...");
@@ -131,14 +131,14 @@ void CBuild::Run	(LPCSTR P)
 		mem_Compact					();
 	}
 
-	//****************************************** GLOBAL-RayCast model
+	//GLOBAL-RayCast model
 	FPU::m64r					();
 	Phase						("Building rcast-CFORM model...");
 	mem_Compact					();
 	Light_prepare				();
 	BuildRapid					(TRUE);
 
-	//****************************************** GLOBAL-ILLUMINATION
+	//GLOBAL-ILLUMINATION
 	if (b_radiosity)			
 	{
 		FPU::m64r					();
@@ -148,7 +148,7 @@ void CBuild::Run	(LPCSTR P)
 		xrPhase_Radiosity			();
 	}
 
-	//****************************************** Starting MU
+	//Starting MU
 	FPU::m64r					();
 //	Phase						("LIGHT: Lightning MU models...");
 	mem_Compact					();
@@ -157,14 +157,14 @@ void CBuild::Run	(LPCSTR P)
 	CThreadManager mu_light_thread;
 	mu_light_thread.start(xr_new<CMULightHiddenThread>(0));
 
-	//****************************************** Resolve materials
+	//Resolve materials
 	FPU::m64r					();
 	Phase						("Resolving materials...");
 	mem_Compact					();
 	xrPhase_ResolveMaterials	();
 	IsolateVertices				(TRUE);
 
-	//****************************************** UV mapping
+	//UV mapping
 	{
 		FPU::m64r					();
 		Phase						("Build UV mapping...");
@@ -173,14 +173,14 @@ void CBuild::Run	(LPCSTR P)
 		IsolateVertices				(TRUE);
 	}
 
-	//****************************************** Subdivide geometry
+	//Subdivide geometry
 	FPU::m64r					();
 	Phase						("Subdividing geometry...");
 	mem_Compact					();
 	xrPhase_Subdivide			();
 	IsolateVertices				(TRUE);
 
-	//****************************************** All lighting + lmaps building and saving
+	//All lighting + lmaps building and saving
 	if (!b_nolmaps) Light						();
 
 	//****************************************** Merge geometry
@@ -189,24 +189,25 @@ void CBuild::Run	(LPCSTR P)
 	mem_Compact					();
 	xrPhase_MergeGeometry		();
 
-	//****************************************** Convert to OGF
+	//Convert to OGF
 	FPU::m64r					();
 	Phase						("Converting to OGFs...");
 	mem_Compact					();
 	Flex2OGF					();
 
-	//****************************************** Wait for MU
+	//Wait for MU
 //	FPU::m64r					();
 //	Phase						("LIGHT: Waiting for MU-thread...");
 //	mem_Compact					();
 //	mu_base.wait				(500);
 //	mu_secondary.wait			(500);
-	mu_light_thread.wait(500);
+	
 	FPU::m64r					();
 	Phase						("LIGHT: Waiting for MU-thread...");
 	mem_Compact					();
+	mu_light_thread.wait(500);
 
-	//****************************************** Export MU-models
+	//Export MU-models
 	FPU::m64r					();
 	Phase						("Converting MU-models to OGFs...");
 	mem_Compact					();
@@ -225,19 +226,19 @@ void CBuild::Run	(LPCSTR P)
 			mu_refs[m]->export_ogf		();
 	}
 
-	//****************************************** Destroy RCast-model
+	//Destroy RCast-model
 	FPU::m64r		();
 	Phase			("Destroying ray-trace model...");
 	mem_Compact		();
 	xr_delete		(RCAST_Model);
 
-	//****************************************** Build sectors
+	//Build sectors
 	FPU::m64r		();
 	Phase			("Building sectors...");
 	mem_Compact		();
 	BuildSectors	();
 
-	//****************************************** Saving MISC stuff
+	//Saving MISC stuff
 	FPU::m64r		();
 	Phase			("Saving...");
 	mem_Compact		();

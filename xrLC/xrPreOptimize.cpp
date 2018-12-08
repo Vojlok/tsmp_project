@@ -56,12 +56,11 @@ void CBuild::PreOptimize()
 	// 
 	Status("Processing...");
 	g_bUnregister		= false;
+	
 	for (int it = 0; it<(int)g_vertices.size(); it++)
-	{
-		if (0==(it%100000)) {
-			Progress(_sqrt(float(it)/float(g_vertices.size())));
-			Status	("Processing... (%d verts removed)",Vremoved);
-		}
+	{	
+		Progress((float)it/(float)g_vertices.size());
+		
 
 		if (it>=(int)g_vertices.size()) break;
 
@@ -80,9 +79,12 @@ void CBuild::PreOptimize()
 		for (vecVertexIt T=H.begin(); T!=H.end(); T++)
 		{
 			Vertex *pBase = *T;
+		
 			if (pBase->similar(*pTest,g_params.m_weld_distance)) 
 			{
-				while				(pTest->adjacent.size())	pTest->adjacent.front()->VReplace(pTest, pBase);
+				while				(pTest->adjacent.size())	
+					pTest->adjacent.front()->VReplace(pTest, pBase);
+				
 				VertexPool.destroy	(g_vertices[it]);
 				Vremoved		+=	1;
 				pTest			=	NULL;
@@ -117,26 +119,27 @@ void CBuild::PreOptimize()
 	{
 		R_ASSERT		(it>=0 && it<(int)g_faces.size());
 		Face* F			= g_faces[it];
-		if ( F->isDegenerated()) {
+		
+		if ( F->isDegenerated()) 
+		{
 			FacePool.destroy	(g_faces[it]);
 			Fremoved			++;
-		} else {
-			// Check validity
-			F->Verify			( );
-		}
+		} 
+		else 			
+			F->Verify(); // Check validity
+		
 		Progress	(float(it)/float(g_faces.size()));
 	}
+
 	if (dwInvalidFaces)	
 	{
 		err_save		();
-		if (!b_skipinvalid)
-			Debug.fatal		(DEBUG_INFO,"* FATAL: %d invalid faces. Compilation aborted",dwInvalidFaces);
-		else
-			clMsg		("* Total %d invalid faces. Do something.",dwInvalidFaces);
+		clMsg		("* Total %d invalid faces. Do something.",dwInvalidFaces);
 	}
 
 	Status("Adjacency check...");
 	g_bUnregister = false;
+	
 	for (u32 it = 0; it<(int)g_vertices.size(); it++)
 	{
 		if (g_vertices[it] && (0==g_vertices[it]->adjacent.size()))
@@ -158,26 +161,9 @@ void CBuild::PreOptimize()
 				}
 	}
 	mem_Compact			();
+	
 	clMsg("%d vertices removed. (%d left)",Vcount-g_vertices.size(),g_vertices.size());
 	clMsg("%d faces removed. (%d left)",   Fcount-g_faces.size(),   g_faces.size());
-	
-	// -------------------------------------------------------------
-	/*
-	int		err_count	=0 ;
-	for (int _1=0; _1<g_faces.size(); _1++)
-	{
-		Progress(float(_1)/float(g_faces.size()));
-		for (int _2=0; _2<g_faces.size(); _2++)
-		{
-			if (_1==_2)		continue;
-			if (FaceEqual(*g_faces[_1],*g_faces[_2]))	{
-				err_count	++;
-			}
-		}
-	}
-	clMsg		("! duplicate/same faces found:%d",err_count);
-	*/
-	// -------------------------------------------------------------
 }
 
 void CBuild::IsolateVertices	(BOOL bProgress)
@@ -188,7 +174,7 @@ void CBuild::IsolateVertices	(BOOL bProgress)
 
 	for (int it=0; it<int(g_vertices.size()); it++)
 	{
-		if (bProgress)	Progress	(float(it)/float(g_vertices.size()));
+		if (bProgress)	Progress(float(it) / float(g_vertices.size()));
 		if (g_vertices[it] && g_vertices[it]->adjacent.empty())	VertexPool.destroy(g_vertices[it]);
 	}
 
@@ -197,5 +183,6 @@ void CBuild::IsolateVertices	(BOOL bProgress)
 	g_bUnregister		= true;
 	mem_Compact			();
 	u32	_count			= verts_old-g_vertices.size();
+	
 	if	(_count)		clMsg	("::compact:: %d verts removed",_count);
 }

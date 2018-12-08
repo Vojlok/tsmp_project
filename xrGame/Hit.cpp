@@ -151,6 +151,7 @@ void SHit::_dump()
 	Log("p_in_bone_space=",p_in_bone_space);
 	Log("hit_type=",(int)hit_type);
 	Log("ap=",ap);
+	Log("time=", Time);
 	Msg("SHit::_dump()---end");
 }
 

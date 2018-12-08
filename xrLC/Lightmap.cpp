@@ -132,10 +132,10 @@ void CLightmap::Save()
 	for (u32 ref=254; ref>(254-16); ref--) 
 	{
 		ApplyBorders	(lm,ref);
-		Progress		(1.f - float(ref)/float(254-16));
+		Progress(1.f - float(ref) / float(254 - 16));
 	}
 	
-	Progress			(1.f);
+	Progress(1.f);
 
 	// Saving			(DXT5.dds)
 	Status			("Compression base...");

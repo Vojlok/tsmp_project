@@ -3,6 +3,10 @@
 #include "build.h"
 #include "common_compilers\communicate.h"
 
+
+#include <thread>
+
+
 CDB::MODEL*	RCAST_Model	= 0;
 
 IC bool				FaceEqual(Face& F1, Face& F2)
@@ -49,20 +53,24 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	{
 		Face*	F = (*it);
 		Shader_xrLC&	SH = F->Shader();
+		
 		if (!SH.flags.bLIGHT_CastShadow)					continue;
 
 		Progress(float(it - g_faces.begin()) / float(g_faces.size()));
 
 		// Collect
 		adjacent.clear();
+		
 		for (int vit = 0; vit<3; vit++)
 		{
 			Vertex* V = F->v[vit];
+		
 			for (u32 adj = 0; adj<V->adjacent.size(); adj++)
 			{
 				adjacent.push_back(V->adjacent[adj]);
 			}
 		}
+
 		std::sort(adjacent.begin(), adjacent.end());
 		adjacent.erase(std::unique(adjacent.begin(), adjacent.end()), adjacent.end());
 
@@ -72,8 +80,10 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		for (u32 ait = 0; ait<adjacent.size(); ait++)
 		{
 			Face*	Test = adjacent[ait];
+			
 			if (Test == F)					continue;
 			if (!Test->flags.bProcessed)	continue;
+			
 			if (FaceEqual(*F, *Test)) 
 			{
 				bAlready = TRUE;
@@ -106,7 +116,23 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 				mu_refs[ref]->export_cform_rcast(CL);
 				fProgr += fStep;
 				Progress(fProgr);
-		}	
+		}	 
+
+/*	auto LodThreadsManager = [](const CBuild *BLD, CDB::CollectorPacked &CLP, const int from, const int to)
+	{
+		//CDB::CollectorPacked CLL = CLP;
+
+		for (int ref = from; ref < to; ref++)
+		{
+			BLD->mu_refs[ref]->export_cform_rcast(CLP);
+		}
+	};
+
+	std::thread thread_1(LodThreadsManager, *this, CL, 0, MRS/2);
+	std::thread thread_2(LodThreadsManager, *this, CL, MRS/2, MRS);
+	thread_1.join();
+	thread_2.join();
+	*/
 
 	// "Building tree..
 	Status					("Building search tree...");

@@ -156,7 +156,7 @@ void	Face::Failure		()
 {
 	dwInvalidFaces			++;
 
-	clMsg		("* ERROR: Invalid face. (A=%f,e0=%f,e1=%f,e2=%f)",
+/*	clMsg		("* ERROR: Invalid face. (A=%f,e0=%f,e1=%f,e2=%f)",
 		CalcArea(),
 		v[0]->P.distance_to(v[1]->P),
 		v[0]->P.distance_to(v[2]->P),
@@ -166,7 +166,8 @@ void	Face::Failure		()
 		VPUSH(v[0]->P),
 		VPUSH(v[1]->P),
 		VPUSH(v[2]->P)
-		);
+		); 
+		*/
 	pBuild->err_invalid.w_fvector3	(v[0]->P);
 	pBuild->err_invalid.w_fvector3	(v[1]->P);
 	pBuild->err_invalid.w_fvector3	(v[2]->P);

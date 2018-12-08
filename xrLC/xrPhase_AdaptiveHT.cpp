@@ -87,9 +87,11 @@ void CBuild::xrPhase_AdaptiveHT()
 	DB.ray_options(0);
 
 	Status("Tesselating...");
+	
 	if (1)
 	{
-		for (u32 fit = 0; fit<g_faces.size(); fit++) {		// clear split flag from all faces + calculate normals
+		for (u32 fit = 0; fit<g_faces.size(); fit++) 
+		{		// clear split flag from all faces + calculate normals
 			g_faces[fit]->flags.bSplitted = false;
 			g_faces[fit]->flags.bLocked = true;
 			g_faces[fit]->CalcNormal();

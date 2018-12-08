@@ -4,9 +4,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{ec60af83-5e9d-454f-b0ca-3559f3e2fd3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CDB">
-      <UniqueIdentifier>{84425239-aa99-4317-8176-851f17fb2347}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External">
       <UniqueIdentifier>{6d7b010b-e592-4979-ae7c-6ff33987f4c8}</UniqueIdentifier>
     </Filter>
@@ -299,9 +296,6 @@
     </ClCompile>
     <ClCompile Include="..\editors\ECore\Engine\NVMeshMender.cpp">
       <Filter>External\NV_Basis</Filter>
-    </ClCompile>
-    <ClCompile Include="COMMON_COMPILERS\cl_collector.cpp">
-      <Filter>CDB</Filter>
     </ClCompile>
     <ClCompile Include="COMMON_COMPILERS\cl_log.cpp" />
     <ClCompile Include="COMMON_COMPILERS\tga.cpp" />

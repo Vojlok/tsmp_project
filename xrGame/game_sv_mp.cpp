@@ -1399,12 +1399,12 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 	// changename 
 	while (NameNew.find('%') != std::string::npos)
 	{
-		NameNew.replace(NameNew.find("%"), 1, "!");
+		NameNew.replace(NameNew.find("%"), 1, " ");
 	}
 
 	while (NameNew.find('_') != std::string::npos)
 	{
-		NameNew.replace(NameNew.find("_"), 1, "!");
+		NameNew.replace(NameNew.find("_"), 1, " ");
 	}
 	// чтобы хоть что то было в нике
 	while (NameNew.find(' ') != std::string::npos)
@@ -1412,10 +1412,10 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 		NameNew.replace(NameNew.find(" "), 1, ".");
 	}
 	// кхе кхе :) для того, чтобы читался ник базой.
-	while (NameNew.find('-') != std::string::npos)
-	{
-		NameNew.replace(NameNew.find("-"), 1, "!");
-	}
+//	while (NameNew.find('-') != std::string::npos)
+	//{
+//		NameNew.replace(NameNew.find("-"), 1, "!");
+//	}
 	// тестовый набор, чтобы была возможность выбросить через голосование спец ники, без поломки ника.
 	while (NameNew.find('a') != std::string::npos)
 	{

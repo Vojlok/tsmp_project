@@ -29,7 +29,7 @@
 CBuild*	pBuild		= NULL;
 
 extern void logThread(void *dummy);
-extern volatile BOOL bClose;
+extern volatile bool bClose;
 
 static const char* h_str = 
 	"The following keys are supported / required:\n"
@@ -136,6 +136,7 @@ void Startup(LPSTR     lpCmdLine)
 	
 	// Faster FPU 
 	SetPriorityClass		(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
+	if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	
 	// Load project
 	name[0]=0;				sscanf(strstr(cmd,"-f")+2,"%s",name);
@@ -209,7 +210,7 @@ void Startup(LPSTR     lpCmdLine)
 	if(!bIsSilent) MessageBox (logWindow,inf,"Congratulation!",MB_OK|MB_ICONINFORMATION);
 
 	// Close log
-	bClose					= TRUE;
+	bClose					= true;
 	Sleep					(500);
 }
 

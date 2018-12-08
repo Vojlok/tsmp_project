@@ -1243,9 +1243,6 @@
     <Filter Include="AI\AScript\ScriptThread\ScriptStackTracker">
       <UniqueIdentifier>{0db097fc-9df5-4b11-a387-209927c9c6f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\memory_allocator">
-      <UniqueIdentifier>{ef32185d-b929-442a-a6a6-577fbb43d1db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\ASound">
       <UniqueIdentifier>{861c424d-9c7c-4624-abfa-f69be97e4890}</UniqueIdentifier>
     </Filter>

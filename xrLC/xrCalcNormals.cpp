@@ -115,7 +115,7 @@ void CBuild::CalcNormals()
 */
 		Progress(p_total+=p_cost);
 	}
-	Progress		(1.f);
+	Progress(1.f);
 
 	// Destroy unused vertices
 	IsolateVertices	(FALSE);

@@ -14,6 +14,7 @@ void xrMU_Model::export_cform_rcast	(CDB::CollectorPacked& CL, Fmatrix& xform)
 
 		// Collect
 		adjacent.clear	();
+	
 		for (int vit=0; vit<3; vit++)
 		{
 			_vertex* V	= F->v[vit];
@@ -25,11 +26,14 @@ void xrMU_Model::export_cform_rcast	(CDB::CollectorPacked& CL, Fmatrix& xform)
 		std::sort		(adjacent.begin(),adjacent.end());
 		adjacent.erase	(std::unique(adjacent.begin(),adjacent.end()),adjacent.end());
 		BOOL			bAlready	= FALSE;
+	
 		for (u32 ait=0; ait<adjacent.size(); ait++)
 		{
 			_face*	Test				= adjacent[ait];
+			
 			if (Test==F)				continue;
 			if (!Test->flags.bProcessed)continue;
+			
 			if (F->isEqual(*Test))
 			{
 				bAlready			= TRUE;

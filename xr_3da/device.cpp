@@ -109,12 +109,18 @@ void CRenderDevice::End		(void)
 
 
 volatile u32	mt_Thread_marker		= 0x12345678;
-void 			mt_Thread	(void *ptr)	{
-	while (true) {
+
+void 			mt_Thread	(void *ptr)	
+{
+	if (0 != strstr(Core.Params, "-priority")) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+
+	while (true) 
+	{
 		// waiting for Device permission to execute
 		Device.mt_csEnter.Enter	();
 
-		if (Device.mt_bMustExit) {
+		if (Device.mt_bMustExit) 
+		{
 			Device.mt_bMustExit = FALSE;				// Important!!!
 			Device.mt_csEnter.Leave();					// Important!!!
 			return;
@@ -124,6 +130,7 @@ void 			mt_Thread	(void *ptr)	{
  
 		for (u32 pit=0; pit<Device.seqParallel.size(); pit++)
 			Device.seqParallel[pit]	();
+
 		Device.seqParallel.clear_not_free	();
 		Device.seqFrameMT.Process	(rp_Frame);
 
@@ -186,6 +193,7 @@ void CRenderDevice::Run			()
 //	InitializeCriticalSection	(&mt_csLeave);
 	mt_csEnter.Enter			();
 	mt_bMustExit				= FALSE;
+
 	thread_spawn				(mt_Thread,"X-RAY Secondary thread",0,0);
 
 	// Message cycle
