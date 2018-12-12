@@ -11,104 +11,16 @@
 #include "../xr_ioconsole.h"
 #include "MainMenu.h"
 
-#define CURL_STATICLIB
-#include "..\components\libcurl\include\curl\curl.h"
-#pragma comment(lib,"libcurl.lib")
+#include "RegistryFuncs.h"
 
-#pragma comment(lib,"ws2_32.lib")  // Зависимость от WinSocks2
-#pragma comment(lib,"wldap32.lib")
-
+#include "..\xrDownloader\xrDownloader.h"
 #include <fstream>
 #include <thread>
-volatile int TotalProgress = 0;
 
 #define TSMP_MAPLIST_URL "http://dark-stalker.clan.su/tsmp/tsmp_maplist.txt"
 
 CMainMenu *Men;
 std::string LastConnectParams=" ";
-CURL *curl=NULL;
-
-class CURL_Downloader
-{
-private:
-	double *PR;
-private:
-	std::string CorrectFilename(std::string ssss)
-	{
-		std::string DPath = ssss;
-		
-		for (int i = 0; ; i++)
-		{	
-			if (DPath[i] == '/') DPath[i] = '\\'; 
-			if (DPath[i] == '\\')
-			{
-				DPath += " ";
-
-				for (int j = DPath.size() - 1; j > i; j--)
-				{
-					DPath[j] = DPath[j - 1];
-				}
-
-				DPath[i + 1] = '\\';
-				i++;				
-			}
-
-			if (i==(DPath.size()-1)) break;
-
-		}
-		Msg("was %s become %s",ssss.c_str(),DPath.c_str());
-		
-		return DPath;
-	}
-
-	static int CURL_ProgressUpdate(CURL_Downloader *D,
-		double dltotal, double dlnow,
-		double ultotal, double ulnow)
-	{
-		TotalProgress = (dlnow / dltotal) * 100;
-		return 0;
-	}
-public:
-	//CURL_Downloader() {};
-
-	//~CURL_Downloader() { Msg("Downloader destroyed"); };
-
-	void DownloadFile(std::string Url, std::string OutFile_)
-	{
-		Msg("ThD: DownloadFile Called");
-
-		TotalProgress = 0;
-
-		Msg("ThD: CorrectFile Called");
-		std::string OutFile= CorrectFilename(OutFile_);
-		Msg("ThD: CorrectFile Finished");
-		
-		FILE *fp;
-		CURLcode res;
-
-		if (curl)
-		{
-			Msg("ThD: Curl initialization ok");
-
-			fp = fopen(OutFile.c_str(), "wb");
-			curl_easy_setopt(curl, CURLOPT_URL, Url.c_str());
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-
-			curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
-			curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, CURL_ProgressUpdate);
-			curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &PR);
-
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-			res = curl_easy_perform(curl);
-			fclose(fp);
-
-			Msg("task completed!");
-		}
-	}
-};
-
-
-#include "RegistryFuncs.h"
 
 BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 {
@@ -134,10 +46,13 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 
 
 		m_caClientOptions			= tmp;
-	} else {
+	} 
+	else 
+	{
 		string1024	ret="";
 		LPCSTR		begin	= NameStart + xr_strlen("/name="); 
 		sscanf			(begin, "%[^/]",ret);
+		
 		if (!xr_strlen(ret))
 		{
 			string1024 tmpstr;
@@ -146,6 +61,7 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 			strcat_s(tmpstr, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
 		
 			const char* ptmp = strstr(strstr(op_client, "name="), "/");
+			
 			if (ptmp)
 				strcat_s(tmpstr, ptmp);
 			m_caClientOptions = tmpstr;
@@ -160,9 +76,11 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	m_bDemoPlayMode = FALSE;
 	m_aDemoData.clear();
 	m_bDemoStarted	= FALSE;
+	
 	if (strstr(Core.Params,"-tdemo ") || strstr(Core.Params,"-tdemof "))
 	{
 		string1024				f_name;
+		
 		if (strstr(Core.Params,"-tdemo "))
 		{
 			sscanf					(strstr(Core.Params,"-tdemo ")+7,"%[^ ] ",f_name);
@@ -399,14 +317,11 @@ bool xr_stdcall net_start_finalizer()
 				 if (remove(cfg_full_name)) Msg("file removed");			 
 			 }
 
-
-			curl= curl_easy_init();
-			 CURL_Downloader *CURL_loader_maplist;
-			 CURL_loader_maplist->DownloadFile(TSMP_MAPLIST_URL, cfg_full_name);
-			 CURL_loader_maplist->~CURL_Downloader();
+			 Xr_Downloader *DWLDR;
+			 DWLDR->DownloadFile(TSMP_MAPLIST_URL, cfg_full_name);
+			 DWLDR->~Xr_Downloader();
 
 				Msg("%s", cfg_full_name);
-
 
 				std::vector<std::string> StrVec;
 
@@ -433,6 +348,7 @@ bool xr_stdcall net_start_finalizer()
 
 					char *p = strtok(s, "=");
 					int iii = 0;
+				
 					while (p != NULL)
 					{
 						if (iii == 0) First = p;
@@ -464,7 +380,9 @@ bool xr_stdcall net_start_finalizer()
 
 					Men = MainMenu();
 
-					auto ThTh = []()
+					Xr_Downloader *xrdownloader;
+
+					auto ThTh = [](Xr_Downloader *xrldr)
 					{
 						Msg("ThTh started");
 
@@ -473,32 +391,30 @@ bool xr_stdcall net_start_finalizer()
 						while (true)
 						{
 							std::this_thread::sleep_for(std::chrono::milliseconds(500));
+							int Pr = xrldr->GetProgress();
+							Men->OnDownloadPatchProgress(Pr, 100);
+							Msg("downloaded %i %%", Pr);
 
-							Men->OnDownloadPatchProgress(TotalProgress, 100);
-							Msg("downloaded %i %%", TotalProgress);
-
-							if (TotalProgress == 100) break;
+							if (Pr == 100) break;
 						}
 						Msg("ThTh end");					
 					};
 
-					std::thread thread_1(ThTh);
+					std::thread thread_1(ThTh,xrdownloader);
 
-					auto ThD = [](std::string url, std::string Arch_)
+					auto ThD = [](std::string url, std::string Arch_, Xr_Downloader *XRDW)
 					{
 						Msg("ThD started");
-
-						CURL_Downloader *CDW;
+						
 						Msg("ThD: Downloader defined");
-						CDW->DownloadFile(url, Arch_);
-						CDW->~CURL_Downloader();
+						XRDW->DownloadFile(url, Arch_);
+						XRDW->~Xr_Downloader();
 
 						Msg("ThD downloaded");
 
 						Men->OnDownloadMapEnd();
 						Msg("Загрузка карты завершена (Map is downloaded) 100 %%");
 
-						curl_easy_cleanup(curl);
 						string_path sp;
 						FS.update_path(sp, "$fs_root$", "\gamedata");
 
@@ -512,7 +428,7 @@ bool xr_stdcall net_start_finalizer()
 						Msg("ThD finished");					
 					};
 
-					std::thread thread_D(ThD,DownloadFrom,Arch);
+					std::thread thread_D(ThD,DownloadFrom,Arch,xrdownloader);
 
 					thread_D.detach();
 					thread_1.detach();
@@ -527,9 +443,6 @@ bool xr_stdcall net_start_finalizer()
 				}
 
 			}
-
-
-
 	}
 	return true;
 }

@@ -151,10 +151,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrGameSpy", "xrGameSpy\xrGa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrGame", "xrGame\xrGame.vcxproj", "{200652A6-043E-4634-8837-87983B3BD5E0}"
 	ProjectSection(ProjectDependencies) = postProject
-		{DA6F56B4-06A4-441D-AD70-AC5A7D51FADB} = {DA6F56B4-06A4-441D-AD70-AC5A7D51FADB}
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29} = {9CBA752E-416E-4B16-A9A6-3156F3811B29}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "components\libcurl\projects\Windows\VC15\lib\libcurl.vcxproj", "{DA6F56B4-06A4-441D-AD70-AC5A7D51FADB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrDownloader", "xrDownloader\xrDownloader.vcxproj", "{9CBA752E-416E-4B16-A9A6-3156F3811B29}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DA6F56B4-06A4-441D-AD70-AC5A7D51FADB} = {DA6F56B4-06A4-441D-AD70-AC5A7D51FADB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1139,6 +1144,26 @@ Global
 		{DA6F56B4-06A4-441D-AD70-AC5A7D51FADB}.tsmp_tools|Win32.Build.0 = LIB Release - LIB OpenSSL - LIB LibSSH2|Win32
 		{DA6F56B4-06A4-441D-AD70-AC5A7D51FADB}.tsmp_tools|x64.ActiveCfg = LIB Release - LIB OpenSSL - LIB LibSSH2|x64
 		{DA6F56B4-06A4-441D-AD70-AC5A7D51FADB}.tsmp_tools|x64.Build.0 = LIB Release - LIB OpenSSL - LIB LibSSH2|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Debug|Win32.Build.0 = Debug|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Debug|x64.ActiveCfg = Debug|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Debug|x64.Build.0 = Debug|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release_Dedicated|Win32.ActiveCfg = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release_Dedicated|Win32.Build.0 = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release_Dedicated|x64.ActiveCfg = Release|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release_Dedicated|x64.Build.0 = Release|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release|Win32.ActiveCfg = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release|Win32.Build.0 = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release|x64.ActiveCfg = Release|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.Release|x64.Build.0 = Release|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_client|Win32.ActiveCfg = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_client|Win32.Build.0 = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_client|x64.ActiveCfg = Release|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_client|x64.Build.0 = Release|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_tools|Win32.ActiveCfg = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_tools|Win32.Build.0 = Release|Win32
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_tools|x64.ActiveCfg = Release|x64
+		{9CBA752E-416E-4B16-A9A6-3156F3811B29}.tsmp_tools|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
