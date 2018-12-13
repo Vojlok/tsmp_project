@@ -10,7 +10,8 @@
 #include "../../xrNetServer/net_server.h"
 #include "game_sv_base.h"
 #include "id_generator.h"
-#include "battleye.h"
+
+#define  BATTLEYE
 
 #ifdef DEBUG
 //. #define SLOW_VERIFY_ENTITIES

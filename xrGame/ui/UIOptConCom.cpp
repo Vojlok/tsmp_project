@@ -5,7 +5,8 @@
 #include "../../xrcore/xrCore.h"
 #include "../game_base_space.h"
 #include "../RegistryFuncs.h"
-#include "../battleye.h"
+
+#define  BATTLEYE
 
 xr_token g_GameModes	[] = {
 	{ "st_deathmatch",			GAME_DEATHMATCH	},

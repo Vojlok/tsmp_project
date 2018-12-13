@@ -224,7 +224,7 @@ public:
 
 	// Starting/Loading
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Load				( LPCSTR name );
+	virtual void				net_Load(LPCSTR name) {};
 	virtual void				net_Save				( LPCSTR name );
 	virtual void				net_Stop				( );
 	virtual BOOL				net_Start_client		( LPCSTR name );

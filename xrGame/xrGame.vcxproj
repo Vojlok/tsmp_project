@@ -3006,7 +3006,6 @@
     <ClInclude Include="antirad.h" />
     <ClInclude Include="BottleItem.h" />
     <ClInclude Include="FoodItem.h" />
-    <ClInclude Include="ItemHealth.h" />
     <ClInclude Include="medkit.h" />
     <ClInclude Include="BoneProtections.h" />
     <ClInclude Include="CustomOutfit.h" />
@@ -3140,7 +3139,6 @@
     <ClInclude Include="game_cl_mp_snd_messages.h" />
     <ClInclude Include="game_cl_mp_script.h" />
     <ClInclude Include="game_sv_base.h" />
-    <ClInclude Include="game_sv_base_console_vars.h" />
     <ClInclude Include="game_sv_event_queue.h" />
     <ClInclude Include="xr_time.h" />
     <ClInclude Include="game_sv_artefacthunt.h" />
@@ -11003,7 +11001,6 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='WIN64|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='64bit|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="CameraEffector.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />
     <ClCompile Include="EffectorFall.cpp" />
     <ClCompile Include="SleepEffector.cpp" />
@@ -11171,12 +11168,6 @@
     <ClCompile Include="Level_GameSpy_Funcs.cpp" />
     <ClCompile Include="Level_input.cpp" />
     <ClCompile Include="Level_load.cpp" />
-    <ClCompile Include="level_map_locations.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Level_network.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">pch_script.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|x64'">pch_script.h</PrecompiledHeaderFile>
@@ -11355,7 +11346,6 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='64bit|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="Level_SLS_Default.cpp" />
-    <ClCompile Include="Level_SLS_Load.cpp" />
     <ClCompile Include="Level_SLS_Save.cpp" />
     <ClCompile Include="Level_start.cpp" />
     <ClCompile Include="LevelGameDef.cpp" />
@@ -14102,8 +14092,6 @@
     <ClCompile Include="PDA.cpp" />
     <ClCompile Include="antirad.cpp" />
     <ClCompile Include="BottleItem.cpp" />
-    <ClCompile Include="FoodItem.cpp" />
-    <ClCompile Include="ItemHealth.cpp" />
     <ClCompile Include="medkit.cpp" />
     <ClCompile Include="BoneProtections.cpp" />
     <ClCompile Include="CustomOutfit.cpp" />
@@ -15715,7 +15703,6 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='64bit|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="game_sv_base.cpp" />
-    <ClCompile Include="game_sv_base_console_vars.cpp" />
     <ClCompile Include="game_sv_base_script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">pch_script.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|x64'">pch_script.h</PrecompiledHeaderFile>
@@ -16612,7 +16599,6 @@
     <ClCompile Include="xrServer_process_update.cpp" />
     <ClCompile Include="xrGameSpy_GameSpyFuncs.cpp" />
     <ClCompile Include="xrGameSpyServer.cpp" />
-    <ClCompile Include="xrGameSpyServer_callbacks.cpp" />
     <ClCompile Include="PHDebug.cpp" />
     <ClCompile Include="PHWorld.cpp" />
     <ClCompile Include="PHWorldScript.cpp">
@@ -16675,7 +16661,6 @@
     <ClCompile Include="PHInterpolation.cpp" />
     <ClCompile Include="PHContactBodyEffector.cpp" />
     <ClCompile Include="PHNetState.cpp" />
-    <ClCompile Include="PHSynchronize.cpp" />
     <ClCompile Include="PHMoveStorage.cpp" />
     <ClCompile Include="DisablingParams.cpp" />
     <ClCompile Include="PHDisabling.cpp" />

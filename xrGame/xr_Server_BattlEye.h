@@ -1,7 +1,7 @@
 #ifndef	__XR_SERVER_BATTLEYE_H__
 #define __XR_SERVER_BATTLEYE_H__
 
-#include "battleye.h"
+#define  BATTLEYE
 
 #ifdef BATTLEYE
 

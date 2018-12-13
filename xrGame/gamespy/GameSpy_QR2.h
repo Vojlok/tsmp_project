@@ -1,7 +1,8 @@
 #pragma once
 
 #include "GameSpy_FuncDefs.h"
-#include "..\battleye.h"
+
+#define  BATTLEYE
 
 class CGameSpy_QR2
 {

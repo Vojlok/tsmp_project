@@ -4,7 +4,7 @@
 #ifndef	XR_BATTLEYE_SYSTEM_H_INCLUDED
 #define XR_BATTLEYE_SYSTEM_H_INCLUDED
 
-#include "battleye.h"
+#define  BATTLEYE
 
 #ifdef BATTLEYE
 
