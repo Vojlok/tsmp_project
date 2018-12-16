@@ -237,8 +237,8 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 	P.w_u8			(u8(g_bCollectStatisticData));
 
 	// Players
-//	u32	p_count			= get_players_count() - ((g_dedicated_server)? 1 : 0);
 	u32 p_count = 0;
+
 	for (u32 p_it=0; p_it<get_players_count(); ++p_it)
 	{
 		xrClientData*	C		=	(xrClientData*)	m_server->client_Get	(p_it);		

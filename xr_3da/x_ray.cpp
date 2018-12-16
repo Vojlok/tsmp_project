@@ -36,7 +36,8 @@ XRCORE_API	u32		build_id;
 //#define NO_SINGLE
 #define NO_MULTI_INSTANCES
 
-static LPSTR month_id[12] = {
+static LPSTR month_id[12] = 
+{
 	"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
 };
 
@@ -136,16 +137,15 @@ void InitSettings	()
 }
 void InitConsole	()
 {
-#ifdef DEDICATED_SERVER
+	if (g_dedicated_server)
 	{
-		Console						= xr_new<CTextConsole>	();		
+		Console = xr_new<CTextConsole>();
 	}
-#else
-	//	else
+	else
 	{
-		Console						= xr_new<CConsole>	();
+		Console = xr_new<CConsole>();
 	}
-#endif
+
 	Console->Initialize			( );
 
 #ifdef TSMP_CLIENT
@@ -248,11 +248,9 @@ void Startup					( )
 	}
 
 	// Initialize APP
-//#ifndef DEDICATED_SERVER
 	ShowWindow( Device.m_hWnd , SW_SHOWNORMAL );
-	Device.Create				( );
-//#endif
-	LALib.OnCreate				( );
+	Device.Create();
+	LALib.OnCreate();
 	pApp						= xr_new<CApplication>	();
 	g_pGamePersistent			= (IGame_Persistent*)	NEW_INSTANCE (CLSID_GAME_PERSISTANT);
 	g_SpatialSpace				= xr_new<ISpatial_DB>	();
@@ -574,53 +572,58 @@ void foo	()
 ENGINE_API	bool g_dedicated_server	= false;
 
 int APIENTRY WinMain_impl(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     char *    lpCmdLine,
-                     int       nCmdShow)
+	HINSTANCE hPrevInstance,
+	char *    lpCmdLine,
+	int       nCmdShow)
 {
-	if (0 != strstr(Core.Params, "-priority")) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+	LPCSTR						prior = "-prioptity ";
+	LPCSTR						ded = "-dedicated ";
 
+	if (!strstr(lpCmdLine, prior) == NULL) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 
-//	foo();
-#ifndef DEDICATED_SERVER
+	if (!strstr(lpCmdLine, ded) == NULL) g_dedicated_server = true;
 
-	// Check for virtual memory
+	HANDLE hCheckPresenceMutex=NULL;
 
-	if ( ( strstr( lpCmdLine , "--skipmemcheck" ) == NULL ) && IsOutOfVirtualMemory() )
-		return 0;
+	if (!g_dedicated_server)
+	{
 
-	// Check for another instance
+		// Check for virtual memory
+
+		if ((strstr(lpCmdLine, "--skipmemcheck") == NULL) && IsOutOfVirtualMemory())
+			return 0;
+
+		// Check for another instance
 #ifdef NO_MULTI_INSTANCES
-	#define STALKER_PRESENCE_MUTEX "STALKER-SoC"
-	
-	HANDLE hCheckPresenceMutex = INVALID_HANDLE_VALUE;
-	hCheckPresenceMutex = OpenMutex( READ_CONTROL , FALSE ,  STALKER_PRESENCE_MUTEX );
-	if ( hCheckPresenceMutex == NULL ) {
-		// New mutex
-		hCheckPresenceMutex = CreateMutex( NULL , FALSE , STALKER_PRESENCE_MUTEX );
-		if ( hCheckPresenceMutex == NULL )
-			// Shit happens
-			return 2;
-	} else {
-		// Already running
-		CloseHandle( hCheckPresenceMutex );
-		return 1;
-	}
-#endif
-#else // DEDICATED_SERVER
-	g_dedicated_server			= true;
-#endif // DEDICATED_SERVER
+#define STALKER_PRESENCE_MUTEX "STALKER-SoC"
 
-	SetThreadAffinityMask		(GetCurrentThread(),1);
+		hCheckPresenceMutex = INVALID_HANDLE_VALUE;
+		hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
+		if (hCheckPresenceMutex == NULL)
+		{
+			hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX); // New mutex
+			if (hCheckPresenceMutex == NULL)				// Shit happens
+				return 2;
+		}
+		else
+		{
+			// Already running
+			CloseHandle(hCheckPresenceMutex);
+			return 1;
+		}
+#endif
+	}
+
+	SetThreadAffinityMask(GetCurrentThread(), 1);
 
 	// Title window
 #ifdef _WIN54
-	logoWindow					= CreateDialog(GetModuleHandle(NULL),	MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc );
+	logoWindow = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc);
 #else
 	logoWindow = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_STARTUP), 0, (DLGPROC)logDlgProc);
 #endif
-	
-	SetWindowPos				(
+
+	SetWindowPos(
 		logoWindow,
 #ifndef DEBUG
 		HWND_TOPMOST,
@@ -635,97 +638,99 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 	);
 
 	// AVI
-	g_bIntroFinished			= TRUE;
+	g_bIntroFinished = TRUE;
 
-	g_sLaunchOnExit_app[0]		= NULL;
-	g_sLaunchOnExit_params[0]	= NULL;
+	g_sLaunchOnExit_app[0] = NULL;
+	g_sLaunchOnExit_params[0] = NULL;
 
 	LPCSTR						fsgame_ltx_name = "-fsltx ";
 	string_path					fsgame = "";
-	if (strstr(lpCmdLine, fsgame_ltx_name)) {
+	if (strstr(lpCmdLine, fsgame_ltx_name)) 
+	{
 		int						sz = xr_strlen(fsgame_ltx_name);
-		sscanf					(strstr(lpCmdLine,fsgame_ltx_name)+sz,"%[^ ] ",fsgame);
+		sscanf(strstr(lpCmdLine, fsgame_ltx_name) + sz, "%[^ ] ", fsgame);
 	}
 
-	g_temporary_stuff			= &trivial_encryptor::decode;
-	
-	compute_build_id			();
-	Core._initialize			("xray",NULL, TRUE, fsgame[0] ? fsgame : NULL);
-	InitSettings				();
+	g_temporary_stuff = &trivial_encryptor::decode;
 
-#ifndef DEDICATED_SERVER
+	compute_build_id();
+	Core._initialize("xray", NULL, TRUE, fsgame[0] ? fsgame : NULL);
+	InitSettings();
+
+	if (!g_dedicated_server)
 	{
 		damn_keys_filter		filter;
 		(void)filter;
-#endif // DEDICATED_SERVER
+	}
 
-		FPU::m24r				();
-		InitEngine				();
-		InitConsole				();
+	FPU::m24r();
+	InitEngine();
+	InitConsole();
 
-		LPCSTR benchName = "-batch_benchmark ";
-		if(strstr(lpCmdLine, benchName))
-		{
-			int sz = xr_strlen(benchName);
-			string64				b_name;
-			sscanf					(strstr(Core.Params,benchName)+sz,"%[^ ] ",b_name);
-			doBenchmark				(b_name);
+	LPCSTR benchName = "-batch_benchmark ";
+	if (strstr(lpCmdLine, benchName))
+	{
+		int sz = xr_strlen(benchName);
+		string64				b_name;
+		sscanf(strstr(Core.Params, benchName) + sz, "%[^ ] ", b_name);
+		doBenchmark(b_name);
+		return 0;
+	}
+
+	if (strstr(lpCmdLine, "-launcher"))
+	{
+		int l_res = doLauncher();
+		if (l_res != 0)
 			return 0;
-		}
+	};
 
-		if (strstr(lpCmdLine,"-launcher")) 
-		{
-			int l_res = doLauncher();
-			if (l_res != 0)
-				return 0;
-		};
-		
 
-		if(strstr(Core.Params,"-r2a"))	
-			Console->Execute			("renderer renderer_r2a");
-		else
-		if(strstr(Core.Params,"-r2"))	
-			Console->Execute			("renderer renderer_r2");
+	if (strstr(Core.Params, "-r2a"))
+		Console->Execute("renderer renderer_r2a");
+	else
+	{
+		if (strstr(Core.Params, "-r2"))
+			Console->Execute("renderer renderer_r2");
 		else
 		{
 			CCC_LoadCFG_custom*	pTmp = xr_new<CCC_LoadCFG_custom>("renderer ");
-			pTmp->Execute				(Console->ConfigFile);
-			xr_delete					(pTmp);
+			pTmp->Execute(Console->ConfigFile);
+			xr_delete(pTmp);
 		}
-
-
-		InitInput					( );
-		Engine.External.Initialize	( );
-		Console->Execute			("stat_memory");
-		Startup	 					( );
-		Core._destroy				( );
-
-		char* _args[3];
-		// check for need to execute something external
-		if (/*xr_strlen(g_sLaunchOnExit_params) && */xr_strlen(g_sLaunchOnExit_app) ) 
-		{
-			string4096 ModuleFileName = "";		
-			GetModuleFileName(NULL, ModuleFileName, 4096);
-
-			string4096 ModuleFilePath		= "";
-			char* ModuleName				= NULL;
-			GetFullPathName					(ModuleFileName, 4096, ModuleFilePath, &ModuleName);
-			ModuleName[0]					= 0;
-			strcat							(ModuleFilePath, g_sLaunchOnExit_app);
-			_args[0] 						= g_sLaunchOnExit_app;
-			_args[1] 						= g_sLaunchOnExit_params;
-			_args[2] 						= NULL;		
-			
-			_spawnv							(_P_NOWAIT, _args[0], _args);//, _envvar);
-		}
-#ifndef DEDICATED_SERVER
-#ifdef NO_MULTI_INSTANCES		
-		// Delete application presence mutex
-		CloseHandle( hCheckPresenceMutex );
-#endif
 	}
-	// here damn_keys_filter class instanse will be destroyed
-#endif // DEDICATED_SERVER
+
+
+	InitInput();
+	Engine.External.Initialize();
+	Console->Execute("stat_memory");
+	Startup();
+	Core._destroy();
+
+	char* _args[3];
+	// check for need to execute something external
+	if (xr_strlen(g_sLaunchOnExit_app))
+	{
+		string4096 ModuleFileName = "";
+		GetModuleFileName(NULL, ModuleFileName, 4096);
+
+		string4096 ModuleFilePath = "";
+		char* ModuleName = NULL;
+		GetFullPathName(ModuleFileName, 4096, ModuleFilePath, &ModuleName);
+		ModuleName[0] = 0;
+		strcat(ModuleFilePath, g_sLaunchOnExit_app);
+		_args[0] = g_sLaunchOnExit_app;
+		_args[1] = g_sLaunchOnExit_params;
+		_args[2] = NULL;
+
+		_spawnv(_P_NOWAIT, _args[0], _args);//, _envvar);
+	}
+
+	if (!g_dedicated_server)
+	{
+#ifdef NO_MULTI_INSTANCES			
+		CloseHandle(hCheckPresenceMutex); // Delete application presence mutex
+#endif 
+	}
 
 	return						0;
 }
@@ -749,13 +754,16 @@ int APIENTRY WinMain(HINSTANCE hInstance,
                      char *    lpCmdLine,
                      int       nCmdShow)
 {
-	__try 
+	__try
 	{
-#ifdef DEDICATED_SERVER
-		Debug._initialize	(true);
-#else // DEDICATED_SERVER
-		Debug._initialize	(false);
-#endif // DEDICATED_SERVER
+		if (g_dedicated_server)
+		{
+			Debug._initialize(true);
+		}
+		else
+		{
+			Debug._initialize(false);
+		}
 
 		WinMain_impl		(hInstance,hPrevInstance,lpCmdLine,nCmdShow);
 	}
@@ -945,13 +953,15 @@ void CApplication::LoadBegin	()
 
 		g_appLoaded			= FALSE;
 
-#ifndef DEDICATED_SERVER
-		_InitializeFont		(pFontSystem,"ui_font_graffiti19_russian",0);
+		if (!g_dedicated_server)
+		{
+			_InitializeFont(pFontSystem, "ui_font_graffiti19_russian", 0);
 
-		ll_hGeom.create		(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
-		sh_progress.create	("hud\\default","ui\\ui_load");
-		ll_hGeom2.create		(FVF::F_TL, RCache.Vertex.Buffer(),NULL);
-#endif
+			ll_hGeom.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
+			sh_progress.create("hud\\default", "ui\\ui_load");
+			ll_hGeom2.create(FVF::F_TL, RCache.Vertex.Buffer(), NULL);
+		}
+
 		phase_timer.Start	();
 		load_stage			= 0;
 

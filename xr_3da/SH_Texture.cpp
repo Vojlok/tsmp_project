@@ -14,6 +14,8 @@
 #define		PRIORITY_NORMAL	8
 #define		PRIORITY_LOW	4
 
+extern bool g_dedicated_server;
+
 void resptrcode_texture::create(LPCSTR _name)
 {
 	_set(Device.Resources->_CreateTexture(_name));
@@ -153,115 +155,124 @@ void CTexture::Load		()
 	}
 
 	Preload							();
-#ifndef		DEDICATED_SERVER
-	// Check for OGM
-	string_path			fn;
-	if (FS.exist(fn,"$game_textures$",*cName,".ogm")){
-		// AVI
-		pTheora		= xr_new<CTheoraSurface>();
-		m_play_time	= 0xFFFFFFFF;
 
-		if (!pTheora->Load(fn)) {
-			xr_delete(pTheora);
-			FATAL				("Can't open video stream");
-		} else {
-			flags.MemoryUsage	= pTheora->Width(true)*pTheora->Height(true)*4;
-			pTheora->Play		(TRUE,Device.dwTimeContinual);
 
-			// Now create texture
-			IDirect3DTexture9*	pTexture = 0;
-			u32 _w = pTheora->Width(false);
-			u32 _h = pTheora->Height(false);
-
-			HRESULT hrr = HW.pDevice->CreateTexture(
-				_w, _h, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &pTexture, NULL );
-
-			pSurface = pTexture;
-			if (FAILED(hrr))
-			{
-				FATAL		("Invalid video stream");
-				R_CHK		(hrr);
-				xr_delete	(pTheora);
-				pSurface	= 0;
-			}
-
-		}
-	} else
-	if (FS.exist(fn,"$game_textures$",*cName,".avi")){
-		// AVI
-		pAVI = xr_new<CAviPlayerCustom>();
-
-		if (!pAVI->Load(fn)) {
-			xr_delete(pAVI);
-			FATAL				("Can't open video stream");
-		} else {
-			flags.MemoryUsage	= pAVI->m_dwWidth*pAVI->m_dwHeight*4;
-
-			// Now create texture
-			IDirect3DTexture9*	pTexture = 0;
-			HRESULT hrr = HW.pDevice->CreateTexture(
-				pAVI->m_dwWidth,pAVI->m_dwHeight,1,0,D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,
-				&pTexture,NULL
-				);
-			pSurface	= pTexture;
-			if (FAILED(hrr))
-			{
-				FATAL		("Invalid video stream");
-				R_CHK		(hrr);
-				xr_delete	(pAVI);
-				pSurface = 0;
-			}
-
-		}
-	} else
-    if (FS.exist(fn,"$game_textures$",*cName,".seq"))
+	if (!g_dedicated_server)
 	{
-		// Sequence
-		string256 buffer;
-		IReader* _fs		= FS.r_open(fn);
+		// Check for OGM
+		string_path			fn;
+		if (FS.exist(fn, "$game_textures$", *cName, ".ogm")) {
+			// AVI
+			pTheora = xr_new<CTheoraSurface>();
+			m_play_time = 0xFFFFFFFF;
 
-		flags.seqCycles	= FALSE;
-		_fs->r_string	(buffer,sizeof(buffer));
-		if (0==stricmp	(buffer,"cycled"))
-		{
-			flags.seqCycles	= TRUE;
-			_fs->r_string	(buffer,sizeof(buffer));
-		}
-		u32 fps	= atoi(buffer);
-		seqMSPF		= 1000/fps;
+			if (!pTheora->Load(fn)) {
+				xr_delete(pTheora);
+				FATAL("Can't open video stream");
+			}
+			else {
+				flags.MemoryUsage = pTheora->Width(true)*pTheora->Height(true) * 4;
+				pTheora->Play(TRUE, Device.dwTimeContinual);
 
-		while (!_fs->eof())
-		{
-			_fs->r_string(buffer,sizeof(buffer));
-			_Trim		(buffer);
-			if (buffer[0])	
-			{
-				// Load another texture
-				u32	mem  = 0;
-				pSurface = ::Render->texture_load	(buffer,mem);
-				if (pSurface)	
+				// Now create texture
+				IDirect3DTexture9*	pTexture = 0;
+				u32 _w = pTheora->Width(false);
+				u32 _h = pTheora->Height(false);
+
+				HRESULT hrr = HW.pDevice->CreateTexture(
+					_w, _h, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &pTexture, NULL);
+
+				pSurface = pTexture;
+				if (FAILED(hrr))
 				{
-					// pSurface->SetPriority	(PRIORITY_LOW);
-					seqDATA.push_back		(pSurface);
-					flags.MemoryUsage		+= mem;
+					FATAL("Invalid video stream");
+					R_CHK(hrr);
+					xr_delete(pTheora);
+					pSurface = 0;
+				}
+
+			}
+		}
+		else
+			if (FS.exist(fn, "$game_textures$", *cName, ".avi")) {
+				// AVI
+				pAVI = xr_new<CAviPlayerCustom>();
+
+				if (!pAVI->Load(fn)) {
+					xr_delete(pAVI);
+					FATAL("Can't open video stream");
+				}
+				else {
+					flags.MemoryUsage = pAVI->m_dwWidth*pAVI->m_dwHeight * 4;
+
+					// Now create texture
+					IDirect3DTexture9*	pTexture = 0;
+					HRESULT hrr = HW.pDevice->CreateTexture(
+						pAVI->m_dwWidth, pAVI->m_dwHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED,
+						&pTexture, NULL
+					);
+					pSurface = pTexture;
+					if (FAILED(hrr))
+					{
+						FATAL("Invalid video stream");
+						R_CHK(hrr);
+						xr_delete(pAVI);
+						pSurface = 0;
+					}
+
 				}
 			}
-		}
-		pSurface	= 0;
-		FS.r_close	(_fs);
-	} else
-	{
-		// Normal texture
-		u32	mem  = 0;
-		pSurface = ::Render->texture_load	(*cName,mem);
+			else
+				if (FS.exist(fn, "$game_textures$", *cName, ".seq"))
+				{
+					// Sequence
+					string256 buffer;
+					IReader* _fs = FS.r_open(fn);
 
-		// Calc memory usage and preload into vid-mem
-		if (pSurface) {
-			// pSurface->SetPriority	(PRIORITY_NORMAL);
-			flags.MemoryUsage		=	mem;
-		}
+					flags.seqCycles = FALSE;
+					_fs->r_string(buffer, sizeof(buffer));
+					if (0 == stricmp(buffer, "cycled"))
+					{
+						flags.seqCycles = TRUE;
+						_fs->r_string(buffer, sizeof(buffer));
+					}
+					u32 fps = atoi(buffer);
+					seqMSPF = 1000 / fps;
+
+					while (!_fs->eof())
+					{
+						_fs->r_string(buffer, sizeof(buffer));
+						_Trim(buffer);
+						if (buffer[0])
+						{
+							// Load another texture
+							u32	mem = 0;
+							pSurface = ::Render->texture_load(buffer, mem);
+							if (pSurface)
+							{
+								// pSurface->SetPriority	(PRIORITY_LOW);
+								seqDATA.push_back(pSurface);
+								flags.MemoryUsage += mem;
+							}
+						}
+					}
+					pSurface = 0;
+					FS.r_close(_fs);
+				}
+				else
+				{
+					// Normal texture
+					u32	mem = 0;
+					pSurface = ::Render->texture_load(*cName, mem);
+
+					// Calc memory usage and preload into vid-mem
+					if (pSurface) {
+						// pSurface->SetPriority	(PRIORITY_NORMAL);
+						flags.MemoryUsage = mem;
+					}
+				}
 	}
-#endif
+
 	PostLoad	()		;
 }
 

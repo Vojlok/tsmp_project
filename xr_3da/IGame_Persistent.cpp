@@ -144,11 +144,11 @@ void IGame_Persistent::OnGameEnd	()
 
 void IGame_Persistent::OnFrame		()
 {
-
-#ifndef DEDICATED_SERVER
-	if(!Device.Paused() || Device.dwPrecacheFrame)
-		Environment().OnFrame				();
-#endif
+	if (!g_dedicated_server)
+	{
+		if (!Device.Paused() || Device.dwPrecacheFrame)
+			Environment().OnFrame();
+	}
 
 #ifndef _EDITOR
 

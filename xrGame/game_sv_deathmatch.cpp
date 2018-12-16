@@ -88,7 +88,7 @@ void HitProcessingThread(void* P)
 
 				for (int i = 0; i < (int)Buffer2.size(); i++)
 				{
-					if (Buffer2[i].uTime == LastHit.uTime && Buffer2[i].iPlayerID == LastHit.iPlayerID)
+					if (Buffer2[i].iPlayerID == LastHit.iPlayerID, Buffer2[i].fPower==LastHit.fPower && Buffer2[i].fImpulse==LastHit.fImpulse && Buffer2[i].fAP==LastHit.fAP && Buffer2[i].iBoneID==LastHit.iBoneID)
 					{
 						iPartedBullet++;
 						continue;
@@ -156,7 +156,7 @@ void HitProcessingThread(void* P)
 
 				for (int i = 0; i < (int)Buffer1.size(); i++)
 				{
-					if (Buffer1[i].uTime == LastHit.uTime && Buffer1[i].iPlayerID == LastHit.iPlayerID)
+					if (Buffer1[i].iPlayerID == LastHit.iPlayerID, Buffer1[i].fPower == LastHit.fPower && Buffer1[i].fImpulse == LastHit.fImpulse && Buffer1[i].fAP == LastHit.fAP && Buffer1[i].iBoneID == LastHit.iBoneID)
 					{
 						iPartedBullet++;
 						continue;
@@ -214,6 +214,7 @@ void HitProcessingThread(void* P)
 			}
 
 		}
+		Sleep(60000);
 	}
 }
 

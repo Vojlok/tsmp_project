@@ -21,7 +21,7 @@
 
 #include <io.h>
 
-
+extern bool g_dedicated_server;
 
 xr_token							snd_freq_token							[ ]={
 	{ "22khz",						sf_22K										},
@@ -476,11 +476,11 @@ public:
 
 	virtual void	Execute	(LPCSTR args)
 	{
-#ifdef DEDICATED_SERVER
-		inherited::Execute	("renderer_r1");
-#else
-		inherited::Execute	(args);
-#endif // DEDICATED_SERVER
+		if(g_dedicated_server)
+			inherited::Execute("renderer_r1");
+		else 
+			inherited::Execute	(args);
+
 
 		psDeviceFlags.set	(rsR2, (renderer_value>0) );
 		r2_sun_static =		(renderer_value!=2);

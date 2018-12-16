@@ -102,9 +102,9 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	FS.r_close					( LL_Stream );
 	bReady						= true;
 	if (!g_dedicated_server)	IR_Capture();
-#ifndef DEDICATED_SERVER
-	Device.seqRender.Add		(this);
-#endif
+
+	if (!g_dedicated_server)
+		Device.seqRender.Add(this);
 
 	Device.seqFrame.Add			(this);
 
@@ -114,27 +114,23 @@ BOOL IGame_Level::Load			(u32 dwNum)
 int		psNET_DedicatedSleep	= 5;
 void	IGame_Level::OnRender		( ) 
 {
-#ifndef DEDICATED_SERVER
-//	if (_abs(Device.fTimeDelta)<EPS_S) return;
-
-	// Level render, only when no client output required
-	if (!g_dedicated_server)	{
-		Render->Calculate			();
-		Render->Render				();
-	} else {
-		Sleep						(psNET_DedicatedSleep);
+	if (!g_dedicated_server)
+	{
+			// Level render, only when no client output required
+		if (!g_dedicated_server) 
+		{
+			Render->Calculate();
+			Render->Render();
+		}
+		else 
+		{
+			Sleep(psNET_DedicatedSleep);
+		}
 	}
-
-	// Font
-//	pApp->pFontSystem->SetSizeI(0.023f);
-//	pApp->pFontSystem->OnRender	();
-#endif
 }
 
 void	IGame_Level::OnFrame		( ) 
 {
-	// Log				("- level:on-frame: ",u32(Device.dwFrame));
-//	if (_abs(Device.fTimeDelta)<EPS_S) return;
 
 	// Update all objects
 	VERIFY						(bReady);
@@ -148,7 +144,9 @@ void	IGame_Level::OnFrame		( )
 		Fvector	pos;
 		pos.random_dir().normalize().mul(::Random.randF(30,100)).add	(Device.vCameraPosition);
 		int		id						= ::Random.randI(Sounds_Random.size());
-		if (Sounds_Random_Enabled)		{
+		
+		if (Sounds_Random_Enabled)		
+		{
 			Sounds_Random[id].play_at_pos	(0,pos,0);
 			Sounds_Random[id].set_volume	(1.f);
 			Sounds_Random[id].set_range		(10,200);

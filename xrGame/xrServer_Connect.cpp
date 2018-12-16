@@ -244,10 +244,6 @@ void xrServer::UnloadDll()
 
 void xrServer::AttachNewClient			(IClient* CL)
 {
-//	Msg("CL NAME = %s",ConPlayer.c_str());	
-
-	
-//#ifdef DEDICATED_SERVER
 	if (g_dedicated_server)
 	{
 		if (g_sv_mp_ModLoaderEnabled == 1)
@@ -307,11 +303,6 @@ void xrServer::AttachNewClient			(IClient* CL)
 				DWORD dwPort = 0;
 
 				Level().GetServerAddress(Address, &dwPort);
-
-
-			//	std::string adr = Address.to_string().c_str();
-
-
 		
 				std::string procargs2 = "-srv " + g_sv_mp_loader_ip + " -srvport " +std::to_string(dwPort);
 
@@ -325,12 +316,7 @@ void xrServer::AttachNewClient			(IClient* CL)
 				moddllinfo.name_lock = "123";  //Цифровая подпись для загруженной DLL - проверяется перед тем, как передать управление в функцию мода
 				moddllinfo.reconnect_addr.ip = "127.0.0.1";  //IP-адрес и порт для реконнекта. Если IP нулевой, то параметры реконнекта автоматически берутся игрой из тех, во время которых произошел дисконнект.
 				moddllinfo.reconnect_addr.port = 5445; // Порт
-			//	moddllinfo.is_reconnect_needed = 0;
-
-
-
-
-
+				
 
 
 	//-binlist <URL> - ссылка на адрес, по которому берется список файлов движка (для работы требуется запуск клиента с ключлм -fz_custom_bin)
@@ -345,40 +331,19 @@ void xrServer::AttachNewClient			(IClient* CL)
 	//-configsdir <string> - директория конфигов
 	//-exename <string> - имя исполняемого файла мода
 
-
-
-
-		//		Msg("After this send sysmsgs");
-
 				SendSysMessage(writer, &moddllinfo, xrServer::SendCB, &userdata);
-
-		//		Msg("Before this send sysmsgs");
-
-			//	FreeLibrary(dll);
-
-			//	Msg("library free");
-			//	Msg("0");
 			}
 		}
-	}
-//#endif
-		
+	}		
 
 	MSYS_CONFIG	msgConfig;
 	msgConfig.sign1 = 0x12071980;
 	msgConfig.sign2 = 0x26111975;
 	msgConfig.is_battleye = 0;
 
-
-	
-		
-
-
-
 #ifdef BATTLEYE
 		msgConfig.is_battleye = (g_pGameLevel && Level().battleye_system.server != 0)? 1 : 0;
 #endif // BATTLEYE
-
 	
 			if (psNET_direct_connect)  //single_game
 			{
@@ -387,26 +352,17 @@ void xrServer::AttachNewClient			(IClient* CL)
 				SendTo_LL(SV_Client->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE, TRUE, TRUE, TRUE));
 			}
 			else
-
-
 			{
-
 				SendTo_LL(CL->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE, TRUE, TRUE, TRUE));
-				Server_Client_Check(CL);
-
-			}
-		
+				Server_Client_Check(CL);				
+			}		
 
 	// gen message
 	if (!NeedToCheckClient_GameSpy_CDKey(CL))
 	{
-	//-------------------------------------------------------------
-	Check_GameSpy_CDKey_Success(CL);
- }
+	Check_GameSpy_CDKey_Success(CL); 
+	}
 
-	//xrClientData * CL_D=(xrClientData*)(CL); 
-	//ip_address				ClAddress;
-	//GetClientAddress		(CL->ID, ClAddress);
 	CL->m_guid[0]=0;
 }
 

@@ -4,6 +4,8 @@
 #include "xr_effgamma.h"
 #include "render.h"
 
+extern bool g_dedicated_server;
+
 void CRenderDevice::_SetupStates	()
 {
 	// General Render States
@@ -16,7 +18,9 @@ void CRenderDevice::_SetupStates	()
 	vCameraRight.set		(1,0,0);
 
 	HW.Caps.Update			();
-	for (u32 i=0; i<HW.Caps.raster.dwStages; i++)				{
+	
+	for (u32 i=0; i<HW.Caps.raster.dwStages; i++)				
+	{
 		float fBias = -.5f	;
 		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MAXANISOTROPY, 4				));
 		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD) (&fBias))));
@@ -69,12 +73,13 @@ void CRenderDevice::_Create	(LPCSTR shName)
 	::Render->create			();
 	Statistic->OnDeviceCreate	();
 
-#ifndef DEDICATED_SERVER
-	m_WireShader.create			("editor\\wire");
-	m_SelectionShader.create	("editor\\selection");
+	if (!g_dedicated_server)
+	{
+		m_WireShader.create("editor\\wire");
+		m_SelectionShader.create("editor\\selection");
 
-	DU.OnDeviceCreate			();
-#endif
+		DU.OnDeviceCreate();
+	}
 
 	dwFrame						= 0;
 }
