@@ -447,8 +447,8 @@ void CSheduler::Update				()
 		VERIFY						(T.Object->dbg_startframe != Device.dwFrame);
 		T.Object->dbg_startframe	= Device.dwFrame;
 #endif
-		T.Object->shedule_Update	(Elapsed);
-		T.dwTimeOfLastExecute		= dwTime;
+		T.Object->shedule_Update	(Elapsed);		
+		T.dwTimeOfLastExecute = dwTime;
 	}
 
 	// Normal (sheduled)

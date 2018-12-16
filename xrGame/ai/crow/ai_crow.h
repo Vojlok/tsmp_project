@@ -108,6 +108,9 @@ public:
 	virtual			~CAI_Crow();
 	virtual void	Load						( LPCSTR section );
 			void	init						();
+
+		virtual	BOOL			net_Relevant() { return FALSE; }
+
 	virtual BOOL	net_Spawn					( CSE_Abstract* DC );
 	virtual void	net_Destroy					();
 	virtual BOOL	renderable_ShadowGenerate	()			{ return FALSE;	}
