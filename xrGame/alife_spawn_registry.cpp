@@ -61,7 +61,7 @@ void CALifeSpawnRegistry::load				(IReader &file_stream, LPCSTR game_name)
 	R_ASSERT					(FS.exist(game_name));
 
 	IReader						*chunk, *chunk0;
-	Msg							("* Loading spawn registry...");
+	Msg							("* Loading spawn registry1...");
 	R_ASSERT2					(file_stream.find_chunk(SPAWN_CHUNK_DATA),"Cannot find chunk SPAWN_CHUNK_DATA!");
 	chunk0						= file_stream.open_chunk(SPAWN_CHUNK_DATA);
 	

@@ -5274,9 +5274,6 @@
     <ClInclude Include="FoodItem.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClInclude>
-    <ClInclude Include="ItemHealth.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClInclude>
     <ClInclude Include="medkit.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClInclude>
@@ -5620,9 +5617,6 @@
       <Filter>Core\Server\Games\client\mp_script</Filter>
     </ClInclude>
     <ClInclude Include="game_sv_base.h">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClInclude>
-    <ClInclude Include="game_sv_base_console_vars.h">
       <Filter>Core\Server\Games\server</Filter>
     </ClInclude>
     <ClInclude Include="game_sv_event_queue.h">
@@ -7791,9 +7785,6 @@
     <ClCompile Include="ActorEffector_script.cpp">
       <Filter>Core\Client\Effectors\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="CameraEffector.cpp">
-      <Filter>Core\Client\Effectors\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="EffectorBobbing.cpp">
       <Filter>Core\Client\Effectors\Actor</Filter>
     </ClCompile>
@@ -7851,9 +7842,6 @@
     <ClCompile Include="Level_load.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
-    <ClCompile Include="level_map_locations.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
     <ClCompile Include="Level_network.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
@@ -7873,9 +7861,6 @@
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
     <ClCompile Include="Level_SLS_Default.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="Level_SLS_Load.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
     <ClCompile Include="Level_SLS_Save.cpp">
@@ -8397,12 +8382,6 @@
     <ClCompile Include="BottleItem.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClCompile>
-    <ClCompile Include="FoodItem.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemHealth.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClCompile>
     <ClCompile Include="medkit.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClCompile>
@@ -8700,9 +8679,6 @@
     <ClCompile Include="game_sv_base.cpp">
       <Filter>Core\Server\Games\server</Filter>
     </ClCompile>
-    <ClCompile Include="game_sv_base_console_vars.cpp">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
     <ClCompile Include="game_sv_base_script.cpp">
       <Filter>Core\Server\Games\server</Filter>
     </ClCompile>
@@ -8892,9 +8868,6 @@
     <ClCompile Include="xrGameSpyServer.cpp">
       <Filter>Core\Server\xrGameSpyServer</Filter>
     </ClCompile>
-    <ClCompile Include="xrGameSpyServer_callbacks.cpp">
-      <Filter>Core\Server\xrGameSpyServer</Filter>
-    </ClCompile>
     <ClCompile Include="PHDebug.cpp">
       <Filter>Core\Client\Objects\physics\Base</Filter>
     </ClCompile>
@@ -8932,9 +8905,6 @@
       <Filter>Core\Client\Objects\physics\Base\Objects\BodyEffectors</Filter>
     </ClCompile>
     <ClCompile Include="PHNetState.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHNet</Filter>
-    </ClCompile>
-    <ClCompile Include="PHSynchronize.cpp">
       <Filter>Core\Client\Objects\physics\Base\Objects\PHNet</Filter>
     </ClCompile>
     <ClCompile Include="PHMoveStorage.cpp">

@@ -379,9 +379,11 @@ void game_sv_GameState::Create					(shared_str &options)
 
 		FS.r_close	(F);
 	}
-
-	if (!g_dedicated_server)
+#ifndef EXPERIMENTS
+	if (!g_dedicated_server){
+#else
 	{
+#endif
 		// loading scripts
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
 		string_path					S;

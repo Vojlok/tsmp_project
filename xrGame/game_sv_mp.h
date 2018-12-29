@@ -6,6 +6,13 @@
 
 class		CItemMgr;
 class		xrClientData;
+
+#ifdef EXPERIMENTS
+#include "alife_simulator.h"
+
+class xrServer;
+#endif
+
 #define		VOTE_LENGTH_TIME		1
 #define		VOTE_QUOTA				0.51f
 
@@ -33,6 +40,23 @@ class game_sv_mp :public game_sv_GameState
 protected:
 	//список трупов для удаления
 	DEF_DEQUE(CORPSE_LIST, u16);
+
+#ifdef EXPERIMENTS
+
+	CALifeSimulator					*m_alife_simulator;
+
+	IC			xrServer			&server() const
+	{
+		VERIFY(m_server);
+		return						(*m_server);
+	}
+
+	IC			CALifeSimulator		&alife() const
+	{
+		VERIFY(m_alife_simulator);
+		return						(*m_alife_simulator);
+	}
+#endif
 
 	CORPSE_LIST						m_CorpseList;
 

@@ -43,7 +43,11 @@ CGameObject::CGameObject		()
 	m_bCrPr_Activated			= false;
 	m_dwCrPr_ActivationStep		= 0;
 	m_spawn_time				= 0;
+#ifndef EXPERIMENTS
 	m_ai_location				= !g_dedicated_server ? xr_new<CAI_ObjectLocation>() : 0;
+#else
+	m_ai_location = xr_new<CAI_ObjectLocation>();
+#endif
 	m_server_flags.one			();
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
@@ -82,6 +86,7 @@ void CGameObject::Load(LPCSTR section)
 void CGameObject::reinit	()
 {
 	m_visual_callback.clear	();
+
 	if (!g_dedicated_server)
         ai_location().reinit	();
 

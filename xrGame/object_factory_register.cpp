@@ -375,8 +375,10 @@ void CObjectFactory::register_classes	()
 	// because we do not have scripts
 	// and script functionality is not
 	// needed here
+#ifndef EXPERIMENTS
 	if (!g_dedicated_server)
 		return;
+#endif
 
 	ADD(CElectricBall			,CSE_ALifeItemArtefact			,TEXT2CLSID("SCRPTART")			,"artefact_s");
 	ADD(CTorch					,CSE_ALifeItemTorch				,TEXT2CLSID("TORCH_S")			,"device_torch_s");

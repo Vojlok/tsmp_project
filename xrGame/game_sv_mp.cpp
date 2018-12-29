@@ -476,6 +476,10 @@ void game_sv_mp::Create (shared_str &options)
 	{
 		g_bConsoleCommandsCreated = true;
 	}
+
+#ifdef EXPERIMENTS
+	m_alife_simulator = xr_new<CALifeSimulator>(&server(), &options);
+#endif
 	
 	//------------------------------------------------------------------
 	LoadRanks();

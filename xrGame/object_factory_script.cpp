@@ -62,7 +62,9 @@ ENGINE_API	bool g_dedicated_server;
 
 void CObjectFactory::register_script_classes()
 {
+#ifndef EXPERIMENTS
 	if (!g_dedicated_server)
+#endif
 		ai();
 }
 

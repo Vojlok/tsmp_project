@@ -952,6 +952,8 @@ void CActor::UpdateCL	()
 float	NET_Jump = 0;
 void CActor::shedule_Update	(u32 DT)
 {
+
+
 	setSVU(OnServer());
 
 	//установить режим показа HUD для текущего активного слота
@@ -1072,7 +1074,11 @@ void CActor::shedule_Update	(u32 DT)
 
 	if (this == Level().CurrentViewEntity())
 	{
+#ifdef EXPERIMENTS
+		if(!g_dedicated_server)
+#endif
 		UpdateMotionIcon		(mstate_real);
+
 	};
 
 	NET_Jump = 0;

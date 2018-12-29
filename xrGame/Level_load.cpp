@@ -89,7 +89,11 @@ BOOL CLevel::Load_GameSpecific_After()
 		}
 	}	
 
+#ifndef EXPERIMENTS
 	if (!g_dedicated_server) {
+#else
+	{
+#endif
 		// loading scripts
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 

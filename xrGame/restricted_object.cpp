@@ -22,6 +22,10 @@
 #include "game_graph.h"
 #include "custommonster.h"
 
+#ifdef EXPERIMENTS
+ENGINE_API	bool g_dedicated_server;
+#endif
+
 CRestrictedObject::~CRestrictedObject		()
 {
 }
@@ -96,6 +100,10 @@ BOOL CRestrictedObject::net_Spawn			(CSE_Abstract* data)
 	Msg							("IN          : %s",temp1);
 #endif
 
+#ifdef EXPERIMENTS
+	Msg("restrict %i %s %s", monster->ID, temp0, temp1);
+#endif
+
 	Level().space_restriction_manager().restrict	(monster->ID,temp0,temp1);
 
 	actual						(true);
@@ -105,6 +113,9 @@ BOOL CRestrictedObject::net_Spawn			(CSE_Abstract* data)
 
 void CRestrictedObject::net_Destroy			()
 {
+#ifdef EXPERIMENTS
+	if (g_dedicated_server) return;
+#endif
 	Level().space_restriction_manager().unrestrict	(m_object->ID());
 }
 
@@ -129,6 +140,11 @@ bool CRestrictedObject::accessible			(const Fvector &position, float radius) con
 	Fsphere						sphere;
 	sphere.P					= position;
 	sphere.R					= radius;
+
+#ifdef EXPERIMENTS
+	if (g_dedicated_server) return true;
+#endif
+
 	return						(Level().space_restriction_manager().accessible(object().ID(),sphere));
 	STOP_PROFILE;
 }
@@ -145,6 +161,9 @@ bool CRestrictedObject::accessible			(u32 level_vertex_id, float radius) const
 {
 	START_PROFILE("Restricted Object/Accessible");
 	VERIFY						(ai().level_graph().valid_vertex_id(level_vertex_id));
+#ifdef EXPERIMENTS
+	if (g_dedicated_server) return true;
+#endif
 	return						(Level().space_restriction_manager().accessible(object().ID(),level_vertex_id,radius));
 	STOP_PROFILE;
 }

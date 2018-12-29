@@ -228,14 +228,27 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 }
 
 #include "../igame_persistent.h"
+
 void CALifeUpdateManager::new_game			(LPCSTR save_name)
 {
 	g_pGamePersistent->LoadTitle		("st_creating_new_game");
 	Msg									("* Creating new game...");
 
 	unload								();
+#ifdef EXPERIMENTS
+	Msg("unloaded");
+#endif
 	reload								(m_section);
+
+#ifdef EXPERIMENTS
+	Msg("reloaded");
+#endif
+
 	spawns().load						(save_name);
+
+#ifdef EXPERIMENTS
+	Msg("spawns loaded");
+#endif
 
 #ifdef PRIQUEL
 	graph().on_load						();
@@ -261,6 +274,9 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 
 void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_only)
 {
+#ifdef EXPERIMENTS
+	Msg("CALifeUpdateManager::load %s %i %i",game_name,no_assert,new_only);
+#endif
 	g_pGamePersistent->LoadTitle		("st_loading_alife_simulator");
 
 #ifdef DEBUG
@@ -270,7 +286,8 @@ void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_onl
 
 	strcpy								(g_last_saved_game,game_name);
 
-	if (new_only || !CALifeStorageManager::load(game_name)) {
+	if (new_only || !CALifeStorageManager::load(game_name)) 
+	{
 		R_ASSERT3						(new_only || no_assert && xr_strlen(game_name),"Cannot find the specified saved game ",game_name);
 		new_game						(game_name);
 	}

@@ -101,8 +101,10 @@ CCustomMonster::~CCustomMonster	()
 	if(!g_dedicated_server)
 		Level().client_spawn_manager().dump	(ID());
 #endif // DEBUG
+#ifndef EXPERIMENTS
 	if(!g_dedicated_server)
 		Level().client_spawn_manager().clear(ID());
+#endif
 }
 
 void CCustomMonster::Load		(LPCSTR section)

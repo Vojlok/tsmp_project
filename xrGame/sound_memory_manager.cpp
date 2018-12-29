@@ -355,6 +355,14 @@ struct CSoundObjectPredicate {
 
 void CSoundMemoryManager::remove_links	(CObject *object)
 {
+#ifdef EXPERIMENTS
+		if (m_sounds == nullptr)
+		{
+			Msg("m_sounds nullptr");
+			return;
+		}
+#endif
+
 	VERIFY					(m_sounds);
 	SOUNDS::iterator		I = std::find_if(m_sounds->begin(),m_sounds->end(),CSoundObjectPredicate(object));
 	if (I != m_sounds->end())

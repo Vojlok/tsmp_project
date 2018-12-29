@@ -15,6 +15,10 @@
 
 const u32 time_to_delete = 300000;
 
+#ifdef EXPERIMENTS
+ENGINE_API	bool g_dedicated_server;
+#endif
+
 struct CSpaceRestrictionManager::CClientRestriction {
 	CRestrictionPtr					m_restriction;
 	shared_str						m_base_out_restrictions;
@@ -118,11 +122,15 @@ IC	void CSpaceRestrictionManager::collect_garbage				()
 
 void CSpaceRestrictionManager::restrict							(ALife::_OBJECT_ID id, shared_str out_restrictors, shared_str in_restrictors)
 {
+#ifdef EXPERIMENTS
+	if (g_dedicated_server) return;
+#endif
+
 	shared_str									merged_out_restrictions = out_restrictors;
 	shared_str									merged_in_restrictions = in_restrictors;
 	shared_str									_default_out_restrictions = default_out_restrictions();
 	shared_str									_default_in_restrictions = default_in_restrictions();
-	
+
 	difference_restrictions						(_default_out_restrictions,merged_in_restrictions);
 	difference_restrictions						(_default_in_restrictions,merged_out_restrictions);
 

@@ -244,7 +244,9 @@ CLevel::~CLevel()
 	xr_delete					(m_debug_renderer);
 #endif
 
+#ifndef EXPERIMENTS
 	if (!g_dedicated_server)
+#endif
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
 	xr_delete					(game);
@@ -555,7 +557,9 @@ void CLevel::OnFrame	()
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),GetGameTimeFactor());
 
 	//Device.Statistic->cripting.Begin	();
+#ifndef EXPERIMENTS
 	if (!g_dedicated_server)
+#endif
 		ai().script_engine().script_process	(ScriptEngine::eScriptProcessorLevel)->update();
 	//Device.Statistic->Scripting.End	();
 	m_ph_commander->update				();

@@ -22,7 +22,8 @@ class CScriptThread;
 
 using namespace ScriptStorage;
 
-class CScriptStorage {
+class CScriptStorage 
+{
 private:
 	lua_State					*m_virtual_machine	;
 	CScriptThread				*m_current_thread	;
