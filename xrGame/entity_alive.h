@@ -14,7 +14,8 @@ class CCharacterPhysicsSupport;
 class CMaterialManager;
 class CVisualMemoryManager;
 class CBlend;
-class CEntityAlive : public CEntity {
+class CEntityAlive : public CEntity 
+{
 private:
 	typedef	CEntity			inherited;			
 public:
@@ -24,8 +25,6 @@ public:
 	bool					m_bMobility;
 	float					m_fAccuracy;
 	float					m_fIntelligence;
-	//m_PhysicMovementControl
-	//CPHMovementControl		*m_PhysicMovementControl;
 
 public:
 	// General
@@ -55,13 +54,6 @@ public:
 	virtual	void			Hit						(SHit* pHDS);
 	virtual void			Die						(CObject* who);
 	virtual void			g_WeaponBones			(int &L, int &R1, int &R2)										= 0;
-	
-//	virtual float			GetfHealth				() const;
-//	virtual float			SetfHealth				(float value);
-
-//	virtual float			g_Health				()	const;
-//	virtual float			g_MaxHealth				()	const;
-
 	virtual float			g_Radiation				()	const;
 	virtual	float			SetfRadiation			(float value);
 
@@ -73,8 +65,6 @@ public:
 	
 	virtual bool			human_being				() const			{return	(false);}
 public:
-	//IC	CPHMovementControl*					PMovement					()						{return m_PhysicMovementControl;}
-
 	virtual u16								PHGetSyncItemsNumber		()						;
 	virtual CPHSynchronize*					PHGetSyncItem				(u16 item)				;
 	virtual void							PHUnFreeze					()						;

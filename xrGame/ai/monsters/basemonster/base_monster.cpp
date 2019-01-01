@@ -145,7 +145,15 @@ void CBaseMonster::Die(CObject* who)
 {
 	if (StateMan) StateMan->critical_finalize();
 
+#ifdef EXPERIMENTS
+	Msg("CBaseMonster::Die inherited::Die(who) call");
+#endif
+
 	inherited::Die(who);
+
+#ifdef EXPERIMENTS
+	Msg("CBaseMonster::Die inherited::Die(who) call returned");
+#endif
 
 	if (is_special_killer(who))
 		sound().play			(MonsterSound::eMonsterSoundDieInAnomaly);

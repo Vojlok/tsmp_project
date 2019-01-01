@@ -10,6 +10,10 @@
 
 #include "../../detail_path_manager_space.h"
 
+#ifdef EXPERIMENTS
+ENGINE_API	bool g_dedicated_server;
+#endif
+
 void CControlDirection::reinit()
 {	
 	inherited::reinit			();
@@ -55,11 +59,13 @@ void CControlDirection::update_frame()
 	m_heading.current_angle		= angle_normalize(m_heading.current_angle);
 	m_data.heading.target_angle	= angle_normalize(m_data.heading.target_angle);
 	
-	if (fsimilar(m_heading.current_angle, m_data.heading.target_angle)) heading_similar = true;
+	if (fsimilar(m_heading.current_angle, m_data.heading.target_angle)) 
+		heading_similar = true;
+
 	angle_lerp(m_heading.current_angle, m_data.heading.target_angle, m_heading.current_speed, m_object->client_update_fdelta());
-	if (!heading_similar && fsimilar(m_heading.current_angle, m_data.heading.target_angle)) {
+
+	if (!heading_similar && fsimilar(m_heading.current_angle, m_data.heading.target_angle)) 
 		event_data.angle |= SRotationEventData::eHeading;
-	}
 
 	// update pitch
 	velocity_lerp				(m_pitch.current_speed, m_data.pitch.target_speed, m_pitch.current_acc, m_object->client_update_fdelta());
@@ -67,11 +73,13 @@ void CControlDirection::update_frame()
 	m_pitch.current_angle		= angle_normalize_signed	(m_pitch.current_angle);
 	m_data.pitch.target_angle	= angle_normalize_signed	(m_data.pitch.target_angle);
 
-	if (fsimilar(m_pitch.current_angle, m_data.pitch.target_angle)) pitch_similar = true;
+	if (fsimilar(m_pitch.current_angle, m_data.pitch.target_angle)) 
+		pitch_similar = true;
+
 	angle_lerp					(m_pitch.current_angle, m_data.pitch.target_angle, m_pitch.current_speed, m_object->client_update_fdelta());
-	if (!pitch_similar && fsimilar(m_pitch.current_angle, m_data.pitch.target_angle)) {
+	
+	if (!pitch_similar && fsimilar(m_pitch.current_angle, m_data.pitch.target_angle)) 
 		event_data.angle |= SRotationEventData::ePitch;
-	}
 
 	// set
 	m_man->path_builder().m_body.speed			= m_heading.current_speed;
@@ -82,9 +90,11 @@ void CControlDirection::update_frame()
 
 	// save object position
 	Fvector P					= m_object->Position();
+
 	// set angles
 	if(!m_object->animation_movement_controlled())
 		m_object->XFORM().setHPB	(-m_man->path_builder().m_body.current.yaw,-m_man->path_builder().m_body.current.pitch,0);
+	
 	// restore object position
 	m_object->Position()		= P;
 
@@ -95,6 +105,10 @@ void CControlDirection::update_frame()
 
 void CControlDirection::pitch_correction()
 {
+#ifdef EXPERIMENTS
+	if (!IsGameTypeSingle() && !g_dedicated_server) return;
+#endif
+
 	if (!m_object->ability_pitch_correction()) return;
 
 	// extended feature to pitch by path (wall climbing)
@@ -105,7 +119,8 @@ void CControlDirection::pitch_correction()
 		const DetailPathManager::STravelPathPoint	cur_point	= m_object->movement().detail().path()[m_object->movement().detail().curr_travel_point_index()];
 		const DetailPathManager::STravelPathPoint	next_point	= m_object->movement().detail().path()[m_object->movement().detail().curr_travel_point_index()+1];
 		
-		if (cur_point.position.distance_to_sqr(next_point.position) > 1) {
+		if (cur_point.position.distance_to_sqr(next_point.position) > 1) 
+		{
 			// получаем искомый вектор направления
 			Fvector						target_dir;
 			target_dir.sub				(next_point.position,cur_point.position);
@@ -165,6 +180,7 @@ bool CControlDirection::is_from_right(const Fvector &position)
 
 	return (from_right(yaw,m_heading.current_angle));
 }
+
 bool CControlDirection::is_from_right(float yaw)
 {
 	return (from_right(yaw,m_heading.current_angle));
@@ -174,6 +190,7 @@ bool CControlDirection::is_turning(float eps_angle)
 {
 	return (!fsimilar(m_heading.current_angle,m_data.heading.target_angle, eps_angle));
 }
+
 void CControlDirection::get_heading(float &current, float &target)
 {
 	current = m_heading.current_angle;

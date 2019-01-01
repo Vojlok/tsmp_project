@@ -3,14 +3,20 @@
 #include "control_combase.h"
 #include "BaseMonster/base_monster.h"
 
-enum EActiveComAction {
+#ifdef EXPERIMENTS
+extern bool bMPClient;
+#endif
+
+enum EActiveComAction 
+{
 	eRemove			= u32(0),
 	eAdd			
 };
 
 
 // DEBUG purpose only
-char *dbg_control_name_table[] = {
+char *dbg_control_name_table[] = 
+{
 		"Control_Movement",
 		"Control_Path",
 		"Control_Dir",
@@ -82,25 +88,35 @@ void CControl_Manager::reinit()
 	// fill active elems
 	m_active_elems.clear	();
 	m_active_elems.reserve	(ControlCom::eControllersCount);
-	for (it = m_control_elems.begin(); it != m_control_elems.end(); ++it)  {
-		if (it->second->is_active() && !is_locked(it->second)) {
+
+	for (it = m_control_elems.begin(); it != m_control_elems.end(); ++it)  
+	{
+		if (it->second->is_active() && !is_locked(it->second)) 
+		{
 			m_active_elems.push_back(it->second);
 		}
 	}
 
 }
 
-struct predicate_remove {
-	IC bool	operator() (const CControl_Com *com) {
+struct predicate_remove 
+{
+	IC bool	operator() (const CControl_Com *com) 
+	{
 		return (com == 0);
 	}
 };
 
 void CControl_Manager::update_frame()
 {
+#ifdef EXPERIMENTS
+	if (bMPClient) return;
+#endif
+
 	if (!m_object->g_Alive()) return;
 
-	for (COM_VEC_IT it = m_active_elems.begin(); it != m_active_elems.end(); ++it)  {
+	for (COM_VEC_IT it = m_active_elems.begin(); it != m_active_elems.end(); ++it)  
+	{
 		// update coms
 		if ((*it)) (*it)->update_frame();
 	}

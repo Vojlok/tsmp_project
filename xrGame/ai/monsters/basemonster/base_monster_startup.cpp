@@ -27,6 +27,11 @@
 #include "../../../inventory_item.h"
 #include "../../../xrServer_Objects_ALife.h"
 
+#ifdef EXPERIMENTS
+ENGINE_API	bool g_dedicated_server;
+bool bMPClient;
+#endif
+
 void CBaseMonster::Load(LPCSTR section)
 {
 	// load parameters from ".ltx" file
@@ -166,6 +171,10 @@ void CBaseMonster::reinit()
 
 BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC) 
 {
+#ifdef EXPERIMENTS
+	bMPClient = (!IsGameTypeSingle && !g_dedicated_server);
+#endif
+
 	if (!inherited::net_Spawn(DC))
 		return(FALSE);
 
@@ -177,6 +186,9 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 												//но для animation movement controllr он должен быть в конце чтобы знать что он создался на споне
 #endif
 
+#ifdef EXPERIMENTS
+	if(!bMPClient)
+#endif
 	R_ASSERT2								(ai().get_level_graph() && ai().get_cross_table() && (ai().level_graph().level_id() != u32(-1)),"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
 
 	monster_squad().register_member			((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);
@@ -190,36 +202,6 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	}
 	m_pPhysics_support->in_NetSpawn			(e);
 #endif
-
-
-	// spawn inventory item
-//	if (ai().get_alife()) {
-//		
-//		CSE_ALifeMonsterBase					*se_monster = smart_cast<CSE_ALifeMonsterBase*>(ai().alife().objects().object(ID()));
-//		VERIFY									(se_monster);
-//
-//		if (se_monster->m_flags.is(CSE_ALifeMonsterBase::flNeedCheckSpawnItem)) {
-//			float prob = Random.randF();
-//			if ((prob < m_spawn_probability) || fsimilar(m_spawn_probability,1.f)) 
-//				se_monster->m_flags.set(CSE_ALifeMonsterBase::flSkipSpawnItem, FALSE);
-//
-//			se_monster->m_flags.set(CSE_ALifeMonsterBase::flNeedCheckSpawnItem, FALSE);
-//		}
-//
-//		if (!se_monster->m_flags.is(CSE_ALifeMonsterBase::flSkipSpawnItem)) {
-//			CSE_Abstract	*object = Level().spawn_item (m_item_section,Position(),ai_location().level_vertex_id(),ID(),true);
-//			CSE_ALifeObject	*alife_object = smart_cast<CSE_ALifeObject*>(object);
-//			if (alife_object)
-//				alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,FALSE);
-//
-//			{
-//				NET_Packet				P;
-//				object->Spawn_Write		(P,TRUE);
-//				Level().Send			(P,net_flags(TRUE));
-//				F_entity_Destroy		(object);
-//			}
-//		}
-//	}
 
 	return(TRUE);
 }

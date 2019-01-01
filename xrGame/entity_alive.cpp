@@ -302,21 +302,51 @@ void CEntityAlive::Die	(CObject* who)
 {
 	if(IsGameTypeSingle())
 		RELATION_REGISTRY().Action(smart_cast<CEntityAlive*>(who), this, RELATION_REGISTRY::KILL);
+#ifdef EXPERIMENTS
+	Msg("CEntityAlive::Die calling inherited::Die");
+#endif
 	inherited::Die(who);
+
+#ifdef EXPERIMENTS
+	Msg("CEntityAlive::Die called inherited::Die");
+#endif
 	
 	const CGameObject *who_object = smart_cast<const CGameObject*>(who);
+
+#ifdef EXPERIMENTS
+	Msg("CEntityAlive::Die who_object got");
+#endif
+
 	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
 
-	if (!getDestroy() && (GameID() == GAME_SINGLE)) {
+#ifdef EXPERIMENTS
+	Msg("CEntityAlive::Die callback");
+#endif
+
+	if (!getDestroy() && (GameID() == GAME_SINGLE)) 
+	{
 		NET_Packet		P;
 		u_EventGen		(P,GE_ASSIGN_KILLER,ID());
 		P.w_u16			(u16(who->ID()));
 		u_EventSend		(P);
 	}
 
+#ifdef EXPERIMENTS
+	Msg("CEntityAlive::Die self");
+#endif
+
 	// disable react to sound
 	ISpatial* self	= smart_cast<ISpatial*> (this);
+
+#ifdef EXPERIMENTS
+	Msg("CEntityAlive::Die sound off");
+#endif
+
 	if (self)		self->spatial.type &=~STYPE_REACTTOSOUND;
+
+#ifdef EXPERIMENTS
+	Msg("CEntityAlive::Die return");
+#endif
 }
 
 //вывзывает при подсчете хита
