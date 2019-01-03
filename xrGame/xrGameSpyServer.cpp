@@ -238,83 +238,26 @@ u32				xrGameSpyServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero 
 		{
 			string4096 ResponseStr;
 			P.r_stringZ(ResponseStr);
-			
-			if (0 != strstr(Core.Params, "-debug")) 
-	{
 
-		Msg("packet type:");
-		string1024 pType;
-		sprintf (pType, "%u", type);		
-			Msg(pType);	
+			if (strlen(ResponseStr) > 100)
+			{		
+				xrClientData *ClData = (xrClientData*)ID_to_client(sender);
+				ip_address			ipSender;
+				DWORD dwPort = 0;
+				u32 uBanFor = 99999999999999999;
 
+				Level().Server->GetClientAddress(ClData->ID, ipSender, &dwPort);
+				Level().Server->clients_Lock();
+				Level().Server->BanAddress(ipSender, uBanFor);
+				Level().Server->DisconnectAddress(ipSender);
+				Level().Server->clients_Unlock();
 
-		Msg("packet string");		
-			Msg(ResponseStr);
-
-
-				}
-			
-
-
-	
-	if (strlen(ResponseStr) > 100)
-	{
-			std::string srv_mes_big = "! stalkazz attack, - "+std::to_string((_Longlong)strlen(ResponseStr))+" symbols";
-
-
-		Msg(srv_mes_big.c_str());
-	
-
-		//xrGameSpyClientData* CL		= (xrGameSpyClientData*)ID_to_client(sender);
-		//xrClientData *l_pC = (xrClientData*)	Level().Server->client_Get	(it);
-		
-		xrClientData *l_pC = (xrClientData*) ID_to_client(sender);
-	//	Level().Server->DisconnectClient(l_pC);
-
-		//Level().Server->GetClientAddress(l_pC->ID, Address, &dwPort);
-
-
-					ip_address			StAddress;
-			DWORD StPort		= 0;
-
-		
-			Level().Server->GetClientAddress(l_pC->ID, StAddress, &StPort);
-		//	Msg("%d : %s - %s port[%u] ping[%u]", it+1, l_pC->ps->getName(),
-			string1024				digits;
-			strcpy(digits,"9999999999999999999999999");
-			u32 ban_time			= atol(digits);
-			string1024 Ipp;
-			string1024 PortS;
-			strcpy(Ipp, StAddress.to_string().c_str());
-	
-			std::string StIp=Ipp;
-
-			char procID[10];
-sprintf(PortS, "%d", StPort);
-
-			std::string StPortS=PortS;
-			std::string srv_mes_big2 = "! stalkazz attack blocked , ip - "+StIp +" , port "+StPortS;
-			Msg(srv_mes_big2.c_str()); 
-			Level().Server->clients_Lock		();
-		//Msg									("Disconnecting and Banning: %s",StAddress.to_string().c_str() ); 
-		Level().Server->BanAddress			(StAddress, ban_time);
-		Level().Server->DisconnectAddress	(StAddress);
-		Level().Server->clients_Unlock		();
-
-
-
-		//		ip_address							Address;
-		//Address.set							(s_ip_addr);
-	//	Level().Server->clients_Lock		();
-	//	Msg									("Disconnecting and Banning: %s",Address.to_string().c_str() ); 
-	//	Level().Server->BanAddress			(Address, ban_time);
-	//	Level().Server->DisconnectAddress	();
-	//	Level().Server->clients_Unlock		();
-
-	}
-	std::string ResPons=ResponseStr;
-	ResPons.resize(70);
-	strcpy(ResponseStr,ResPons.c_str() );
+				Msg("! stalkazz attack detected, %i characters string was in packet, blocked ip %s"
+					, strlen(ResponseStr)
+					, ipSender.to_string().c_str());
+				
+				return 0;
+			}
 
 			if (!CL->m_bCDKeyAuth)
 			{
@@ -329,7 +272,7 @@ sprintf(PortS, "%d", StPort);
 				m_GCDServer.ReAuthUser(int(CL->ID.value()), CL->m_iCDKeyReauthHint, ResponseStr);
 			}
 
-			return (0);
+			return 0;
 		}break;
 	}
 
