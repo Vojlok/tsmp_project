@@ -239,10 +239,6 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 
 	spawns().load						(save_name);
 
-#ifdef PRIQUEL
-	graph().on_load						();
-#endif // PRIQUEL
-
 	server().PerformIDgen				(0x0000);
 	time_manager().init					(m_section);
 	VERIFY								(can_register_objects());
@@ -253,6 +249,7 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 
 	CALifeObjectRegistry::OBJECT_REGISTRY::iterator	I = objects().objects().begin();
 	CALifeObjectRegistry::OBJECT_REGISTRY::iterator	E = objects().objects().end();
+	
 	for ( ; I != E; ++I)
 		(*I).second->on_register		();
 

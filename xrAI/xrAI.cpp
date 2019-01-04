@@ -44,10 +44,8 @@ static const char* h_str =
 	"-? or -h   == this help\n"
 	"-f<NAME>   == compile level in gamedata/levels/<NAME>/\n"
 	"-o         == modify build options\n"
-#ifndef PRIQUEL
 	"-g<NAME>   == build off-line AI graph and cross-table to ai-map in gamedata/levels/<NAME>/\n"
 	"-m         == merge level graphs\n"
-#endif // PRIQUEL
 	"-s         == build game spawn data\n"
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
@@ -61,33 +59,28 @@ extern  HWND logWindow;
 
 extern LPCSTR GAME_CONFIG;
 
-#ifdef PRIQUEL
-extern void clear_temp_folder	();
-#endif // PRIQUEL
 
 void execute	(LPSTR cmd)
 {
 	// Load project
 	string4096 name;
 	name[0]=0; 
-#ifndef PRIQUEL
-	if (strstr(cmd,"-patch")) {
+
+	if (strstr(cmd,"-patch")) 
+	{
 		string256		spawn_id, previous_spawn_id;
 		sscanf			(strstr(cmd,"-patch")+xr_strlen("-patch"),"%s %s",spawn_id,previous_spawn_id);
 		spawn_patcher	a(spawn_id,previous_spawn_id);
 		return;
 	}
 	else
-#endif // PRIQUEL
 	{
 		if (strstr(cmd,"-f"))
 			sscanf	(strstr(cmd,"-f")+2,"%s",name);
 		else
-#ifndef PRIQUEL
 			if (strstr(cmd,"-g"))
 				sscanf	(strstr(cmd,"-g")+2,"%s",name);
 			else
-#endif // PRIQUEL
 				if (strstr(cmd,"-s"))
 					sscanf	(strstr(cmd,"-s")+2,"%s",name);
 				else
@@ -128,20 +121,20 @@ void execute	(LPSTR cmd)
 		xrCompiler		(prjName,!!strstr(cmd,"-draft"),!!strstr(cmd,"-pure_covers"),output);
 	}
 	else
-#ifndef PRIQUEL
-		if (strstr(cmd,"-g")) {
+		if (strstr(cmd,"-g")) 
+		{
 			R_ASSERT3		(can_use_name,"Too big level name",name);
 			CGameGraphBuilder().build_graph	(prjName);
 		}
-		else {
-			if (strstr(cmd,"-m")) {
+		else 
+		{
+			if (strstr(cmd,"-m"))
+			{
 				xrMergeGraphs		(prjName,!!strstr(cmd,"-rebuild"));
 			}
 			else
-#else
-		{
-#endif // PRIQUEL
-				if (strstr(cmd,"-s")) {
+				if (strstr(cmd,"-s")) 
+				{
 					if (xr_strlen(name))
 						name[xr_strlen(name) - 1] = 0;
 					char				*output = strstr(cmd,"-out");
@@ -160,9 +153,6 @@ void execute	(LPSTR cmd)
 						start			= temp1;
 					}
 					char				*no_separator_check = strstr(cmd,"-no_separator_check");
-#ifdef PRIQUEL
-					clear_temp_folder	();
-#endif // PRIQUEL
 					CGameSpawnConstructor(name,output,start,!!no_separator_check);
 				}
 				else

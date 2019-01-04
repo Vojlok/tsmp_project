@@ -3,7 +3,8 @@
 
 #include <freeimage.h>
 
-struct SExts{
+struct SExts
+{
 	xr_vector<LPSTR>	exts;
     void format_register(LPCSTR ext)
     {
@@ -13,7 +14,8 @@ struct SExts{
     		exts.push_back(xr_strdup(ext));
         }
     }
-    u32 size()	{	return (u32)exts.size();	}
+   
+	u32 size()	{	return (u32)exts.size();	}
     LPSTR operator [](int k){return exts[k];}
 	~SExts()
     {
@@ -27,21 +29,28 @@ SExts formats;
 void	Surface_FormatExt(FREE_IMAGE_FORMAT f)
 {
 	LPCSTR n=FreeImage_GetFIFExtensionList(f);
-    if (n){
+   
+	if (n)
+	{
         LPSTR base = xr_strdup(n);
         LPSTR ext = base;
         LPSTR cur = ext;
-        for	(; ext[0]; ext++){
-        if (ext[0]==','){
-                ext[0] = 0;
-                formats.format_register(cur);
-                cur = ++ext;
-            }
-        }
+       
+		for (; ext[0]; ext++)
+		{
+			if (ext[0] == ',')
+			{
+				ext[0] = 0;
+				formats.format_register(cur);
+				cur = ++ext;
+			}
+		}
+
         if (cur&&cur[0]) formats.format_register(cur);
         xr_free(base);
     }
 }
+
 void	Surface_Init()
 {
 	Msg("* ImageLibrary version: %s",FreeImage_GetVersion());
@@ -75,17 +84,14 @@ void	Surface_Init()
 
 BOOL	Surface_Detect(string_path& F, LPSTR N)
 {
-#ifndef PRIQUEL
 	for (u32 i=0; i<formats.size(); i++)
-#endif // PRIQUEL
 	{
-#ifdef PRIQUEL
-		FS.update_path	(F,"$game_textures$",strconcat(sizeof(F),F,N,".dds"));
-#else // PRIQUEL
 		FS.update_path	(F,"$textures$",strconcat(sizeof(F),F,N,".",formats[i]));
-#endif // PRIQUEL
+
 		int h = _open(F,O_RDONLY|O_BINARY);
-		if (h>0)	{
+
+		if (h>0)	
+		{
 			_close(h);
 			return TRUE;
 		}

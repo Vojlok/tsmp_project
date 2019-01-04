@@ -77,13 +77,8 @@ void CLevelSpawnConstructor::init								()
 	m_level_graph			= xr_new<CLevelGraph>(file_name);
 	
 	// loading cross table
-#ifdef PRIQUEL
-	m_game_spawn_constructor->game_graph().set_current_level	(game_graph().header().level(*m_level.name()).id());
-	m_cross_table			= &game_graph().cross_table();
-#else // PRIQUEL
 	strcat					(file_name,CROSS_TABLE_NAME);
 	m_cross_table			= xr_new<CGameLevelCrossTable>(file_name);
-#endif // PRIQUEL
 
 	// loading patrol paths
 	FS.update_path			(file_name,"$game_levels$",*m_level.name());
@@ -613,11 +608,7 @@ void CLevelSpawnConstructor::Execute							()
 	verify_space_restrictors			();
 	
 	xr_delete							(m_level_graph);
-#ifdef PRIQUEL
-	m_cross_table						= 0;
-#else // PRIQUEL
 	xr_delete							(m_cross_table);
-#endif // PRIQUEL
 	xr_delete							(m_graph_engine);
 }
 

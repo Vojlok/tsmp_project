@@ -3,8 +3,6 @@
 #include <string>
 #include <cstring>
 
-
-
 #include "game_sv_mp.h"
 #include "xrServer.h"
 #include "xrMessages.h"
@@ -66,21 +64,9 @@ game_sv_mp::game_sv_mp() :inherited()
 	m_uTimer1Started = false;
 	m_uTimer2Started = false;
 
-
-
-
 	if (!(0 != strstr(Core.Params, "-enable_name_change"))) g_sv_mp_nickname_change_mode = 1;
 
-
-
-	//------------------------------------------------------
-//	g_pGamePersistent->Environment().SetWeather("mp_weather");
 	m_aRanks.clear();	
-	//------------------------------------------------------	
-	round_end_reason = eRoundEnd_Force; //unknown
-
-
-//	StartTimer();
 }
 
 game_sv_mp::~game_sv_mp()
@@ -107,6 +93,7 @@ void	game_sv_mp::Update()
 			Msg("corpse [%d] not found [%d]", CorpseID, Device.dwFrame);
 			continue;
 		}
+
 		if (!pCorpseObj->children.empty())
 		{
 			Msg("corpse [%d] childern not empty [%d]", CorpseID, Device.dwFrame);
@@ -114,7 +101,6 @@ void	game_sv_mp::Update()
 			continue;
 		}
 
-		//---------------------------------------------
 		NET_Packet			P;
 		u_EventGen(P, GE_DESTROY, CorpseID);
 		Level().Send(P, net_flags(TRUE, TRUE));
@@ -136,8 +122,6 @@ void	game_sv_mp::Update()
 			if (m_uTimer1StartTime + u32(g_sv_mp_Timer1Interval * 60000) < CurTime)
 			{
 				Msg("# tsmp timer1 ");
-				//	if (!OnServer()) return;
-				//	(Level().Server && Level().Server->game)	
 				Console->Execute("cfg_load tsmp_timer1_commands");
 
 				m_uTimer1Started = false;
@@ -148,10 +132,8 @@ void	game_sv_mp::Update()
 			u32 CurTimeTimer = Level().timeServer();
 			m_uTimer1StartTime = CurTimeTimer;
 			m_uTimer1Started = true;
-			//		Msg("timer started");
 		}
 	}
-
 
 	if (g_sv_mp_Timer2Enabled == 1)
 	{
@@ -162,8 +144,6 @@ void	game_sv_mp::Update()
 			if (m_uTimer2StartTime + u32(g_sv_mp_Timer2Interval * 60000) < CurTime)
 			{
 				Msg("# tsmp timer2 ");
-				//	if (!OnServer()) return;
-				//	(Level().Server && Level().Server->game)	
 				Console->Execute("cfg_load tsmp_timer2_commands");
 
 				m_uTimer2Started = false;
@@ -174,19 +154,18 @@ void	game_sv_mp::Update()
 			u32 CurTimeTimer = Level().timeServer();
 			m_uTimer2StartTime = CurTimeTimer;
 			m_uTimer2Started = true;
-			//		Msg("timer started");
 		}
 	}
 	g_sv_mp_Counter = 0;
 }
 	g_sv_mp_Counter++;
 
-	//-------------------------------------------------------
 	UpdatePlayersMoney();
 
 	if(g_sv_mp_iDumpStatsPeriod)
 	{
 		int curr_minutes = iFloor(Device.fTimeGlobal/60.0f);
+
 		if(g_sv_mp_iDumpStats_last+g_sv_mp_iDumpStatsPeriod <= curr_minutes )
 		{
 			if(Phase()==GAME_PHASE_INPROGRESS)
@@ -208,7 +187,6 @@ void game_sv_mp::OnRoundStart()
 	}
 	
 	m_CorpseList.clear();
-
 	
 	m_WeaponDisablerItemsCount = 0;
 	int ii;
@@ -238,11 +216,9 @@ void game_sv_mp::OnRoundStart()
 
 	//send "RoundStarted" Message To Allclients
 	NET_Packet			P;
-//	P.w_begin			(M_GAMEMESSAGE);
 	GenerateGameMessage (P);
 	P.w_u32				(GAME_EVENT_ROUND_STARTED);
 	u_EventSend(P);
-
 
 	Console->Execute("cfg_load all_server_settings");
 
@@ -261,14 +237,11 @@ void game_sv_mp::OnRoundEnd()
 	switch_Phase		(GAME_PHASE_PENDING);
 	//send "RoundOver" Message To All clients
 	NET_Packet			P;
-//	P.w_begin			(M_GAMEMESSAGE);
 	GenerateGameMessage (P);
 	P.w_u32				(GAME_EVENT_ROUND_END);
 	P.w_stringZ			(res_str);
 	u_EventSend(P);
-	//-------------------------------------------------------
 }
-
 
 void	game_sv_mp::KillPlayer				(ClientID id_who, u16 GameID)
 {
@@ -278,14 +251,15 @@ void	game_sv_mp::KillPlayer				(ClientID id_who, u16 GameID)
 	xrClientData* xrCData	=	m_server->ID_to_client(id_who);
 	
 	if (xrCData && xrCData->ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)) return;
+	
 	if (xrCData) 
-	{
-		//-------------------------------------------------------
+	{		
 		OnPlayerKillPlayer(xrCData->ps, xrCData->ps, KT_HIT, SKT_NONE, NULL);
 		xrCData->ps->m_bClearRun = false;
 	};
-	//-------------------------------------------------------
+
 	CActor* pActor = smart_cast <CActor*>(pObject);
+
 	if (pActor)
 	{
 		if (!pActor->g_Alive())
@@ -296,11 +270,11 @@ void	game_sv_mp::KillPlayer				(ClientID id_who, u16 GameID)
 		pActor->m_bAllowDeathRemove = true;
 		m_CorpseList.push_back(pActor->ID());
 	}
-	//-------------------------------------------------------
+
 	u16 PlayerID = (xrCData != 0) ? xrCData->ps->GameID : GameID;
-	//-------------------------------------------------------
+
 	SendPlayerKilledMessage(PlayerID, KT_HIT, PlayerID, 0, SKT_NONE);
-	//-------------------------------------------------------
+
 	// Kill Player on all clients
 	NET_Packet			P;
 	u_EventGen(P, GE_DIE, PlayerID);
@@ -310,163 +284,169 @@ void	game_sv_mp::KillPlayer				(ClientID id_who, u16 GameID)
 	u_EventSend(P, net_flags(TRUE, TRUE, FALSE, TRUE));
 	
 	if (xrCData) SetPlayersDefItems		(xrCData->ps);
-	signal_Syncronize();
-	//-------------------------------------------------------	
-	
+	signal_Syncronize();	
 };
-
 
 void	game_sv_mp::OnEvent (NET_Packet &P, u16 type, u32 time, ClientID sender )
 {
 	switch	(type)
 	{	
 	case GAME_EVENT_PLAYER_KILLED:  //playerKillPlayer
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_PLAYER_KILLED");
-			OnPlayerKilled(P);
-		}break;
-	case GAME_EVENT_PLAYER_HITTED:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_PLAYER_HITTED");
-			OnPlayerHitted(P);			
-		}break;
-	case GAME_EVENT_PLAYER_READY:// cs & dm 
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_PLAYER_READY");
-			xrClientData *l_pC = m_server->ID_to_client(sender);
-			if (!l_pC) break;
-			OnPlayerReady		(l_pC->ID);
-		}break;
-	case GAME_EVENT_PLAYER_BUY_SPAWN:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_PLAYER_BUY_SPAWN");
-			xrClientData *l_pC = m_server->ID_to_client(sender);
-			if (!l_pC) break;
-			OnPlayerBuySpawn	(l_pC->ID);
-		}break;
-	case GAME_EVENT_VOTE_START:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_VOTE_START");
-			if (!IsVotingEnabled()) break;
-			string1024 VoteCommand;
-			P.r_stringZ(VoteCommand);
-			std::string Vte = VoteCommand;		
-
-			while (Vte.find('%') != std::string::npos)
-			{
-				Vte.replace(Vte.find("%"), 1, " ");
-				Msg("! bad symbol in vote found - percent");
-			}		
-
-			size_t pos = Vte.find("changemap");
-			if (pos != std::string::npos) 
-			{
-				Msg("change map found");
-		
-				std::string String1,String2;
-				String1= Vte;
-				bool bIsAllOk = false;
-
-				if (String1.find(' ') != std::string::npos)
-				{
-					bIsAllOk = true;
-					char *s = new char[String1.size() + 1];
-
-					strcpy(s, String1.c_str());
-
-					char *p = strtok(s, " ");
-					int iii = 0;
-					while (p != NULL) 
-					{
-						if (iii == 0) String1 = p;
-						else String2 = p;
-						p = strtok(NULL, " ");
-						iii++;
-					}
-
-					delete[] s;
-				}
-				std::string Type = Level().Server->game->type_name();							
-
-				if (!Tsmp_is_map_registered(String2, Type))
-				{
-					xrClientData *pPlayer = NULL;
-					u32	cnt = get_players_count();
-					for (u32 it = 0; it<cnt; it++)
-					{
-						xrClientData *l_pC = (xrClientData*)m_server->client_Get(it);
-						if (!l_pC) continue;
-						if (l_pC->ID == sender)
-						{						
-							pPlayer = l_pC;
-						}					
-					};
-
-					string512 PName;
-					strcpy(PName, pPlayer->ps->getName());
-					
-					Msg("! Cant find map [%s] in the list. Vote started by player [%s]",String2.c_str(), PName);
-					break;
-				}		
+	{
+		OnPlayerKilled(P);
+		break;
 	}
 
-	else 
+	case GAME_EVENT_PLAYER_HITTED:
 	{
-		while (Vte.find('_') != std::string::npos)
+		OnPlayerHitted(P);
+		break;
+	}
+
+	case GAME_EVENT_PLAYER_READY:// cs & dm 
+	{
+		xrClientData *l_pC = m_server->ID_to_client(sender);
+		if (!l_pC) break;
+		OnPlayerReady(l_pC->ID);
+		break;
+	}
+
+	case GAME_EVENT_PLAYER_BUY_SPAWN:
+	{
+		xrClientData *l_pC = m_server->ID_to_client(sender);
+		if (!l_pC) break;
+		OnPlayerBuySpawn(l_pC->ID);
+		break;
+	}
+
+	case GAME_EVENT_VOTE_START:
+	{
+		if (!IsVotingEnabled()) break;
+		string1024 VoteCommand;
+		P.r_stringZ(VoteCommand);
+		std::string Vte = VoteCommand;
+
+		while (Vte.find('%') != std::string::npos)
 		{
-			Vte.replace(Vte.find("_"), 1, " ");
-			Msg("! bad symbol in vote found - _");
+			Vte.replace(Vte.find("%"), 1, " ");
+			Msg("! bad symbol in vote found - percent");
 		}
 
+		size_t pos = Vte.find("changemap");
+		if (pos != std::string::npos)
+		{
+			Msg("change map found");
+
+			std::string String1, String2;
+			String1 = Vte;
+			bool bIsAllOk = false;
+
+			if (String1.find(' ') != std::string::npos)
+			{
+				bIsAllOk = true;
+				char *s = new char[String1.size() + 1];
+
+				strcpy(s, String1.c_str());
+
+				char *p = strtok(s, " ");
+				int iii = 0;
+
+				while (p != NULL)
+				{
+					if (iii == 0) String1 = p;
+					else String2 = p;
+					p = strtok(NULL, " ");
+					iii++;
+				}
+
+				delete[] s;
+			}
+			std::string Type = Level().Server->game->type_name();
+
+			if (!Tsmp_is_map_registered(String2, Type))
+			{
+				xrClientData *pPlayer = NULL;
+				u32	cnt = get_players_count();
+				for (u32 it = 0; it < cnt; it++)
+				{
+					xrClientData *l_pC = (xrClientData*)m_server->client_Get(it);
+					if (!l_pC) continue;
+					if (l_pC->ID == sender)
+					{
+						pPlayer = l_pC;
+					}
+				};
+
+				string512 PName;
+				strcpy(PName, pPlayer->ps->getName());
+
+				Msg("! Cant find map [%s] in the list. Vote started by player [%s]", String2.c_str(), PName);
+				break;
+			}
+		}
+
+		else
+		{
+			while (Vte.find('_') != std::string::npos)
+			{
+				Vte.replace(Vte.find("_"), 1, " ");
+				Msg("! bad symbol in vote found - _");
+			}
+		}
+
+		if (strlen(VoteCommand) > 70)
+			Msg("! too many symbols in vote found");
+
+		Vte.resize(70);
+
+		string1024 debug_msg_vote;
+		strcpy(debug_msg_vote, Vte.c_str());
+
+		Msg(debug_msg_vote);
+		OnVoteStart(Vte.c_str(), sender);
+		break;
 	}
-			
-			if (strlen(VoteCommand) > 70)
-				Msg("! too many symbols in vote found");
 
-			Vte.resize(70);
-			
-			string1024 debug_msg_vote;
-			strcpy(debug_msg_vote, Vte.c_str());
-
-			Msg(debug_msg_vote);
-			OnVoteStart(Vte.c_str(), sender);
-		}break;
 	case GAME_EVENT_VOTE_YES:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_VOTE_YES");
-			if (!IsVotingEnabled()) break;
-			OnVoteYes(sender);
-		}break;
+	{
+		if (!IsVotingEnabled()) break;
+		OnVoteYes(sender);
+		break;
+	}
+
 	case GAME_EVENT_VOTE_NO:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_VOTE_NO");
-			if (!IsVotingEnabled()) break;
-			OnVoteNo(sender);
-		}break;
+	{
+		if (!IsVotingEnabled()) break;
+		OnVoteNo(sender);
+		break;
+	}
+
 	case GAME_EVENT_PLAYER_NAME:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_PLAYER_NAME");
-			OnPlayerChangeName(P, sender);
-		}break;
+	{
+		OnPlayerChangeName(P, sender);
+		break; 
+	}
+
 	case GAME_EVENT_SPEECH_MESSAGE:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_SPEECH_MESSAGE");
-			OnPlayerSpeechMessage(P, sender);
-		}break;
+	{
+		OnPlayerSpeechMessage(P, sender);
+		break;
+	}
+
 	case GAME_EVENT_PLAYER_GAME_MENU:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GAME_EVENT_PLAYER_GAME_MENU");
-			OnPlayerGameMenu(P, sender);
-//			OnPlayerSelectSpectator(P, sender);
-		}break;
+	{	
+		OnPlayerGameMenu(P, sender);
+		break;
+	}
+
 	default:
 		inherited::OnEvent(P, type, time, sender);
 	};//switch
-
 }
 
 bool g_bConsoleCommandsCreated = false;
 extern	float	g_fTimeFactor;
+
 void game_sv_mp::Create (shared_str &options)
 {
 	SetVotingActive(false);
@@ -514,37 +494,30 @@ void game_sv_mp::net_Export_State		(NET_Packet& P, ClientID id_to)
 
 void	game_sv_mp::RespawnPlayer			(ClientID id_who, bool NoSpectator)
 {
-	//------------------------------------------------------------
 	xrClientData* xrCData	=	m_server->ID_to_client(id_who);
 	if (!xrCData || !xrCData->owner) return;
-//	game_PlayerState*	ps	=	&(xrCData->ps);
+
 	CSE_Abstract* pOwner = xrCData->owner;
 	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(pOwner);
 	CSE_Spectator			*pS =	smart_cast<CSE_Spectator*>(pOwner);
 
 	if (pA)
-	{
-		//------------------------------------------------------------			
+	{		
 		AllowDeadBodyRemove(id_who, xrCData->ps->GameID);
-		//------------------------------------------------------------
 		m_CorpseList.push_back(pOwner->ID);
-		//------------------------------------------------------------
 	};
 
 	if (pA && !NoSpectator)
 	{
-		//------------------------------------------------------------
 		SpawnPlayer(id_who, "spectator");
-		//------------------------------------------------------------
 	}
 	else
 	{
-		//------------------------------------------------------------
 		if (pOwner->owner != m_server->GetServerClient())
 		{
 			pOwner->owner = (xrClientData*)m_server->GetServerClient();
 		};
-		//------------------------------------------------------------
+
 		//remove spectator entity
 		if (pS)
 		{
@@ -552,21 +525,17 @@ void	game_sv_mp::RespawnPlayer			(ClientID id_who, bool NoSpectator)
 			u_EventGen			(P,GE_DESTROY,pS->ID);
 			Level().Send(P,net_flags(TRUE,TRUE));
 		};
-		//------------------------------------------------------------
+
 		SpawnPlayer(id_who, "mp_actor");
-		//------------------------------------------------------------
-//		SpawnWeaponsForActor(xrCData->owner, ps);
-		//------------------------------------------------------------
 	};
 };
-
 
 void	game_sv_mp::SpawnPlayer(ClientID id, LPCSTR N)
 {
 	xrClientData* CL	= m_server->ID_to_client(id);
-	//-------------------------------------------------
+
 	CL->net_PassUpdates = TRUE;
-	//-------------------------------------------------
+
 	game_PlayerState*	ps_who	=	CL->ps;
 	ps_who->setFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD);
 	
@@ -597,16 +566,18 @@ void	game_sv_mp::SpawnPlayer(ClientID id, LPCSTR N)
 		Game().m_WeaponUsageStatistic->OnPlayerSpawned(ps_who);
 	}
 	else
+	{
 		if (pS)
 		{
 			Fvector Pos, Angle;
-			if (!GetPosAngleFromActor(id, Pos, Angle)) assign_RP				(E, ps_who);
+			if (!GetPosAngleFromActor(id, Pos, Angle)) assign_RP(E, ps_who);
 			else
 			{
 				E->o_Angle.set(Angle);
-				E->o_Position.set(Pos);				
+				E->o_Position.set(Pos);
 			}
 		};
+	}
 	
 	Msg		("* %s respawned as %s", get_name_id(id) , (0 == pA) ? "spectator" : "actor");
 	spawn_end				(E,id);
@@ -629,6 +600,7 @@ void game_sv_mp::AllowDeadBodyRemove(ClientID id, u16 GameID)
 	if (pObject && pObject->CLS_ID == CLSID_OBJECT_ACTOR)
 	{
 		CActor* pActor = smart_cast <CActor*>(pObject);
+	
 		if (pActor)
 		{
 			pActor->set_death_time		();
@@ -644,13 +616,12 @@ void game_sv_mp::OnPlayerConnect			(ClientID id_who)
 
 void game_sv_mp::OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID)
 {
-	//---------------------------------------------------
 	NET_Packet					P;
 	GenerateGameMessage			(P);
 	P.w_u32						(GAME_EVENT_PLAYER_DISCONNECTED);
 	P.w_stringZ					(Name);
 	u_EventSend					(P);
-	//---------------------------------------------------
+
 	KillPlayer					(id_who, GameID);
 	
 	AllowDeadBodyRemove			(id_who, GameID);
@@ -662,10 +633,10 @@ void game_sv_mp::OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID)
 void	game_sv_mp::SetSkin					(CSE_Abstract* E, u16 Team, u16 ID)
 {
 	if (!E) return;
-	//-------------------------------------------
+
 	CSE_Visual* pV = smart_cast<CSE_Visual*>(E);
 	if (!pV) return;
-	//-------------------------------------------
+
 	string256 SkinName;
 	std::strcpy(SkinName, pSettings->r_string("mp_skins_path", "skin_path"));
 	//загружены ли скины для этой комманды
@@ -702,11 +673,9 @@ void	game_sv_mp::SetSkin					(CSE_Abstract* E, u16 Team, u16 ID)
 		};
 	};
 	std::strcat(SkinName, ".ogf");
-//.	Msg("* Skin - %s", SkinName);
 	int len = xr_strlen(SkinName);
 	R_ASSERT2(len < 64, "Skin Name is too LONG!!!");
 	pV->set_visual(SkinName);
-	//-------------------------------------------
 };
 
 #include "../CameraBase.h"
@@ -717,7 +686,6 @@ bool	game_sv_mp::GetPosAngleFromActor				(ClientID id, Fvector& Pos, Fvector &An
 	if (!xrCData || !xrCData->owner) return false;
 	
 	CObject* pObject =  Level().Objects.net_Find(xrCData->owner->ID);
-///	R_ASSERT2	((pObject && pObject->CLS_ID == CLSID_OBJECT_ACTOR),"Dead Player is not Actor");
 
 	if (!pObject || pObject->CLS_ID != CLSID_OBJECT_ACTOR) return false;
 
@@ -742,8 +710,6 @@ TeamStruct* game_sv_mp::GetTeamData				(u32 Team)
 
 void	game_sv_mp::SpawnWeaponForActor		(u16 actorId,  LPCSTR N, bool isScope, bool isGrenadeLauncher, bool isSilencer)
 {
-	if (0 != strstr(Core.Params, "-debug"))  Msg("SpawnWeaponForActor");
-
 		u8 addon_flags = 0;
 		if(isScope)
 			addon_flags |= CSE_ALifeItemWeapon::eWeaponAddonScope;

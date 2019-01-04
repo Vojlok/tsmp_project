@@ -14,9 +14,7 @@ using namespace ALife;
 
 CALifeGraphRegistry::CALifeGraphRegistry	()
 {
-#ifndef PRIQUEL
 	on_load							();
-#endif // PRIQUEL
 
 	m_level							= 0;
 	m_process_time					= 0;
@@ -30,7 +28,8 @@ CALifeGraphRegistry::~CALifeGraphRegistry	()
 
 void CALifeGraphRegistry::on_load			()
 {
-	for (int i=0; i<GameGraph::LOCATION_TYPE_COUNT; ++i) {
+	for (int i=0; i<GameGraph::LOCATION_TYPE_COUNT; ++i) 
+	{
 		{
 			for (int j=0; j<GameGraph::LOCATION_COUNT; ++j)
 				m_terrain[i][j].clear();
@@ -44,6 +43,7 @@ void CALifeGraphRegistry::on_load			()
 	{
 		GRAPH_REGISTRY::iterator	I = m_objects.begin();
 		GRAPH_REGISTRY::iterator	E = m_objects.end();
+		
 		for ( ; I != E; ++I)
 			(*I).objects().clear	();
 	}

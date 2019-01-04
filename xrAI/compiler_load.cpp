@@ -124,20 +124,18 @@ void xrLoad(LPCSTR name, bool draft_mode)
 					if (strchr(N,'.')) *(strchr(N,'.')) = 0;
 					strlwr			(N);
 
-					if (0==xr_strcmp(N,"level_lods"))	{
+					if (0==xr_strcmp(N,"level_lods"))	
+					{
 						// HACK for merged lod textures
 						BT.dwWidth	= 1024;
 						BT.dwHeight	= 1024;
 						BT.bHasAlpha= TRUE;
 						BT.pSurface	= 0;
-					} else {
+					} 
+					else 
+					{
 						strcat			(N,".thm");
-#ifdef PRIQUEL
-						IReader* THM	= FS.r_open("$game_textures$",N);
-#else // PRIQUEL
 						IReader* THM	= FS.r_open("$textures$",N);
-#endif // PRIQUEL
-//						if (!THM)		continue;
 						
 						R_ASSERT2		(THM,	N);
 
@@ -311,10 +309,5 @@ void xrLoad(LPCSTR name, bool draft_mode)
 		}
 
 		F->close			();
-
-#ifdef PRIQUEL
-		if (!strstr(Core.Params,"-keep_temp_files"))
-			DeleteFile		(file_name);
-#endif // PRIQUEL
 	}
 }

@@ -42,21 +42,16 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	u32 base_verts_cnt		= u32(CL.getVS());
 	u32 base_faces_cnt		= u32(CL.getTS());
 
-	// save source SMF
-#ifdef PRIQUEL
-	bool					keep_temp_files = !!strstr(Core.Params,"-keep_temp_files");
-	if (keep_temp_files)
-#endif // PRIQUEL
-	{
-		string_path			fn;
-		SaveAsSMF			(strconcat(sizeof(fn),fn,pBuild->path,"cform_source.smf"),CL);
-	}
+	// save source SMF	
+	string_path			fn;
+	SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_source.smf"), CL);	
 
 	// prepare model
 	MxStdModel* mdl			= xr_new<MxStdModel>(base_verts_cnt,base_faces_cnt);
 
 	// transfer vertices
-	for (u32 v_idx=0; v_idx<base_verts_cnt; v_idx++){
+	for (u32 v_idx=0; v_idx<base_verts_cnt; v_idx++)
+	{
 		Fvector* v			= CL.getV()+v_idx;
 		mdl->add_vertex		(v->x,v->y,v->z);
 	}
@@ -141,17 +136,10 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 		}
 	}
 
-
 	// save source CDB
-#ifdef PRIQUEL
-	if (keep_temp_files)
-#endif // PRIQUEL
-	{
-		string_path			fn;
-		SaveAsSMF			(strconcat(sizeof(fn),fn,pBuild->path,"cform_optimized.smf"),CL);
-	}
+	string_path			fn;
+	SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_optimized.smf"), CL);	
 
  	xr_delete				(slim);
 	xr_delete				(mdl);
 }
-

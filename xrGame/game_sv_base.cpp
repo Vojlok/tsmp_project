@@ -22,10 +22,8 @@ string_path		MAPROT_LIST		= "";
 BOOL	net_sv_control_hit	= FALSE		;
 BOOL	g_bCollectStatisticData = FALSE;
 
-//-----------------------------------------------------------------
 u32		g_sv_base_dwRPointFreezeTime	= 0;
 int		g_sv_base_iVotingEnabled		= 0x00ff;
-//-----------------------------------------------------------------
 
 xr_token	round_end_result_str[]=
 {
@@ -57,7 +55,9 @@ game_PlayerState*	game_sv_GameState::get_id					(ClientID id)
 ClientID				game_sv_GameState::get_it_2_id				(u32 it)
 {
 	xrClientData*	C	= (xrClientData*)m_server->client_Get		(it);
-	if (0==C){
+
+	if (0==C)
+	{
 		ClientID clientID;clientID.set(0);
 		return clientID;
 	}
@@ -116,15 +116,15 @@ game_PlayerState*	game_sv_GameState::get_eid (u16 id) //if exist
 			}
 		}
 	}
-	//-------------------------------------------------
+
 	u32		cnt		= get_players_count	();
+	
 	for		(u32 it=0; it<cnt; ++it)	
 	{
 		game_PlayerState*	ps	=	get_it	(it);
 		if (!ps) continue;
 		if (ps->HasOldID(id)) return ps;
 	};
-	//-------------------------------------------------
 	return NULL;
 }
 
@@ -133,16 +133,17 @@ void* game_sv_GameState::get_client (u16 id) //if exist
 	CSE_Abstract* entity = get_entity_from_eid(id);
 	if (entity && entity->owner && entity->owner->ps && entity->owner->ps->GameID == id)
 		return entity->owner;
-	//-------------------------------------------------
+
 	u32		cnt		= get_players_count	();
+
 	for		(u32 it=0; it<cnt; ++it)	
 	{
 		xrClientData*	C	= (xrClientData*)m_server->client_Get		(it);
 		if (!C || !C->ps) continue;
-//		game_PlayerState*	ps	=	get_it	(it);
+
 		if (C->ps->HasOldID(id)) return C;
 	};
-	//-------------------------------------------------
+
 	return NULL;
 }
 
@@ -156,9 +157,11 @@ u32					game_sv_GameState::get_alive_count			(u32 team)
 {
 	u32		cnt		= get_players_count	();
 	u32		alive	= 0;
+
 	for		(u32 it=0; it<cnt; ++it)	
 	{
 		game_PlayerState*	ps	=	get_it	(it);
+		
 		if (!ps) continue;
 		if (u32(ps->team) == team)	alive	+=	(ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))?0:1;
 	}
@@ -632,79 +635,77 @@ void game_sv_GameState::OnHit (u16 id_hitter, u16 id_hitted, NET_Packet& P)
 
 void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
-	switch	(type)
-	{	
+	switch (type)
+	{
 	case GAME_EVENT_PLAYER_CONNECTED:
-		{
-				if (0 != strstr(Core.Params, "-debug")) Msg("GE:GAME_EVENT_PLAYER_CONNECTED");
+	{
+		ClientID ID;
+		tNetPacket.r_clientID(ID);
+		OnPlayerConnect(ID);
 
-			ClientID ID;
-			tNetPacket.r_clientID(ID);
-			OnPlayerConnect(ID);
+		xrClientData* xrCData = m_server->ID_to_client(ID);
+		xrCData->m_radio_usage.m_BanSince = 0;
+		xrCData->m_radio_usage.m_Counter = 0;
+		for (int iii = 0; iii < 60; ++iii) xrCData->m_radio_usage.m_UsageHistory[iii] = 0;
+		xrCData->m_radio_usage.m_HasBan = false;
 
-			xrClientData* xrCData = m_server->ID_to_client(ID);
-				xrCData->m_radio_usage.m_BanSince = 0;
-	xrCData->m_radio_usage.m_Counter = 0;
-	for (int iii = 0; iii < 60; ++iii) xrCData->m_radio_usage.m_UsageHistory[iii] = 0;
-	xrCData->m_radio_usage.m_HasBan=false;
-
-			
-
-
-		}break;
+		break;
+	}
 
 	case GAME_EVENT_PLAYER_DISCONNECTED:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("GE:GAME_EVENT_PLAYER_DISCONNECTED");
-			ClientID ID;
-			tNetPacket.r_clientID(ID);
-			string1024 PlayerName;
-			tNetPacket.r_stringZ(PlayerName);
-			u16		GameID = tNetPacket.r_u16();
-			OnPlayerDisconnect(ID, PlayerName, GameID);
-		}break;
+	{
+		ClientID ID;
+		tNetPacket.r_clientID(ID);
+		string1024 PlayerName;
+		tNetPacket.r_stringZ(PlayerName);
+		u16		GameID = tNetPacket.r_u16();
+		OnPlayerDisconnect(ID, PlayerName, GameID);
+		break;
+	}
 
 	case GAME_EVENT_PLAYER_KILLED:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("GE:GAME_EVENT_PLAYER_KILLED");
-		}break	;
+		break;
+
 	case GAME_EVENT_ON_HIT:
+	{
+		u16		id_dest = tNetPacket.r_u16();
+		u16     id_src = tNetPacket.r_u16();
+		CSE_Abstract*	e_src = get_entity_from_eid(id_src);
+
+		if (!e_src)  // && !IsGameTypeSingle() added by andy because of Phantom does not have server entity
 		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("GE:GAME_EVENT_ON_HIT");
-			u16		id_dest				= tNetPacket.r_u16();
-			u16     id_src				= tNetPacket.r_u16();
-			CSE_Abstract*	e_src		= get_entity_from_eid	(id_src	);
+			if (IsGameTypeSingle()) break;
 
-			if(!e_src)  // && !IsGameTypeSingle() added by andy because of Phantom does not have server entity
-			{
-				if( IsGameTypeSingle() ) break;
+			game_PlayerState* ps = get_eid(id_src);
+			if (!ps)				break;
+			id_src = ps->GameID;
+		}
 
-				game_PlayerState* ps	= get_eid(id_src);
-				if (!ps)				break;
-				id_src					= ps->GameID;
-			}
+		OnHit(id_src, id_dest, tNetPacket);
+		m_server->SendBroadcast(BroadcastCID, tNetPacket, net_flags(TRUE, TRUE));
+		break;
+	}
 
-			OnHit(id_src, id_dest, tNetPacket);
-			m_server->SendBroadcast		(BroadcastCID,tNetPacket,net_flags(TRUE,TRUE));
-		}break;
 	case GAME_EVENT_CREATE_CLIENT:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("GE:GAME_EVENT_CREATE_CLIENT");
-			IClient* CL					= (IClient*)m_server->ID_to_client(sender);
-			if ( CL == NULL ) { break; }
-			
-			CL->flags.bConnected		= TRUE;
-			m_server->AttachNewClient	(CL);
-		}break;
+	{
+		IClient* CL = (IClient*)m_server->ID_to_client(sender);
+		if (CL == NULL) 
+			break;
+
+		CL->flags.bConnected = TRUE;
+		m_server->AttachNewClient(CL);
+		break;
+	}
+
 	case GAME_EVENT_PLAYER_AUTH:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("GE:GAME_EVENT_PLAYER_AUTH");
-			IClient*	CL	=	m_server->ID_to_client		(sender);
-			m_server->OnBuildVersionRespond(CL, tNetPacket);
-		}break;
+	{
+		IClient*	CL = m_server->ID_to_client(sender);
+		m_server->OnBuildVersionRespond(CL, tNetPacket);
+		break;
+	}
+
 	default:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("GE:default, not implemented");
+		{			
 			string16 tmp;
 			R_ASSERT3	(0,"Game Event not implemented!!!", itoa(type, tmp, 10));
 		};

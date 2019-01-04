@@ -145,15 +145,6 @@ void xrServer::OnBuildVersionRespond(IClient* CL, NET_Packet& P)
 
 	u64 _our_new = 1189233227;
 
-	if (0 != strstr(Core.Params, "-debug"))
-	{
-		Msg("OnBuildVersionRespond");
-		Msg("_our = %d", _our);
-		Msg("_him = %d", _him);
-}
-
-
-
 #ifdef DEBUG
 	Msg("_our = %d", _our);
 	Msg("_him = %d", _him);

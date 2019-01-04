@@ -8,7 +8,6 @@
 
 #include "stdafx.h"
 
-#ifndef PRIQUEL
 #	include "spawn_patcher.h"
 #	include "game_graph.h"
 #	include "game_spawn_constructor.h"
@@ -184,4 +183,3 @@ bool spawn_patcher::process_patrol	(IReader &reader, IWriter &writer)
 
 	return					(true);
 }
-#endif // PRIQUEL

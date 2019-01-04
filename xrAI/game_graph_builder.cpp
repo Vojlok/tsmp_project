@@ -351,20 +351,11 @@ void CGameGraphBuilder::save_cross_table	(const float &start, const float &amoun
 	}
 
 	tMemoryStream.close_chunk();
-	
-//	Msg						("CT:SAVE : %f",timer.GetElapsed_sec());
-//	Msg						("Flushing cross table");
 
-#ifdef PRIQUEL
-	tMemoryStream.save_to	(m_cross_table_name);
-#else // PRIQUEL
+
 	string_path				file_name;
 	strconcat				(sizeof(file_name), file_name,*m_level_name,CROSS_TABLE_NAME_RAW);
 	tMemoryStream.save_to	(file_name);
-#endif // PRIQUEL
-//	Msg						("CT:SAVE : %f",timer.GetElapsed_sec());
-
-//	Msg						("Freiing cross table resources");
 
 	m_marks.clear			();
 	m_mark_stack.clear		();
@@ -372,7 +363,6 @@ void CGameGraphBuilder::save_cross_table	(const float &start, const float &amoun
 	m_current_fringe.clear	();
 	m_next_fringe.clear		();
 
-//	Msg						("CT:SAVE : %f",timer.GetElapsed_sec());
 	Progress				(start + amount);
 }
 
@@ -405,19 +395,13 @@ void CGameGraphBuilder::load_cross_table	(const float &start, const float &amoun
 
 	Msg						("Loading cross table");
 
-#ifndef PRIQUEL
+
 	string_path				file_name;
 	strconcat				(sizeof(file_name), file_name,*m_level_name,CROSS_TABLE_NAME_RAW);
-#endif // PRIQUEL
 
 	VERIFY					(!m_cross_table);
-	m_cross_table			= xr_new<CGameLevelCrossTable>(
-#ifdef PRIQUEL
-		m_cross_table_name
-#else // PRIQUEL
-		file_name
-#endif // PRIQUEL
-	);
+
+	m_cross_table			= xr_new<CGameLevelCrossTable>(file_name);
 
 	Progress				(start + amount);
 }
@@ -700,13 +684,10 @@ void CGameGraphBuilder::save_graph			(const float &start, const float &amount)
 		}
 	}
 
-#ifdef PRIQUEL
-	writer.save_to				(m_graph_name);
-#else // PRIQUEL
 	string_path					file_name;
 	strconcat					(sizeof(file_name),file_name,*m_level_name,GAME_LEVEL_GRAPH);
 	writer.save_to				(file_name);
-#endif // PRIQUEL
+
 	Msg							("%d bytes saved",int(writer.size()));
 
 	Progress					(start + amount);
@@ -742,36 +723,18 @@ void CGameGraphBuilder::build_graph			(const float &start, const float &amount)
 	Progress				(start + amount);
 }
 
-void CGameGraphBuilder::build_graph			(
-#ifdef PRIQUEL
-		LPCSTR graph_name,
-		LPCSTR cross_table_name,
-#endif // PRIQUEL
-		LPCSTR level_name
-	)
+void CGameGraphBuilder::build_graph(LPCSTR level_name)
 {
 	Phase					("Building level game graph");
 	Msg						("level \"%s\"",level_name);
 
-#ifdef PRIQUEL
-	m_graph_name			= graph_name;
-	m_cross_table_name		= cross_table_name;
-#endif // PRIQUEL
 	m_level_name			= level_name;
 	
-//	CTimer					timer;
-//	timer.Start				();
-
 	create_graph			(0.000000f,0.000047f);
-//	Msg						("%f",timer.GetElapsed_sec());
 	load_level_graph		(0.000047f,0.002470f);
-//	Msg						("%f",timer.GetElapsed_sec());
 	load_graph_points		(0.002517f,0.111812f);
-//	Msg						("%f",timer.GetElapsed_sec());
 	build_cross_table		(0.114329f,0.773423f);
-//	Msg						("%f",timer.GetElapsed_sec());
 	build_graph				(0.887752f,0.112248f);
-//	Msg						("%f",timer.GetElapsed_sec());
 
 	Msg						("Level graph is generated successfully");
 }

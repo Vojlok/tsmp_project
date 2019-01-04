@@ -22,22 +22,9 @@ CALifeSpawnRegistry::CALifeSpawnRegistry	(LPCSTR section)
 {
 	m_spawn_name				= "";
 	seed						(u32(CPU::QPC() & 0xffffffff));
-
-#ifdef PRIQUEL
-	m_game_graph				= 0;
-	m_chunk						= 0;
-	m_file						= 0;
-#endif // PRIQUEL
 }
 
-CALifeSpawnRegistry::~CALifeSpawnRegistry	()
-{
-#ifdef PRIQUEL
-	xr_delete					(m_game_graph);
-	m_chunk->close				();
-	FS.r_close					(m_file);
-#endif // PRIQUEL
-}
+CALifeSpawnRegistry::~CALifeSpawnRegistry() {}
 
 void CALifeSpawnRegistry::save				(IWriter &memory_stream)
 {
@@ -75,16 +62,12 @@ void CALifeSpawnRegistry::load				(IReader &file_stream, LPCSTR game_name)
 	string_path					file_name;
 	bool						file_exists = !!FS.exist(file_name, "$game_spawn$", *m_spawn_name, ".spawn");
 	R_ASSERT3					(file_exists,"Can't find spawn file:",*m_spawn_name);
-	
-#ifndef PRIQUEL
+
 	IReader						*m_file = 0;
-#endif // PRIQUEL
 	VERIFY						(!m_file);
 	m_file						= FS.r_open(file_name);
 	load						(*m_file,&guid);
-#ifndef PRIQUEL
 	FS.r_close					(m_file);
-#endif // PRIQUEL
 
 	chunk0->close				();
 }
@@ -96,24 +79,20 @@ void CALifeSpawnRegistry::load				(LPCSTR spawn_name)
 	string_path					file_name;
 	R_ASSERT3					(FS.exist(file_name, "$game_spawn$", *m_spawn_name, ".spawn"),"Can't find spawn file:",*m_spawn_name);
 	
-#ifndef PRIQUEL
 	IReader						*m_file = 0;
-#endif // PRIQUEL
+
 	VERIFY						(!m_file);
 	m_file						= FS.r_open(file_name);
 	load						(*m_file);
-#ifndef PRIQUEL
 	FS.r_close					(m_file);
-#endif // PRIQUEL
 }
 
-struct dummy {
+struct dummy 
+{
     int count;
     lua_State* state;
     int ref;
 };
-
-//#include "pch_script.h"
 
 void CALifeSpawnRegistry::load				(IReader &file_stream, xrGUID *save_guid)
 {
@@ -127,24 +106,6 @@ void CALifeSpawnRegistry::load				(IReader &file_stream, xrGUID *save_guid)
 	m_spawns.load				(*chunk);
 	chunk->close				();
 
-#if 0
-	SPAWN_GRAPH::vertex_iterator			I = m_spawns.vertices().begin();
-	SPAWN_GRAPH::vertex_iterator			E = m_spawns.vertices().end();
-	for ( ; I != E; ++I) {
-		luabind::wrap_base		*base = smart_cast<luabind::wrap_base*>(&(*I).second->data()->object());
-		if (!base)
-			continue;
-
-		if (xr_strcmp((*I).second->data()->object().name_replace(),"rostok_stalker_outfit"))
-			continue;
-
-		dummy					*_dummy = (dummy*)((void*)base->m_self.m_impl);
-		lua_State				**_state = &_dummy->state;
-		Msg						("0x%08x",*(int*)&_state);
-		break;
-	}
-#endif
-
 	chunk						= file_stream.open_chunk(2);
 	load_data					(m_artefact_spawn_positions,*chunk);
 	chunk->close				();
@@ -153,16 +114,6 @@ void CALifeSpawnRegistry::load				(IReader &file_stream, xrGUID *save_guid)
 	R_ASSERT2					(chunk,"Spawn version mismatch - REBUILD SPAWN!");
 	ai().patrol_path_storage	(*chunk);
 	chunk->close				();
-
-#ifdef PRIQUEL
-	VERIFY						(!m_chunk);
-	m_chunk						= file_stream.open_chunk(4);
-	R_ASSERT2					(m_chunk,"Spawn version mismatch - REBUILD SPAWN!");
-
-	VERIFY						(!m_game_graph);
-	m_game_graph				= xr_new<CGameGraph>(*m_chunk);
-	ai().game_graph				(m_game_graph);
-#endif // PRIQUEL
 
 	R_ASSERT2					(header().graph_guid() == ai().game_graph().header().guid(),"Spawn doesn't correspond to the graph : REBUILD SPAWN!");
 
@@ -177,7 +128,9 @@ void CALifeSpawnRegistry::save_updates		(IWriter &stream)
 {
 	SPAWN_GRAPH::vertex_iterator			I = m_spawns.vertices().begin();
 	SPAWN_GRAPH::vertex_iterator			E = m_spawns.vertices().end();
-	for ( ; I != E; ++I) {
+	
+	for ( ; I != E; ++I) 
+	{
 		stream.open_chunk					((*I).second->vertex_id());
 		(*I).second->data()->save_update	(stream);
 		stream.close_chunk					();
@@ -187,7 +140,9 @@ void CALifeSpawnRegistry::save_updates		(IWriter &stream)
 void CALifeSpawnRegistry::load_updates		(IReader &stream)
 {
 	u32								vertex_id;
-	for (IReader *chunk = stream.open_chunk_iterator(vertex_id); chunk; chunk = stream.open_chunk_iterator(vertex_id,chunk)) {
+	
+	for (IReader *chunk = stream.open_chunk_iterator(vertex_id); chunk; chunk = stream.open_chunk_iterator(vertex_id,chunk))
+	{
 		VERIFY						(u32(ALife::_SPAWN_ID(-1)) > vertex_id);
 		const SPAWN_GRAPH::CVertex	*vertex = m_spawns.vertex(ALife::_SPAWN_ID(vertex_id));
 		VERIFY						(vertex);

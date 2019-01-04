@@ -64,11 +64,6 @@ private:
 	CInifile						*m_game_info;
 	CSE_ALifeCreatureAbstract		*m_actor;
 
-#ifdef PRIQUEL
-private:
-	string_path						m_game_graph_id;
-#endif // PRIQUEL
-
 private:
 	IC		shared_str				actor_level_name		();
 	IC		shared_str				spawn_name				(LPCSTR output);

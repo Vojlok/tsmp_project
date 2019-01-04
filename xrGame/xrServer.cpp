@@ -544,268 +544,255 @@ u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means bro
 	switch (type)
 	{
 	case M_UPDATE:	
-		{
-			//if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_UPDATE");
-			Process_update			(P,sender);						// No broadcast
-			VERIFY					(verify_entities());
-		}break;
+	{
+		Process_update(P, sender);						// No broadcast
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_SPAWN:	
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_SPAWN");
-			if (CL->flags.bLocal)
-				Process_spawn		(P,sender);	
+	{
+		if (CL->flags.bLocal)
+			Process_spawn(P, sender);
 
-			VERIFY					(verify_entities());
-		}break;
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_EVENT:	
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_EVENT");
-			Process_event			(P,sender);
-			VERIFY					(verify_entities());
-		}break;
+	{
+		Process_event(P, sender);
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_EVENT_PACK:
+	{
+		NET_Packet	tmpP;
+		while (!P.r_eof())
 		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_EVENT_PACK");
-			NET_Packet	tmpP;
-			while (!P.r_eof())
-			{
-				tmpP.B.count		= P.r_u8();
-				P.r					(&tmpP.B.data, tmpP.B.count);
+			tmpP.B.count = P.r_u8();
+			P.r(&tmpP.B.data, tmpP.B.count);
 
-				OnMessage			(tmpP, sender);
-			};			
-		}break;
+			OnMessage(tmpP, sender);
+		};
+		break;
+	}
+
 	case M_CL_UPDATE:
-		{
-			//if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CL_UPDATE");
-			xrClientData* CL		= ID_to_client	(sender);
-			if (!CL)				break;
-			CL->net_Ready			= TRUE;
+	{
+		xrClientData* CL = ID_to_client(sender);
+		if (!CL)				break;
+		CL->net_Ready = TRUE;
 
-			if (!CL->net_PassUpdates)
-				break;
-			//-------------------------------------------------------------------
-			u32 ClientPing = CL->stats.getPing();
-			P.w_seek(P.r_tell()+2, &ClientPing, 4);
-			//-------------------------------------------------------------------
-			if (SV_Client) 
-				SendTo	(SV_Client->ID, P, net_flags(TRUE, TRUE));
-			VERIFY					(verify_entities());
-		}break;
+		if (!CL->net_PassUpdates)
+			break;
+
+		u32 ClientPing = CL->stats.getPing();
+		P.w_seek(P.r_tell() + 2, &ClientPing, 4);
+
+		if (SV_Client)
+			SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_MOVE_PLAYERS_RESPOND:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_MOVE_PLAYERS_RESPOND");
-			xrClientData* CL		= ID_to_client	(sender);
-			if (!CL)				break;
-			CL->net_Ready			= TRUE;
-			CL->net_PassUpdates		= TRUE;
-		}break;
-	//-------------------------------------------------------------------
+	{
+		xrClientData* CL = ID_to_client(sender);
+		if (!CL)				break;
+		CL->net_Ready = TRUE;
+		CL->net_PassUpdates = TRUE;
+		break;
+	}
+
 	case M_CL_INPUT:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CL_INPUT");
-			xrClientData* CL		= ID_to_client	(sender);
-			if (CL)	CL->net_Ready	= TRUE;
-			if (SV_Client) SendTo	(SV_Client->ID, P, net_flags(TRUE, TRUE));
-			VERIFY					(verify_entities());
-		}break;
+	{
+		xrClientData* CL = ID_to_client(sender);
+		if (CL)	CL->net_Ready = TRUE;
+		if (SV_Client) SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_GAMEMESSAGE:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_GAMEMESSAGE");
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-			VERIFY					(verify_entities());
-		}break;
+	{
+		SendBroadcast(BroadcastCID, P, net_flags(TRUE, TRUE));
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_CLIENTREADY:
+	{
+		xrClientData* CL = ID_to_client(sender);
+
+		if (CL)
 		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CLIENTREADY");
-			xrClientData* CL		= ID_to_client(sender);
-			if ( CL )	
-			{
-				CL->net_Ready	= TRUE;
-				CL->ps->DeathTime = Device.dwTimeGlobal;
-				game->OnPlayerConnectFinished(sender);
-				CL->ps->setName( CL->name.c_str() );
-				
+			CL->net_Ready = TRUE;
+			CL->ps->DeathTime = Device.dwTimeGlobal;
+			game->OnPlayerConnectFinished(sender);
+			CL->ps->setName(CL->name.c_str());
+
 #ifdef BATTLEYE
-				if ( g_pGameLevel && Level().battleye_system.server )
-				{
-					Level().battleye_system.server->AddConnected_OnePlayer( CL );
-				}
+			if (g_pGameLevel && Level().battleye_system.server)
+			{
+				Level().battleye_system.server->AddConnected_OnePlayer(CL);
+			}
 #endif // BATTLEYE
-			};
-			game->signal_Syncronize	();
-			VERIFY					(verify_entities());
-		}break;
+		};
+		game->signal_Syncronize();
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_SWITCH_DISTANCE:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_SWITCH_DISTANCE");
-			game->switch_distance	(P,sender);
-			VERIFY					(verify_entities());
-		}break;
+	{
+		game->switch_distance(P, sender);
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_CHANGE_LEVEL:
+	{
+		if (game->change_level(P, sender))
 		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CHANGE_LEVEL");
-			if (game->change_level(P,sender))
-			{
-				SendBroadcast		(BroadcastCID,P,net_flags(TRUE,TRUE));
-			}
-			VERIFY					(verify_entities());
-		}break;
+			SendBroadcast(BroadcastCID, P, net_flags(TRUE, TRUE));
+		}
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_SAVE_GAME:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_SAVE_GAME");
-			game->save_game			(P,sender);
-			VERIFY					(verify_entities());
-		}break;
+	{
+		game->save_game(P, sender);
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_LOAD_GAME:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_LOAD_GAME");
-			game->load_game			(P,sender);
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-			VERIFY					(verify_entities());
-		}break;
+	{
+		game->load_game(P, sender);
+		SendBroadcast(BroadcastCID, P, net_flags(TRUE, TRUE));
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_RELOAD_GAME:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_RELOAD_GAME");
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-			VERIFY					(verify_entities());
-		}break;
+	{
+		SendBroadcast(BroadcastCID, P, net_flags(TRUE, TRUE));
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_SAVE_PACKET:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_SAVE_PACKET");
-			Process_save			(P,sender);
-			VERIFY					(verify_entities());
-		}break;
+	{
+		Process_save(P, sender);
+		VERIFY(verify_entities());
+		break;
+	}
+
 	case M_CLIENT_REQUEST_CONNECTION_DATA:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CLIENT_REQUEST_CONNECTION_DATA");
-			AddDelayedPacket(P, sender);
-		}break;
+	{
+		AddDelayedPacket(P, sender);
+		break;
+	}
+
 	case M_CHAT_MESSAGE:
-		{
-	        if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CHAT_MESSAGE");
-			xrClientData *l_pC			= ID_to_client(sender);
-			OnChatMessage				(&P, l_pC);
-		}break;
+	{
+		xrClientData *l_pC = ID_to_client(sender);
+		OnChatMessage(&P, l_pC);
+		break;
+	}
+
 	case M_CHANGE_LEVEL_GAME:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CHANGE_LEVEL_GAME");
-			ClientID CID; CID.set		(0xffffffff);
-			SendBroadcast				(CID,P,net_flags(TRUE,TRUE));
-		}break;
+	{
+		ClientID CID; CID.set(0xffffffff);
+		SendBroadcast(CID, P, net_flags(TRUE, TRUE));
+		break;
+	}
+
 	case M_CL_AUTH:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_CL_AUTH");
-			game->AddDelayedEvent		(P,GAME_EVENT_PLAYER_AUTH, 0, sender);
-		}break;
+	{
+		game->AddDelayedEvent(P, GAME_EVENT_PLAYER_AUTH, 0, sender);
+		break;
+	}
+
 	case M_STATISTIC_UPDATE:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_STATISTIC_UPDATE");
-			if (SV_Client)
-				SendBroadcast			(SV_Client->ID,P,net_flags(TRUE,TRUE));
-			else
-				SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-		}break;
+	{
+		if (SV_Client)
+			SendBroadcast(SV_Client->ID, P, net_flags(TRUE, TRUE));
+		else
+			SendBroadcast(BroadcastCID, P, net_flags(TRUE, TRUE));
+		break;
+	}
+
 	case M_STATISTIC_UPDATE_RESPOND:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_STATISTIC_UPDATE_RESPOND");
-			if (SV_Client) SendTo	(SV_Client->ID, P, net_flags(TRUE, TRUE));
-		}break;
+	{
+		if (SV_Client) SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
+		break;
+	}
+
 	case M_PLAYER_FIRE:
-		{
-			if (0 != strstr(Core.Params, "-debug")) 
-			{
-				Msg("Packet type: M_PLAYER_FIRE");
-			
-		//		u16			type2;
-		//	P.r_begin	(type2);
+	{
+		if (game)
+			game->OnPlayerFire(sender, P);
+		break;
+	}
 
-
-	//		string128 str11;
-	//	P.r_stringZ(str11);
-	//	string4096 str22;
-	//P.r_stringZ(str22);
-	//s16 second1;
-	//P.r_s16(second1);
-
-
-		
-
-	//				Msg("packet type:");
-	//	string1024 pType;
-	//	sprintf (pType, "%u", type2);		
-	//		Msg(pType);	
-
-//			Msg("num");
-		//	string1024 sss;
-	//		sprintf (sss, "%u", second1);	
-			//Msg(sss);
-
-//		Msg("packet string");		
-	//		Msg(str11);
-		//		Msg("packet string");		
-			//Msg(str22);
-
-
-			}
-
-			if (game)
-				game->OnPlayerFire(sender, P);
-		}break;
 	case M_REMOTE_CONTROL_AUTH:
+	{
+		string512				reason;
+		shared_str				user;
+		shared_str				pass;
+		P.r_stringZ(user);
+
+		game_PlayerState* ps1;
+
+		xrClientData*	pClient2 = (xrClientData*)ID_to_client(sender);
+		ps1 = pClient2->ps;
+
+		if (0 == stricmp(user.c_str(), "logoff"))
 		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_REMOTE_CONTROL_AUTH");
-			string512				reason;
-			shared_str				user;
-			shared_str				pass;
-			P.r_stringZ				(user);
-
-			game_PlayerState* ps1;
-
-			xrClientData*	pClient2 = (xrClientData*)ID_to_client(sender);
-			ps1 = pClient2->ps;
-
-
-			if(0==stricmp(user.c_str(),"logoff"))
+			CL->m_admin_rights.m_has_admin_rights = FALSE;
+			strcpy(reason, "logged off");
+			Msg("# Remote administrator logged off.");
+		}
+		else
+		{
+			P.r_stringZ(pass);
+			bool res = CheckAdminRights(user, pass, reason);
+			if (res)
 			{
-				CL->m_admin_rights.m_has_admin_rights	= FALSE;
-				strcpy				(reason,"logged off");
-				Msg("# Remote administrator logged off.");
-			} else
-			{
-				P.r_stringZ				(pass);
-				bool res = CheckAdminRights(user, pass, reason);
-				if(res){
-					CL->m_admin_rights.m_has_admin_rights	= TRUE;
-					CL->m_admin_rights.m_dwLoginTime		= Device.dwTimeGlobal;
+				CL->m_admin_rights.m_has_admin_rights = TRUE;
+				CL->m_admin_rights.m_dwLoginTime = Device.dwTimeGlobal;
 
-			
-
-					Msg("# Player [%s] logged as remote administrator with login [%s].", ps1->getName(), user.c_str());
-				} else
-					Msg("# Player [%s] tried to login as remote administrator with login [%s]. Access denied.", ps1->getName(), user.c_str());
-
+				Msg("# Player [%s] logged as remote administrator with login [%s].", ps1->getName(), user.c_str());
 			}
-			NET_Packet			P_answ;			
-			P_answ.w_begin		(M_REMOTE_CONTROL_CMD);
-			P_answ.w_stringZ	(reason);
-			SendTo				(CL->ID,P_answ,net_flags(TRUE,TRUE));
-		}break;
+			else
+				Msg("# Player [%s] tried to login as remote administrator with login [%s]. Access denied.", ps1->getName(), user.c_str());
+
+		}
+		NET_Packet			P_answ;
+		P_answ.w_begin(M_REMOTE_CONTROL_CMD);
+		P_answ.w_stringZ(reason);
+		SendTo(CL->ID, P_answ, net_flags(TRUE, TRUE));
+		break;
+	}
 
 	case M_REMOTE_CONTROL_CMD:
-		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_REMOTE_CONTROL_CMD");
-			AddDelayedPacket(P, sender);
-		}break;
+	{
+		AddDelayedPacket(P, sender);
+		break;
+	}
 	case M_BATTLEYE:
 		{
-			if (0 != strstr(Core.Params, "-debug")) Msg("Packet type: M_BATTLEYE");
 #ifdef BATTLEYE
 			if ( g_pGameLevel )
 			{
 				Level().battleye_system.ReadPacketServer( sender.value(), &P );
 			}
 #endif // BATTLEYE
+			break;
 		}
 	}
 
