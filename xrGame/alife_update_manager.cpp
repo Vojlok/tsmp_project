@@ -235,20 +235,9 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 	Msg									("* Creating new game...");
 
 	unload								();
-#ifdef EXPERIMENTS
-	Msg("unloaded");
-#endif
 	reload								(m_section);
 
-#ifdef EXPERIMENTS
-	Msg("reloaded");
-#endif
-
 	spawns().load						(save_name);
-
-#ifdef EXPERIMENTS
-	Msg("spawns loaded");
-#endif
 
 #ifdef PRIQUEL
 	graph().on_load						();
@@ -274,9 +263,6 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 
 void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_only)
 {
-#ifdef EXPERIMENTS
-	Msg("CALifeUpdateManager::load %s %i %i",game_name,no_assert,new_only);
-#endif
 	g_pGamePersistent->LoadTitle		("st_loading_alife_simulator");
 
 #ifdef DEBUG

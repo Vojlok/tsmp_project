@@ -22,13 +22,7 @@
 #include "game_graph.h"
 #include "custommonster.h"
 
-#ifdef EXPERIMENTS
-ENGINE_API	bool g_dedicated_server;
-#endif
-
-CRestrictedObject::~CRestrictedObject		()
-{
-}
+CRestrictedObject::~CRestrictedObject() {}
 
 IC	void construct_string					(LPSTR result, const xr_vector<ALife::_OBJECT_ID> &restrictions)
 {
@@ -47,24 +41,6 @@ IC	void construct_string					(LPSTR result, const xr_vector<ALife::_OBJECT_ID> &
 	}
 }
 
-#if 0
-IC	void construct_id_string					(LPSTR result, const xr_vector<ALife::_OBJECT_ID> &restrictions)
-{
-	strcpy			(result,"");
-	string16		temp;
-	u32				count = 0;
-	xr_vector<ALife::_OBJECT_ID>::const_iterator	I = restrictions.begin();
-	xr_vector<ALife::_OBJECT_ID>::const_iterator	E = restrictions.end();
-	for ( ; I != E; ++I) {
-		if (count)
-			strcat	(result,",");
-		sprintf_s		(temp,"%d",*I);
-		strcat		(result,temp);
-		++count;
-	}
-}
-#endif
-
 BOOL CRestrictedObject::net_Spawn			(CSE_Abstract* data)
 {
 	CSE_Abstract				*abstract	= (CSE_Abstract*)(data);
@@ -79,30 +55,11 @@ BOOL CRestrictedObject::net_Spawn			(CSE_Abstract* data)
 	strcpy						(temp0,*monster->m_out_space_restrictors);
 	strcpy						(temp1,*monster->m_in_space_restrictors);
 
-	if (ai().get_alife()) {
+	if (ai().get_alife()) 
+	{
 		construct_string		(temp0,monster->m_dynamic_out_restrictions);
 		construct_string		(temp1,monster->m_dynamic_in_restrictions);
 	}
-
-#if 0
-	string4096					temp2;
-	string4096					temp3;
-
-	construct_id_string			(temp2,monster->m_dynamic_out_restrictions);
-	construct_id_string			(temp3,monster->m_dynamic_in_restrictions);
-
-	Msg							("Restricting object %s with",monster->name_replace());
-	Msg							("STATIC OUT  : %s",*monster->m_out_space_restrictors);
-	Msg							("STATIC IN   : %s",*monster->m_in_space_restrictors);
-	Msg							("DYNAMIC OUT : %s",temp2);
-	Msg							("DYNAMIC IN  : %s",temp3);
-	Msg							("OUT         : %s",temp0);
-	Msg							("IN          : %s",temp1);
-#endif
-
-#ifdef EXPERIMENTS
-	Msg("restrict %i %s %s", monster->ID, temp0, temp1);
-#endif
 
 	Level().space_restriction_manager().restrict	(monster->ID,temp0,temp1);
 
@@ -111,15 +68,12 @@ BOOL CRestrictedObject::net_Spawn			(CSE_Abstract* data)
 	return						(TRUE);
 }
 
-void CRestrictedObject::net_Destroy			()
+void CRestrictedObject::net_Destroy()
 {
-#ifdef EXPERIMENTS
-	if (g_dedicated_server) return;
-#endif
 	Level().space_restriction_manager().unrestrict	(m_object->ID());
 }
 
-u32	CRestrictedObject::accessible_nearest	(const Fvector &position, Fvector &result) const
+u32	CRestrictedObject::accessible_nearest(const Fvector &position, Fvector &result) const
 {
 	START_PROFILE("Restricted Object/Accessible Nearest");
 	VERIFY						(!accessible(position));
@@ -127,7 +81,7 @@ u32	CRestrictedObject::accessible_nearest	(const Fvector &position, Fvector &res
 	STOP_PROFILE;
 }
 
-bool CRestrictedObject::accessible			(const Fvector &position) const
+bool CRestrictedObject::accessible(const Fvector &position) const
 {
 	START_PROFILE("Restricted Object/Accessible");
 	return						(accessible(position,EPS_L));
@@ -140,10 +94,6 @@ bool CRestrictedObject::accessible			(const Fvector &position, float radius) con
 	Fsphere						sphere;
 	sphere.P					= position;
 	sphere.R					= radius;
-
-#ifdef EXPERIMENTS
-	if (g_dedicated_server) return true;
-#endif
 
 	return						(Level().space_restriction_manager().accessible(object().ID(),sphere));
 	STOP_PROFILE;
@@ -161,9 +111,6 @@ bool CRestrictedObject::accessible			(u32 level_vertex_id, float radius) const
 {
 	START_PROFILE("Restricted Object/Accessible");
 	VERIFY						(ai().level_graph().valid_vertex_id(level_vertex_id));
-#ifdef EXPERIMENTS
-	if (g_dedicated_server) return true;
-#endif
 	return						(Level().space_restriction_manager().accessible(object().ID(),level_vertex_id,radius));
 	STOP_PROFILE;
 }
@@ -176,7 +123,9 @@ void CRestrictedObject::add_border			(u32 start_vertex_id, float radius) const
 	VERIFY						(!m_applied);
 	VERIFY						(m_removed);
 	m_removed					= false;
-	if (accessible(start_vertex_id)) {
+
+	if (accessible(start_vertex_id)) 
+	{
 		m_applied				= true;
 		Level().space_restriction_manager().add_border(object().ID(),start_vertex_id,radius);
 	}
@@ -191,7 +140,9 @@ void CRestrictedObject::add_border			(const Fvector &start_position, const Fvect
 	VERIFY						(!m_applied);
 	VERIFY						(m_removed);
 	m_removed					= false;
-	if (accessible(start_position)) {
+	
+	if (accessible(start_position)) 
+	{
 		m_applied				= true;
 		Level().space_restriction_manager().add_border(object().ID(),start_position,dest_position);
 	}
@@ -206,7 +157,9 @@ void CRestrictedObject::add_border			(u32 start_vertex_id, u32 dest_vertex_id) c
 	VERIFY						(!m_applied);
 	VERIFY						(m_removed);
 	m_removed					= false;
-	if (accessible(start_vertex_id)) {
+	
+	if (accessible(start_vertex_id)) 
+	{
 		m_applied				= true;
 		Level().space_restriction_manager().add_border(object().ID(),start_vertex_id,dest_vertex_id);
 	}
@@ -219,8 +172,10 @@ void CRestrictedObject::remove_border		() const
 	
 	VERIFY						(!m_removed);
 	m_removed					= true;
+	
 	if (m_applied)
 		Level().space_restriction_manager().remove_border(object().ID());
+	
 	m_applied					= false;
 	
 	STOP_PROFILE;
@@ -410,4 +365,3 @@ void CRestrictedObject::actual					(bool value)
 	if (!actual())
 		m_object->on_restrictions_change	();
 }
-

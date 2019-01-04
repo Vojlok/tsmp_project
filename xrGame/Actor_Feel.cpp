@@ -16,16 +16,9 @@
 #include "game_cl_base.h"
 #include "Level.h"
 
-#ifdef EXPERIMENTS
-ENGINE_API bool g_dedicated_server;
-#endif
-
 #define PICKUP_INFO_COLOR 0xFFDDDDDD
-//AAAAAA
 
-void CActor::feel_touch_new				(CObject* O)
-{
-}
+void CActor::feel_touch_new (CObject* O) {}
 
 void CActor::feel_touch_delete	(CObject* O)
 {
@@ -142,12 +135,9 @@ void CActor::PickupModeUpdate()
 
 #include "../CameraBase.h"
 BOOL	g_b_COD_PickUpMode = TRUE;
+
 void	CActor::PickupModeUpdate_COD	()
 {
-#ifdef EXPERIMENTS
-	if (g_dedicated_server)
-		return;
-#endif
 
 	if (Level().CurrentViewEntity() != this || !g_b_COD_PickUpMode) return;
 		

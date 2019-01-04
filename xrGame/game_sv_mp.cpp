@@ -471,19 +471,14 @@ void game_sv_mp::Create (shared_str &options)
 {
 	SetVotingActive(false);
 	inherited::Create(options);
-	//-------------------------------------------------------------------	
+
 	if (!g_bConsoleCommandsCreated)
 	{
 		g_bConsoleCommandsCreated = true;
 	}
 
-#ifdef EXPERIMENTS
-	m_alife_simulator = xr_new<CALifeSimulator>(&server(), &options);
-#endif
-	
-	//------------------------------------------------------------------
 	LoadRanks();
-	//------------------------------------------------------------------
+
 	Set_RankUp_Allowed(false);
 };
 

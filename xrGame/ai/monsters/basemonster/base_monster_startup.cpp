@@ -27,11 +27,6 @@
 #include "../../../inventory_item.h"
 #include "../../../xrServer_Objects_ALife.h"
 
-#ifdef EXPERIMENTS
-ENGINE_API	bool g_dedicated_server;
-bool bMPClient;
-#endif
-
 void CBaseMonster::Load(LPCSTR section)
 {
 	// load parameters from ".ltx" file
@@ -60,11 +55,6 @@ void CBaseMonster::Load(LPCSTR section)
 	CoverMan->load					();
 
 	m_rank							= (pSettings->line_exist(section,"rank")) ? int(pSettings->r_u32(section,"rank")) : 0;
-
-//	if (pSettings->line_exist(section,"Spawn_Inventory_Item_Section")) {
-//		m_item_section					= pSettings->r_string(section,"Spawn_Inventory_Item_Section");
-//		m_spawn_probability				= pSettings->r_float(section,"Spawn_Inventory_Item_Probability");
-//	} else m_spawn_probability			= 0.f;
 
 	m_melee_rotation_factor			= READ_IF_EXISTS(pSettings,r_float,section,"Melee_Rotation_Factor", 1.5f);
 	berserk_always					= READ_IF_EXISTS(!!pSettings,r_bool,section,"berserk_always", false);
@@ -171,9 +161,6 @@ void CBaseMonster::reinit()
 
 BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC) 
 {
-#ifdef EXPERIMENTS
-	bMPClient = (!IsGameTypeSingle && !g_dedicated_server);
-#endif
 
 	if (!inherited::net_Spawn(DC))
 		return(FALSE);
@@ -186,9 +173,6 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 												//но для animation movement controllr он должен быть в конце чтобы знать что он создался на споне
 #endif
 
-#ifdef EXPERIMENTS
-	if(!bMPClient)
-#endif
 	R_ASSERT2								(ai().get_level_graph() && ai().get_cross_table() && (ai().level_graph().level_id() != u32(-1)),"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
 
 	monster_squad().register_member			((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);

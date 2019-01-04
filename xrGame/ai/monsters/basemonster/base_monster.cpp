@@ -145,15 +145,7 @@ void CBaseMonster::Die(CObject* who)
 {
 	if (StateMan) StateMan->critical_finalize();
 
-#ifdef EXPERIMENTS
-	Msg("CBaseMonster::Die inherited::Die(who) call");
-#endif
-
 	inherited::Die(who);
-
-#ifdef EXPERIMENTS
-	Msg("CBaseMonster::Die inherited::Die(who) call returned");
-#endif
 
 	if (is_special_killer(who))
 		sound().play			(MonsterSound::eMonsterSoundDieInAnomaly);
@@ -165,8 +157,6 @@ void CBaseMonster::Die(CObject* who)
 	if (m_controlled)			m_controlled->on_die();
 }
 
-
-//void CBaseMonster::Hit(float P,Fvector &dir,CObject*who,s16 element,Fvector p_in_object_space,float impulse, ALife::EHitType hit_type)
 void	CBaseMonster::Hit							(SHit* pHDS)
 {
 	if (ignore_collision_hit && (pHDS->hit_type == ALife::eHitTypeStrike)) return;

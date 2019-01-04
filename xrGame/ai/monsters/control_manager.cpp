@@ -3,10 +3,6 @@
 #include "control_combase.h"
 #include "BaseMonster/base_monster.h"
 
-#ifdef EXPERIMENTS
-extern bool bMPClient;
-#endif
-
 enum EActiveComAction 
 {
 	eRemove			= u32(0),
@@ -50,11 +46,7 @@ CControl_Manager::~CControl_Manager()
 	xr_delete(m_movement);
 }
 
-void CControl_Manager::init_external()
-{
-	//for (CONTROLLERS_MAP_IT it = m_control_elems.begin(); it != m_control_elems.end(); ++it)
-	//	it->second->init_external(this, m_object);
-}
+void CControl_Manager::init_external() {}
 
 void CControl_Manager::load(LPCSTR section)
 {
@@ -63,6 +55,7 @@ void CControl_Manager::load(LPCSTR section)
 	for (CONTROLLERS_MAP_IT it = m_control_elems.begin(); it != m_control_elems.end(); ++it)
 		it->second->load(section);
 }
+
 void CControl_Manager::reload(LPCSTR section)
 {
 	for (CONTROLLERS_MAP_IT it = m_control_elems.begin(); it != m_control_elems.end(); ++it) 
@@ -109,10 +102,6 @@ struct predicate_remove
 
 void CControl_Manager::update_frame()
 {
-#ifdef EXPERIMENTS
-	if (bMPClient) return;
-#endif
-
 	if (!m_object->g_Alive()) return;
 
 	for (COM_VEC_IT it = m_active_elems.begin(); it != m_active_elems.end(); ++it)  

@@ -10,10 +10,6 @@
 
 #include "../../detail_path_manager_space.h"
 
-#ifdef EXPERIMENTS
-ENGINE_API	bool g_dedicated_server;
-#endif
-
 void CControlDirection::reinit()
 {	
 	inherited::reinit			();
@@ -105,10 +101,6 @@ void CControlDirection::update_frame()
 
 void CControlDirection::pitch_correction()
 {
-#ifdef EXPERIMENTS
-	if (!IsGameTypeSingle() && !g_dedicated_server) return;
-#endif
-
 	if (!m_object->ability_pitch_correction()) return;
 
 	// extended feature to pitch by path (wall climbing)

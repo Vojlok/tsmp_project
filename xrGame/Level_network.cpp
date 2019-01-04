@@ -53,17 +53,15 @@ void CLevel::remove_objects	()
 	ph_commander().clear		();
 	ph_commander_scripts().clear();
 
-#ifndef EXPERIMENTS
+
 	if(!g_dedicated_server)
-#endif
 		space_restriction_manager().clear	();
 
 	psDeviceFlags.set			(rsDisableObjectsAsCrows, b_stored);
 	g_b_ClearGameCaptions		= true;
 
-#ifndef EXPERIMENTS
+
 	if (!g_dedicated_server)
-#endif
 		ai().script_engine().collect_all_garbage	();
 
 	stalker_animation_data_storage().clear		();
@@ -91,8 +89,6 @@ void CLevel::remove_objects	()
 
 	g_pGamePersistent->destroy_particles		(false);
 
-//.	xr_delete									(m_seniority_hierarchy_holder);
-//.	m_seniority_hierarchy_holder				= xr_new<CSeniorityHierarchyHolder>();
 	if (!IsGameTypeSingle()) Msg("CLevel::remove_objects - End");
 }
 
@@ -119,9 +115,7 @@ void CLevel::net_Stop		()
 		xr_delete				(Server);
 	}
 
-#ifndef EXPERIMENTS
 	if (!g_dedicated_server)
-#endif
 		ai().script_engine().collect_all_garbage	();
 
 #ifdef DEBUG

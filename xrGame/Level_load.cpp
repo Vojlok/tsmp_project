@@ -89,11 +89,9 @@ BOOL CLevel::Load_GameSpecific_After()
 		}
 	}	
 
-#ifndef EXPERIMENTS
-	if (!g_dedicated_server) {
-#else
+
+	if (!g_dedicated_server) 
 	{
-#endif
 		// loading scripts
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
@@ -107,7 +105,8 @@ BOOL CLevel::Load_GameSpecific_After()
 	return TRUE;
 }
 
-struct translation_pair {
+struct translation_pair 
+{
 	u32			m_id;
 	u16			m_index;
 

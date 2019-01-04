@@ -232,13 +232,6 @@ void CHitMemoryManager::enable			(const CObject *object, bool enable)
 
 void CHitMemoryManager::remove_links	(CObject *object)
 {
-#ifdef EXPERIMENTS
-		if (m_hits == nullptr)
-		{
-			Msg("m_hits nullptr");
-			return;
-		}
-#endif
 
 	VERIFY				(m_hits);
 	HITS::iterator		I = std::find_if(m_hits->begin(),m_hits->end(),CHitObjectPredicate(object));

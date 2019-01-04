@@ -523,25 +523,17 @@ struct CVisibleObjectPredicateEx {
 
 void CVisualMemoryManager::remove_links	(CObject *object)
 {
-#ifdef EXPERIMENTS
-		if (m_objects == nullptr)
-		{
-			Msg("m_objects nullptr");
-			return;
-		}
-#endif
+	VERIFY(m_objects);
+	VISIBLES::iterator			I = std::find_if(m_objects->begin(), m_objects->end(), CVisibleObjectPredicateEx(object));
+	
+	if (I != m_objects->end())
+		m_objects->erase(I);
 
-	{
-		VERIFY						(m_objects);
-		VISIBLES::iterator			I = std::find_if(m_objects->begin(),m_objects->end(),CVisibleObjectPredicateEx(object));
-		if (I != m_objects->end())
-			m_objects->erase		(I);
-	}
-	{
-		NOT_YET_VISIBLES::iterator	I = std::find_if(m_not_yet_visible_objects.begin(),m_not_yet_visible_objects.end(),CVisibleObjectPredicateEx(object));
-		if (I != m_not_yet_visible_objects.end())
-			m_not_yet_visible_objects.erase	(I);
-	}
+	NOT_YET_VISIBLES::iterator	IT = std::find_if(m_not_yet_visible_objects.begin(), m_not_yet_visible_objects.end(), CVisibleObjectPredicateEx(object));
+	
+	if (IT != m_not_yet_visible_objects.end())
+		m_not_yet_visible_objects.erase(IT);
+
 }
 
 CVisibleObject *CVisualMemoryManager::visible_object	(const CGameObject *game_object)
@@ -638,15 +630,6 @@ void CVisualMemoryManager::update				(float time_delta)
 		);
 	}
 	STOP_PROFILE
-
-#if 0//def DEBUG
-	if (m_stalker) {
-		CAgentMemberManager::MEMBER_STORAGE::const_iterator	I = m_stalker->agent_manager().member().members().begin();
-		CAgentMemberManager::MEMBER_STORAGE::const_iterator	E = m_stalker->agent_manager().member().members().end();
-		for ( ; I != E; ++I)
-			(*I)->object().memory().visual().check_visibles();
-	}
-#endif
 
 	if (m_object && g_actor && m_object->is_relation_enemy(Actor())) {
 		xr_vector<CNotYetVisibleObject>::iterator	I = std::find_if(
@@ -776,10 +759,10 @@ void CVisualMemoryManager::load	(IReader &packet)
 
 		const CClientSpawnManager::CSpawnCallback	*spawn_callback = Level().client_spawn_manager().callback(delayed_object.m_object_id,m_object->ID());
 		if (!spawn_callback || !spawn_callback->m_object_callback)
-#ifndef EXPERIMENTS
+
 			if(!g_dedicated_server)
-#endif
 				Level().client_spawn_manager().add	(delayed_object.m_object_id,m_object->ID(),callback);
+
 #ifdef DEBUG
 		else {
 			if (spawn_callback && spawn_callback->m_object_callback) {

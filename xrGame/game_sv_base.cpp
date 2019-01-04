@@ -379,11 +379,9 @@ void game_sv_GameState::Create					(shared_str &options)
 
 		FS.r_close	(F);
 	}
-#ifndef EXPERIMENTS
-	if (!g_dedicated_server){
-#else
+
+	if (!g_dedicated_server)
 	{
-#endif
 		// loading scripts
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
 		string_path					S;
@@ -400,26 +398,17 @@ void game_sv_GameState::Create					(shared_str &options)
 		xr_delete					(l_tpIniFile);
 	}
 
-
-	//---------------------------------------------------------------------
 	ConsoleCommands_Create();
-	//---------------------------------------------------------------------
-//	CCC_LoadCFG_custom*	pTmp = xr_new<CCC_LoadCFG_custom>("sv_");
-//	pTmp->Execute				(Console->ConfigFile);
-//	xr_delete					(pTmp);
-	//---------------------------------------------------------------------
+
 	LPCSTR		svcfg_ltx_name = "-svcfg ";
 	if (strstr(Core.Params, svcfg_ltx_name))
 	{
 		string_path svcfg_name = "";
 		int		sz = xr_strlen(svcfg_ltx_name);
 		sscanf		(strstr(Core.Params,svcfg_ltx_name)+sz,"%[^ ] ",svcfg_name);
-//		if (FS.exist(svcfg_name))
-		{
+
 			Console->ExecuteScript(svcfg_name);
-		}
 	};
-	//---------------------------------------------------------------------
 	ReadOptions(options);	
 }
 

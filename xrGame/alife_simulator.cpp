@@ -35,10 +35,6 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	CALifeInteractionManager	(server,alife_section),
 	CALifeSimulatorBase			(server,alife_section)
 {
-#ifdef EXPERIMENTS
-	Msg("alife args: %s", command_line->c_str());
-#endif
-
 	restart_all					();
 
 	ai().set_alife				(this);
@@ -48,14 +44,12 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	typedef IGame_Persistent::params params;
 	params						&p = g_pGamePersistent->m_game_params;
 	
-#ifndef EXPERIMENTS
 	R_ASSERT2					(
 		xr_strlen(p.m_game_or_spawn) && 
 		!xr_strcmp(p.m_alife,"alife") && 
 		!xr_strcmp(p.m_game_type,"single"),
 		"Invalid server options!"
 	);
-#endif
 	
 	string256					temp;
 	strcpy						(temp,p.m_game_or_spawn);
@@ -64,10 +58,6 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	strcat						(temp,"/");
 	strcat						(temp,p.m_alife);
 	*command_line				= temp;
-
-#ifdef EXPERIMENTS
-	Msg("Params2: %s", temp);
-#endif
 	
 	LPCSTR						start_game_callback = pSettings->r_string(alife_section,"start_game_callback");
 	luabind::functor<void>		functor;

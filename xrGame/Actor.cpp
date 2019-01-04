@@ -1073,13 +1073,7 @@ void CActor::shedule_Update	(u32 DT)
 	}
 
 	if (this == Level().CurrentViewEntity())
-	{
-#ifdef EXPERIMENTS
-		if(!g_dedicated_server)
-#endif
-		UpdateMotionIcon		(mstate_real);
-
-	};
+		UpdateMotionIcon (mstate_real);
 
 	NET_Jump = 0;
 

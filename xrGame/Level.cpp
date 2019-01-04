@@ -20,7 +20,6 @@
 #include "PHdynamicdata.h"
 #include "Physics.h"
 #include "ShootingObject.h"
-//.#include "LevelFogOfWar.h"
 #include "Level_Bullet_Manager.h"
 #include "script_process.h"
 #include "script_engine.h"
@@ -244,9 +243,7 @@ CLevel::~CLevel()
 	xr_delete					(m_debug_renderer);
 #endif
 
-#ifndef EXPERIMENTS
 	if (!g_dedicated_server)
-#endif
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
 	xr_delete					(game);
@@ -553,18 +550,15 @@ void CLevel::OnFrame	()
 		}
 	}
 	
-//	g_pGamePersistent->Environment().SetGameTime	(GetGameDayTimeSec(),GetGameTimeFactor());
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),GetGameTimeFactor());
 
-	//Device.Statistic->cripting.Begin	();
-#ifndef EXPERIMENTS
+
+
 	if (!g_dedicated_server)
-#endif
 		ai().script_engine().script_process	(ScriptEngine::eScriptProcessorLevel)->update();
-	//Device.Statistic->Scripting.End	();
+	
 	m_ph_commander->update				();
 	m_ph_commander_scripts->update		();
-//	autosave_manager().update			();
 
 	//просчитать полет пуль
 	Device.Statistic->TEST0.Begin		();

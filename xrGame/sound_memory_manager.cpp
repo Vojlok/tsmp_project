@@ -183,16 +183,13 @@ void CSoundMemoryManager::feel_sound_new(CObject *object, int sound_type, CSound
 			if (_entity_alive && (self->ID() != _entity_alive->ID()) && (_entity_alive->g_Team() != entity_alive->g_Team()))
 				m_object->memory().hit().add(_entity_alive);
 		}
+
 		if (!m_stalker || !m_stalker->memory().enemy().selected())
-			add				(object,sound_type,position,sound_power);
-		else {
-			if (object) {
-//				bool		is_shooting = is_sound_type(sound_type,SOUND_TYPE_WEAPON_SHOOTING);
-//				bool		is_colliding = is_sound_type(sound_type,SOUND_TYPE_WORLD_OBJECT_COLLIDING);
-//				bool		very_close = m_stalker->Position().distance_to_sqr(object->Position()) <= COMBAT_SOUND_PERCEIVE_RADIUS_SQR;
-//				if (is_shooting || is_colliding || very_close)
-					add		(object,sound_type,position,sound_power);
-			}
+			add(object,sound_type,position,sound_power);
+		else 
+		{
+			if (object)
+				add(object,sound_type,position,sound_power);
 		}
 	}
 
@@ -204,13 +201,16 @@ void CSoundMemoryManager::feel_sound_new(CObject *object, int sound_type, CSound
 
 void CSoundMemoryManager::add			(const CSoundObject &sound_object, bool check_for_existance)
 {
-	if (check_for_existance) {
+	if (check_for_existance) 
+	{
 		if (m_sounds->end() != std::find(m_sounds->begin(),m_sounds->end(),object_id(sound_object.m_object)))
 			return;
 	}
 
 	VERIFY					(m_max_sound_count);
-	if (m_max_sound_count <= m_sounds->size()) {
+	
+	if (m_max_sound_count <= m_sounds->size()) 
+	{
 		xr_vector<CSoundObject>::iterator	I = std::min_element(m_sounds->begin(),m_sounds->end(),SLevelTimePredicate<CGameObject>());
 		VERIFY				(m_sounds->end() != I);
 		*I					= sound_object;
@@ -355,14 +355,6 @@ struct CSoundObjectPredicate {
 
 void CSoundMemoryManager::remove_links	(CObject *object)
 {
-#ifdef EXPERIMENTS
-		if (m_sounds == nullptr)
-		{
-			Msg("m_sounds nullptr");
-			return;
-		}
-#endif
-
 	VERIFY					(m_sounds);
 	SOUNDS::iterator		I = std::find_if(m_sounds->begin(),m_sounds->end(),CSoundObjectPredicate(object));
 	if (I != m_sounds->end())
