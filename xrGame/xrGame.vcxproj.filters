@@ -6541,6 +6541,7 @@
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\xr_3da\doug_lea_memory_allocator.h" />
+    <ClInclude Include="TSMP_Timers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -9664,6 +9665,7 @@
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\xr_3da\doug_lea_memory_allocator.c" />
+    <ClCompile Include="TSMP_Timers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="graph_abstract.h">

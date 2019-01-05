@@ -257,18 +257,12 @@ void CObject::UpdateCL			()
 
 void CObject::shedule_Update	( u32 T )
 {
-	// consistency check
-	// Msg						("-SUB-:[%x][%s] CObject::shedule_Update",dynamic_cast<void*>(this),*cName());
 	ISheduled::shedule_Update	(T);
 	spatial_update				(base_spu_epsP*1,base_spu_epsR*1);
 
 	// Always make me crow on shedule-update 
 	// Makes sure that update-cl called at least with freq of shedule-update
-	MakeMeCrow					();	
-	/*
-	if (AlwaysTheCrow())																	MakeMeCrow	();
-	else if (Device.vCameraPosition.distance_to_sqr(Position()) < CROW_RADIUS*CROW_RADIUS)	MakeMeCrow	();
-	*/
+	MakeMeCrow();	
 }
 
 void	CObject::spatial_register	()

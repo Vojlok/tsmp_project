@@ -950,9 +950,14 @@ void CActor::UpdateCL	()
 }
 
 float	NET_Jump = 0;
-void CActor::shedule_Update	(u32 DT)
-{
 
+void CActor::shedule_Update(u32 DT)
+{
+	if (g_dedicated_server)
+	{
+		Msg("! CActor::shedule_Update called on dedicated server! Something is wrong.");
+		return;
+	}
 
 	setSVU(OnServer());
 
@@ -970,12 +975,6 @@ void CActor::shedule_Update	(u32 DT)
 	{
 		m_sDefaultObjAction				= NULL;
 		inherited::shedule_Update		(DT);
-
-/*		if (OnServer())
-		{
-			Check_Weapon_ShowHideState();
-		};	
-*/
 		return;
 	}
 
@@ -985,24 +984,10 @@ void CActor::shedule_Update	(u32 DT)
 
 	// Check controls, create accel, prelimitary setup "mstate_real"
 	
-	//----------- for E3 -----------------------------
-//	if (Local() && (OnClient() || Level().CurrentEntity()==this))
 	if (Level().CurrentControlEntity() == this && (!Level().IsDemoPlay() || Level().IsServerDemo()))
-	//------------------------------------------------
 	{
 		g_cl_CheckControls		(mstate_wishful,NET_SavedAccel,NET_Jump,dt);
-		{
-			/*
-			if (mstate_real & mcJump)
-			{
-				NET_Packet	P;
-				u_EventGen(P, GE_ACTOR_JUMPING, ID());
-				P.w_sdir(NET_SavedAccel);
-				P.w_float(NET_Jump);
-				u_EventSend(P);
-			}
-			*/
-		}
+		
 		g_cl_Orientate			(mstate_real,dt);
 		g_Orientate				(mstate_real,dt);
 
@@ -1013,7 +998,6 @@ void CActor::shedule_Update	(u32 DT)
 		
 		// Check for game-contacts
 		Fvector C; float R;		
-		//m_PhysicMovementControl->GetBoundingSphere	(C,R);
 		
 		Center(C);
 		R=Radius();
@@ -1028,7 +1012,7 @@ void CActor::shedule_Update	(u32 DT)
 		}
 		if (!Level().IsDemoPlay())
 		{		
-		//-----------------------------------------------------
+
 		mstate_wishful &=~mcAccel;
 		mstate_wishful &=~mcLStrafe;
 		mstate_wishful &=~mcRStrafe;
@@ -1039,7 +1023,6 @@ void CActor::shedule_Update	(u32 DT)
 		extern bool g_bAutoClearCrouch;
 		if (g_bAutoClearCrouch)
 			mstate_wishful &=~mcCrouch;
-		//-----------------------------------------------------
 		}
 	}
 	else 
@@ -1048,10 +1031,6 @@ void CActor::shedule_Update	(u32 DT)
 	
 		if (NET.size())
 		{
-			
-//			NET_SavedAccel = NET_Last.p_accel;
-//			mstate_real = mstate_wishful = NET_Last.mstate;
-
 			g_sv_Orientate				(mstate_real,dt			);
 			g_Orientate					(mstate_real,dt			);
 			g_Physics					(NET_SavedAccel,NET_Jump,dt	);			

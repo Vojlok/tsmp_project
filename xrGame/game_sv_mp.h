@@ -49,10 +49,6 @@ protected:
 	bool			m_bVotingActive;
 	bool			m_bVotingReal;
 	u32				m_uVoteStartTime;	
-	u32				m_uTimer1StartTime;
-	bool			m_uTimer1Started;
-	u32				m_uTimer2StartTime;
-	bool			m_uTimer2Started;
 	shared_str		m_pVoteCommand;
 	bool			m_WeaponDisablerState[100];
 

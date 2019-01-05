@@ -54,14 +54,18 @@ extern	BOOL	g_sv_mp_bSpectator_TeamCamera	;
 extern	BOOL	g_sv_mp_bCountParticipants		;
 extern	float	g_sv_mp_fVoteQuota				;
 extern	int		g_sv_mp_fVoteTime				;
-extern	int		g_sv_mp_Timer1Interval			;
+
+extern	int		TSMP_Timer1Interval				;
+extern	int		TSMP_Timer2Interval				;
+extern	int		TSMP_Timer3Interval				;
+extern	int		TSMP_Timer1Enabled				;
+extern	int		TSMP_Timer2Enabled				;
+extern	int		TSMP_Timer3Enabled				;
+
 extern	int		g_sv_mp_RadioInterval			;
 extern	int		g_sv_mp_RadioMuteInterval		;
 extern	int		g_sv_mp_RadioAntiSpam			;
 extern	int		g_sv_mp_RadioMaxMsgs			;
-extern	int		g_sv_mp_Timer2Interval			;
-extern	int		g_sv_mp_Timer1Enabled			;
-extern	int		g_sv_mp_Timer2Enabled			;
 extern	std::string	g_sv_mp_loader_ip			;
 extern	std::string	g_sv_mp_loader_port			;
 extern	int		g_sv_mp_ModLoaderEnabled		;
@@ -1596,14 +1600,18 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"sv_artefacts_count"		,	(int*)&g_sv_ah_dwArtefactsNum			, 1,100);
 
 
-	CMD4(CCC_SV_Integer,	"tsmp_timer1_interval"		,	(int*)&g_sv_mp_Timer1Interval, 1, 60);
-	CMD4(CCC_SV_Integer,	"tsmp_timer2_interval"		,	(int*)&g_sv_mp_Timer2Interval, 1, 60);
+	CMD4(CCC_SV_Integer,	"tsmp_timer1_interval"		,	(int*)&TSMP_Timer1Interval, 1, 60);
+	CMD4(CCC_SV_Integer,	"tsmp_timer2_interval"		,	(int*)&TSMP_Timer2Interval, 1, 60);
+	CMD4(CCC_SV_Integer,	"tsmp_timer3_interval"		,	(int*)&TSMP_Timer3Interval, 1, 60);
+	CMD4(CCC_SV_Integer,	"tsmp_timer1_enabled"		,	(int*)&TSMP_Timer1Enabled, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_timer2_enabled"		,	(int*)&TSMP_Timer2Enabled, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_timer3_enabled"		,	(int*)&TSMP_Timer3Enabled, 0, 1);
+
 	CMD4(CCC_SV_Integer,	"tsmp_radio_interval"		,	(int*)&g_sv_mp_RadioInterval,5, 600);
 	CMD4(CCC_SV_Integer,	"tsmp_radio_mute_interval"	,	(int*)&g_sv_mp_RadioMuteInterval, 1, 60);
 	CMD4(CCC_SV_Integer,	"tsmp_radio_max_msgs"		,	(int*)&g_sv_mp_RadioMaxMsgs, 1, 60);
 	CMD4(CCC_SV_Integer,	"tsmp_radio_antispam"		,	(int*)&g_sv_mp_RadioAntiSpam, 0, 1);
-	CMD4(CCC_SV_Integer,	"tsmp_timer1_enabled"		,	(int*)&g_sv_mp_Timer1Enabled, 0, 1);
-	CMD4(CCC_SV_Integer,	"tsmp_timer2_enabled"		,	(int*)&g_sv_mp_Timer2Enabled, 0, 1);
+
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_disabler_enabled", (int*)&g_sv_mp_DisablerEnabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_log_hits"		,	(int*)&g_sv_mp_LogHitsEnabled, 0, 1);
 

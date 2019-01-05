@@ -19,12 +19,12 @@
 #include "Spectator.h"
 #include "game_cl_base_weapon_usage_statistic.h"
 #include "xrGameSpyServer.h"
-
-
 #include "game_sv_mp_vote_flags.h"
 
+#include "TSMP_Timers.h"
+
 u32		g_dwMaxCorpses = 10;
-//-----------------------------------------------------------------
+
 BOOL		g_sv_mp_bSpectator_FreeFly		= FALSE;
 BOOL		g_sv_mp_bSpectator_FirstEye		= TRUE;
 BOOL		g_sv_mp_bSpectator_LookAt		= TRUE;
@@ -35,14 +35,10 @@ int			g_sv_mp_iDumpStats_last			= 0;
 BOOL		g_sv_mp_bCountParticipants		= FALSE;
 float		g_sv_mp_fVoteQuota				= VOTE_QUOTA;
 int			g_sv_mp_fVoteTime				= 60;
-int			g_sv_mp_Timer1Interval			= 15;
-int			g_sv_mp_Timer2Interval			= 15;
 int			g_sv_mp_RadioAntiSpam			= 0;
 int			g_sv_mp_RadioMaxMsgs			= 7;
 int			g_sv_mp_RadioInterval			= 60;
 int			g_sv_mp_RadioMuteInterval		= 10;
-int			g_sv_mp_Timer1Enabled			= 1;
-int			g_sv_mp_Timer2Enabled			= 0;
 int			g_sv_mp_ModLoaderEnabled		= 1;
 int			g_sv_mp_DisablerEnabled			= 0;
 int			g_sv_mp_LogHitsEnabled			= 0;
@@ -50,8 +46,6 @@ int			g_sv_mp_LogHitsEnabled			= 0;
 int			g_sv_mp_nickname_change_mode	= 3;
 std::string		g_sv_mp_loader_ip =  "0.0.0.0" ;
 std::string		g_sv_mp_loader_port = "4554" ;
-int			g_sv_mp_Counter = 0;
-//-----------------------------------------------------------------
 
 extern xr_token	round_end_result_str[];
 
@@ -60,10 +54,8 @@ extern xr_token	round_end_result_str[];
 game_sv_mp::game_sv_mp() :inherited()
 {
 	m_strWeaponsData		= xr_new<CItemMgr>();
-	m_bVotingActive = false;	
-	m_uTimer1Started = false;
-	m_uTimer2Started = false;
 
+	if (g_dedicated_server) OnTimersStart();
 	if (!(0 != strstr(Core.Params, "-enable_name_change"))) g_sv_mp_nickname_change_mode = 1;
 
 	m_aRanks.clear();	
@@ -109,56 +101,6 @@ void	game_sv_mp::Update()
 	}
 
 	if (IsVotingEnabled() && IsVotingActive()) UpdateVote();
-
-	if (g_sv_mp_Counter==500)
-	{
-
-	if (g_sv_mp_Timer1Enabled == 1)
-	{
-		if (m_uTimer1Started)
-		{
-			u32 CurTime = Level().timeServer();
-
-			if (m_uTimer1StartTime + u32(g_sv_mp_Timer1Interval * 60000) < CurTime)
-			{
-				Msg("# tsmp timer1 ");
-				Console->Execute("cfg_load tsmp_timer1_commands");
-
-				m_uTimer1Started = false;
-			}
-		}
-		else
-		{
-			u32 CurTimeTimer = Level().timeServer();
-			m_uTimer1StartTime = CurTimeTimer;
-			m_uTimer1Started = true;
-		}
-	}
-
-	if (g_sv_mp_Timer2Enabled == 1)
-	{
-		if (m_uTimer2Started)
-		{
-			u32 CurTime = Level().timeServer();
-
-			if (m_uTimer2StartTime + u32(g_sv_mp_Timer2Interval * 60000) < CurTime)
-			{
-				Msg("# tsmp timer2 ");
-				Console->Execute("cfg_load tsmp_timer2_commands");
-
-				m_uTimer2Started = false;
-			}
-		}
-		else
-		{
-			u32 CurTimeTimer = Level().timeServer();
-			m_uTimer2StartTime = CurTimeTimer;
-			m_uTimer2Started = true;
-		}
-	}
-	g_sv_mp_Counter = 0;
-}
-	g_sv_mp_Counter++;
 
 	UpdatePlayersMoney();
 
