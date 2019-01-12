@@ -110,14 +110,14 @@ void	CBackend::set_ClipPlanes	(u32 _enable, Fmatrix*	_xform  /*=NULL */, u32 fma
 	set_ClipPlanes		(_enable,F.planes,F.p_count);
 }
 
-void CBackend::set_Textures			(STextureList* _T)
+void CBackend::set_Textures			(STextureList* TT)
 {
-	if (T == _T)	return;
-	T				= _T;
+	if (T == TT)	return;
+	T				= TT;
 	u32 _last_ps	= 0;
 	u32 _last_vs	= 0;
-	STextureList::iterator	_it		= _T->begin	();
-	STextureList::iterator	_end	= _T->end	();
+	STextureList::iterator	_it		= TT->begin	();
+	STextureList::iterator	_end	= TT->end	();
 	for (; _it!=_end; ++_it)
 	{
 		std::pair<u32,ref_texture>&		loader	=	*_it;
@@ -134,10 +134,11 @@ void CBackend::set_Textures			(STextureList* _T)
 				if (load_surf)			{
 					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
-//					load_surf->Apply	(load_id);
 				}
 			}
-		} else {
+		} 
+		else 
+		{
 			// d-map or vertex	
 			u32		load_id_remapped	= load_id-256;
 			if (load_id_remapped>_last_vs)	_last_vs	=	load_id_remapped;
@@ -149,7 +150,6 @@ void CBackend::set_Textures			(STextureList* _T)
 				if (load_surf)	{
 					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
-//					load_surf->Apply	(load_id);
 				}
 			}
 		}
@@ -169,6 +169,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #else
 
 void	CBackend::set_ClipPlanes	(u32 _enable, Fmatrix*	_xform  /*=NULL */, u32 fmask/* =0xff */) {}
-void CBackend::set_Textures			(STextureList* _T) {}
+void CBackend::set_Textures			(STextureList* TT) {}
 
 #endif

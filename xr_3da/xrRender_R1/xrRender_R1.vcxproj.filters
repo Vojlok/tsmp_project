@@ -207,7 +207,6 @@
     <ClInclude Include="..\xrRender\LightTrack.h">
       <Filter>Lights</Filter>
     </ClInclude>
-    <ClInclude Include="..\doug_lea_memory_allocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -408,7 +407,6 @@
     <ClCompile Include="..\xrRender\LightTrack.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
-    <ClCompile Include="..\doug_lea_memory_allocator.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Pipeline.txt" />
